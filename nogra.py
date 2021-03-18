@@ -5,6 +5,7 @@ import logging
 import asyncio
 from discord.ext import commands
 import json
+import os
 import datetime
 from datetime import datetime as dt
 from datetime import date
@@ -939,6 +940,6 @@ async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat =None):
 
 
 
-with open("token.0", "r", encoding="utf-8") as f:
-    bottoken = f.read()
-client.run(bottoken)
+'''with open("token.0", "r", encoding="utf-8") as f:
+    bottoken = f.read()'''
+client.run(os.environ['DISCORD_TOKEN'])

@@ -795,14 +795,12 @@ async def edit(ctx,messageid=None, channelid=None,*, newmessage=None):
         channelid = int(channelid)
         channel = client.get_channel(channelid)
         message = await channel.fetch_message(messageid)
-        await ctx.send(message)
         if message.author.id != 800184970298785802:
             await ctx.send("That message was not sent by me, I can't edit it.")
         else:
             if ctx.author.id != 650647680837484556:
                 await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
             else:
-                await ctx.send(f"New message: `{newmessage}`")
                 await message.edit(content=newmessage)
 
 @client.command()

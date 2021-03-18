@@ -487,9 +487,7 @@ async def blacklist(ctx, member:discord.Member=None, duration=None, *, reason =N
     await ctx.message.add_reaction("<a:Tick:796984073603383296>")
     await ctx.send(f"Blacklisted {member.name}#{member.discriminator} and DMed him. Have a good day. <:cozythumbsup:814040556140232714>")
 
-@client.command()
-async def temp(ctx):
-    print("This should show up in Heroku's logs.")
+
 
 @client.command()
 async def kicc(ctx):

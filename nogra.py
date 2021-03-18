@@ -765,7 +765,6 @@ async def secretping(ctx, id=None, *, message=None):
         await ctx.message.delete()
         await ctx.send("<@" + id + "> " + message)
 
-
 @client.command()
 async def triggers(ctx):
     if ctx.guild.id == 738632364208554095:
@@ -902,41 +901,6 @@ async def abuse_error(ctx,error):
         await ctx.send("lmfao no you need manage permissions to let people abuse")
     else:
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-
-@client.command()
-async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat =None):
-    if ctx.author.id != 650647680837484556:
-        await ctx.send("You can only change the status of the bot if you are Argon!")
-        return
-    allstatus = ['online', 'idle', 'dnd']
-    if ooommmaaa in allstatus:
-        if ooommmaaa == 'online':
-            omam = discord.Status.online
-        if ooommmaaa == 'idle':
-            omam = discord.Status.idle
-        if ooommmaaa == 'dnd':
-            omam = discord.Status.dnd
-        if presence == "game":
-            # Setting `Playing ` status
-            await client.change_presence(activity=discord.Game(name=statuswhat), status=omam)
-            await ctx.send("I have set my status to **playing " + statuswhat + "** while being " + ooommmaaa)
-        elif presence == "stream":
-            # Setting `Streaming ` status
-            await ctx.send("Argon use this command when you have a twitch stream url ready")
-            # await bot.change_presence(activity=discord.Streaming(name="My Stream", url=my_twitch_url))
-        elif presence == "listen":
-            # Setting `Listening ` status
-            await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=statuswhat), status=omam)
-            await ctx.send("I have set my status to **listening to " + statuswhat + "** while being " + ooommmaaa)
-        elif presence == "watch":
-            # Setting `Watching ` status
-            await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=statuswhat), status=omam)
-            await ctx.send("I have set my status to **watching " + statuswhat + "** while being " + ooommmaaa)
-        else:
-            await ctx.send("you can only use `game`, `stream`, `listen`, and `watch` stupid.")
-    else:
-        await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
 
 

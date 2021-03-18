@@ -800,6 +800,7 @@ async def edit(ctx,messageid=None, channel:discord.TextChannel=None,*, newmessag
                 await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
             else:
                 await message.edit(content=newmessage)
+                await ctx.message.add_reaction("<a:Tick:796984073603383296>")
 
 @client.command()
 async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat=None):

@@ -934,9 +934,9 @@ async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat =None):
             await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=statuswhat), status=omam)
             await ctx.send("I have set my status to **watching " + statuswhat + "** while being " + ooommmaaa)
         else:
-            await ctx.send("you can only use `game`, `stream`, `listen`, and `watch` stupid".)
+            await ctx.send("you can only use `game`, `stream`, `listen`, and `watch` stupid.")
     else:
-        await ctx.send("You can only use `online`, `idle`, or `dnd` stupid".)
+        await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
 
 

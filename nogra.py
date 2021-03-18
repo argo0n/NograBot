@@ -783,7 +783,7 @@ async def triggers(ctx):
         await ctx.send("There are no triggers for this server!")
 
 @client.command()
-async def edit(ctx,messageid=None, channel:discord.TextChannel=None,*, newmessage=None):
+async def edit(ctx,messageid:int=None, channel:discord.TextChannel=None,*, newmessage=None):
     if messageid == None:
         await ctx.send("You didn't give me a Message ID to edit.")
     elif channel == None:
@@ -791,7 +791,6 @@ async def edit(ctx,messageid=None, channel:discord.TextChannel=None,*, newmessag
     elif newmessage == None:
         await ctx.send("You need to give me some message to edit bruh")
     else:
-        messageid = int(messageid)
         message = await channel.fetch_message(messageid)
         if message.author.id != 800184970298785802:
             await ctx.send("That message was not sent by me, I can't edit it.")

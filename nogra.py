@@ -794,7 +794,7 @@ async def edit(ctx,messageid=None, channelid=None,*, newmessage=None):
         messageid = int(messageid)
         channelid = int(channelid)
         channel = client.get_channel(channelid)
-        message = channel.fetch_message(messageid)
+        message = await channel.fetch_message(messageid)
         await ctx.send(message)
         if message.author.id != 800184970298785802:
             await ctx.send("That message was not sent by me, I can't edit it.")

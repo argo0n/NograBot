@@ -781,6 +781,64 @@ async def triggers(ctx):
         await ctx.send(embed=triggerembed)
     else:
         await ctx.send("There are no triggers for this server!")
+
+@client.command()
+async def edit(ctx,messageid=None, *, newmessage=None):
+    if messageid == None:
+        await ctx.send("You didn't give me a Message ID to edit.")
+    elif newmessage == None:
+        await ctx.send("You need to give me some message to edit bruh")
+    else:
+        messageid = int(messageid)
+        message = client.get_message(messageid)
+        if message.author.id != 800184970298785802:
+            await ctx.send("That message was not sent by me, I can't edit it.")
+        else:
+            if ctx.author.id != 650647680837484556:
+                await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
+            else:
+                await message.edit(newmessage)
+
+                @client.command()
+                async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
+                    if ctx.author.id != 650647680837484556:
+                        await ctx.send("You can only change the status of the bot if you are Argon!")
+                        return
+                    allstatus = ['online', 'idle', 'dnd']
+                    if ooommmaaa in allstatus:
+                        if ooommmaaa == 'online':
+                            omam = discord.Status.online
+                        if ooommmaaa == 'idle':
+                            omam = discord.Status.idle
+                        if ooommmaaa == 'dnd':
+                            omam = discord.Status.dnd
+                        if presence == "game":
+                            # Setting `Playing ` status
+                            await client.change_presence(activity=discord.Game(name=statuswhat), status=omam)
+                            await ctx.send(
+                                "I have set my status to **playing " + statuswhat + "** while being " + ooommmaaa)
+                        elif presence == "stream":
+                            # Setting `Streaming ` status
+                            await ctx.send("Argon use this command when you have a twitch stream url ready")
+                            # await bot.change_presence(activity=discord.Streaming(name="My Stream", url=my_twitch_url))
+                        elif presence == "listen":
+                            # Setting `Listening ` status
+                            await client.change_presence(
+                                activity=discord.Activity(type=discord.ActivityType.listening, name=statuswhat),
+                                status=omam)
+                            await ctx.send(
+                                "I have set my status to **listening to " + statuswhat + "** while being " + ooommmaaa)
+                        elif presence == "watch":
+                            # Setting `Watching ` status
+                            await client.change_presence(
+                                activity=discord.Activity(type=discord.ActivityType.watching, name=statuswhat),
+                                status=omam)
+                            await ctx.send(
+                                "I have set my status to **watching " + statuswhat + "** while being " + ooommmaaa)
+                        else:
+                            await ctx.send("you can only use `game`, `stream`, `listen`, and `watch` stupid.")
+                    else:
+                        await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 # errors
 
 @ei.error

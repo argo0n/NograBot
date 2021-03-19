@@ -170,9 +170,8 @@ for filename in os.listdir('./cogs'):
 async def say(ctx, *, arg):
     if ctx.author.id == 560251854399733760:
         return
-    else:
-        await ctx.send(arg)
-        print(f"{ctx.author.name}#{ctx.author.disriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
+    await ctx.send(arg)
+    print(f"{ctx.author.name}#{ctx.author.disriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):

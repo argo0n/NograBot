@@ -168,7 +168,11 @@ for filename in os.listdir('./cogs'):
 
 @client.command()
 async def say(ctx, *, arg):
-    await ctx.send(arg)
+    if ctx.author.id == 560251854399733760:
+        return
+    else:
+        await ctx.send(arg)
+        print(f"{ctx.author.name}#{ctx.author.disriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):
@@ -401,10 +405,9 @@ async def cutie(ctx):
         await m.add_roles(var)
         await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
         # await asyncio.sleep(1)
-        m = ctx.guild.get_member(560251854399733760)
+        m = ctx.guild.get_member(560251854399733760) #frenzy
         await m.add_roles(var)
         await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
         m = ctx.guild.get_member(730974500111515648)
         await m.add_roles(var)
         await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
@@ -478,6 +481,9 @@ async def uglie(ctx):
         await m.remove_roles(var)
         await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
         m = ctx.guild.get_member(680331233624195132)
+        await m.remove_roles(var)
+        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
+        m = ctx.guild.get_member(560251854399733760)
         await m.remove_roles(var)
         await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
         m = ctx.guild.get_member(560251854399733760)

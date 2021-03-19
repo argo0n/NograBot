@@ -17,7 +17,7 @@ intents.members = True
 
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
                       activity=discord.Activity(type=discord.ActivityType.listening, name="a.help"), intents=intents)
-client.remove_command("help")
+'''client.remove_command("help")'''
 
 async def task():
     while True:
@@ -53,25 +53,6 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_message(message):
-
-    if message.author.id == 650647680837484556 and "a.emojis" in message.content:
-        await message.delete()
-
-    if message.author == client.user:
-        return
-
-    if "frenzy" in message.content:
-        await message.channel.send(":c")
-
-    if (
-        message.author.id == 560251854399733760
-        and (
-            "argon" in message.content
-            or "<@650647680837484556>" in message.content
-        )
-        and ("slap" in message.content or "bully" in message.content)
-    ):
-        await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
 
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
@@ -201,10 +182,7 @@ for filename in os.listdir('./cogs'):
 
 @client.command()
 async def say(ctx, *, arg):
-    if ctx.author.id == 560251854399733760:
-        return
-    else:
-        await ctx.send(arg)
+    await ctx.send(arg)
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):
@@ -230,7 +208,7 @@ async def hmmm(ctx):
     else:
         await ctx.send("You can only use this command if you are Argon.")
 
-@client.group(invoke_without_command=True)
+'''@client.group(invoke_without_command=True)
 async def help(ctx):
     embedVar = discord.Embed(title="Nogra's Help Page", description="Just a pretty useless bot tbh lmfao", color=0x00ff00)
     embedVar.add_field(name="Prefix", value="`a.`", inline=False)
@@ -356,7 +334,7 @@ async def setstatus(ctx):
     ee = discord.Embed(title="Set my Status", description="Changes the bot's status.",color=0x00ff00)
     ee.add_field(name="__**Usage**__", value="`ar.setstatus <online/idle/dnd> <game/stream/listen/watch> <what I am doing>`")
     ee.add_field(name="__**Needs**__",value="`Bot Owner`", inline=False)
-    await ctx.send(embed = ee)
+    await ctx.send(embed = ee)'''
 
 @client.command(pass_context=True)
 @commands.has_permissions(manage_channels=True)
@@ -367,33 +345,6 @@ async def cchan(ctx, *, channel_name=None):
         guild = ctx.message.guild
         await guild.create_text_channel(channel_name)
         await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
-
-@client.command(pass_context=True)
-@commands.has_permissions(manage_messages=True)
-async def clear(ctx, number=None):
-    if number is None:
-        await ctx.send("Try again, but do tell me how many messages do you want to clear.")
-    else:
-        number = int(number)
-        await ctx.channel.purge(limit=number + 1, check=lambda msg: not msg.pinned)
-        await ctx.send(str(number) + " messages were cleared in bulk. <a:Tick:796984073603383296>", delete_after=3.0)
-    # choosing a channel to send the ar.lear mod log if command is used in different servers
-
-        if ctx.guild.id == 738632364208554095:
-            channel = client.get_channel(762898168803229707)
-        if ctx.guild.id == 781056775544635412:
-            channel = client.get_channel(781064310758572063)
-        if ctx.guild.id == 789840820563476482:
-            channel = client.get_channel(802786241799651330)
-    # embed to be posted in modlogs
-        timestamp = ctx.message.created_at
-        clearembed = discord.Embed(title="`Clear` action done with Nogra", color=0xff0000)
-        clearembed.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator),
-                              icon_url=str(ctx.author.avatar_url))
-        clearembed.add_field(name=str(number) + " messages deleted", value="in " + str(ctx.channel.mention), inline=False)
-        clearembed.set_footer(text="ID: " + str(ctx.author.id) + " • " + str(timestamp))
-        await channel.send(embed=clearembed)
-
 
 '''@client.command()
 async def timeout(ctx, user: discord.Member, hms):
@@ -464,9 +415,6 @@ async def cutie(ctx):
         await m.add_roles(var)
         await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
         # await asyncio.sleep(1)
-        m = ctx.guild.get_member(560251854399733760)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
         # await asyncio.sleep(1)
         m = ctx.guild.get_member(730974500111515648)
         await m.add_roles(var)
@@ -541,9 +489,6 @@ async def uglie(ctx):
         await m.remove_roles(var)
         await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
         m = ctx.guild.get_member(680331233624195132)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(560251854399733760)
         await m.remove_roles(var)
         await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
         m = ctx.guild.get_member(730974500111515648)
@@ -868,14 +813,6 @@ async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
 @ei.error
 async def ei_error(ctx, error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-@clear.error
-async def clear_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send('You do not have the Manage Messages permission! <:nograRedX:801684348502933525> ')
-        await ctx.send('Imagine trying to delete many messages without permission... ')
-        await ctx.send('<a:jensmh:801615739034402836>')
-    else:
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 @blacklist.error
 async def blacklist_error(ctx,error):
@@ -924,10 +861,6 @@ async def bon_error(ctx,error):
 
 @help.error
 async def help_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@cchan.error
-async def cchan_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 @unoreverse.error

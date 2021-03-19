@@ -171,7 +171,7 @@ async def say(ctx, *, arg):
     if ctx.author.id == 560251854399733760:
         return
     await ctx.send(arg)
-    print(f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
+    print(f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.mention}")
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):

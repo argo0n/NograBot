@@ -182,10 +182,7 @@ for filename in os.listdir('./cogs'):
 
 @client.command()
 async def say(ctx, *, arg):
-    if ctx.author.id == 560251854399733760:
-        return
-    else:
-        await ctx.send(arg)
+    await ctx.send(arg)
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):

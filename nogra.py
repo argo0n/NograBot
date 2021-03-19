@@ -167,9 +167,11 @@ for filename in os.listdir('./cogs'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
 @client.command()
-async def say(ctx, *, arg):
+async def say(ctx, *, arg=None):
     if ctx.author.id == 560251854399733760:
         return
+    elif arg == None:
+        await ctx.send("Give me something to say <:ff_hmph:818436762333610014>")
     await ctx.send(arg)
     print(f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.mention}")
 

@@ -70,7 +70,7 @@ class Moderation(commands.Cog):
 
 
     @clear.error
-    async def clear_error(ctx, error):
+    async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send('You do not have the Manage Messages permission! <:nograRedX:801684348502933525> ')
             await ctx.send('Imagine trying to delete many messages without permission... ')

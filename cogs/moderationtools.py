@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
+import discord, datetime, time
 
+start_time = time.time()
 class Moderation(commands.Cog):
 
     def __init__(self, client):
@@ -68,6 +70,18 @@ class Moderation(commands.Cog):
             clearembed.set_footer(text="ID: " + str(ctx.author.id) + " • " + str(timestamp))
             await channel.send(embed=clearembed)
 
+    @commands.command(pass_context=True)
+    async def uptime(self, ctx):
+        current_time = time.time()
+        difference = int(round(current_time - start_time))
+        text = str(datetime.timedelta(seconds=difference))
+        embed = discord.Embed(colour=0xc8dc6c)
+        embed.add_field(name="Uptime", value=text)
+        embed.set_footer(text="Nogra")
+        try:
+            await ctx.send(embed=embed)
+        except discord.HTTPException:
+            await ctx.send("Current uptime: " + text)
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):

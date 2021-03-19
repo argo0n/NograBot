@@ -57,21 +57,7 @@ async def on_message(message):
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 
-    # GOOD NIGHT MESSAGE
-#    if "Good night" in message.content or "good night" in message.content or "Gute nacht" in message.content or "gn" in message.content:
-#        await message.channel.send(message.author.mention + ' good night to you too! ')
-#        await message.channel.send('<a:zsleepy:801094263168303144>')
-    if "owo" in message.content and "<@650647680837484556>" in message.content:
-        owocommand, action, mention = message.split(" ")
-        if mention == "<@650647680837484556>" and action in [
-            "slap",
-            "punch",
-            "bite",
-        ]:
-            await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
-            await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
-
-    if "<@800184970298785802>   " in message.content:
+    if "<@800184970298785802>" in message.content:
         embedVar = discord.Embed(title="Nogra's Help Page",
                                  description="Just a pretty bad bot that stalks you lmfao <:kekcamera:814488911261859861>",
                                  color=0x00ff00)
@@ -136,7 +122,7 @@ async def on_message(message):
 
 
     # BLOCK CHANNEL MESSAGE SENDING
-    if message.channel.id in [
+    '''if message.channel.id in [
         803662591690932235,
         813288124460826669,
         802581920886030406,
@@ -153,7 +139,7 @@ async def on_message(message):
         elif message.guild.id == 796727833048645692:
             channel = client.get_channel(810007702058565632)
             await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")'''
 
 
     await client.process_commands(message)

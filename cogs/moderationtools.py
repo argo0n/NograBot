@@ -69,9 +69,9 @@ class Moderation(commands.Cog):
             await channel.send(embed=clearembed)
 
 
-    @clear.error
+    '''@clear.error
     async def cog_command_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''
 
 
 def setup(client):

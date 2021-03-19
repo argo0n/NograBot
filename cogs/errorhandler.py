@@ -65,7 +65,7 @@ class CommandErrorHandler(commands.Cog):
 
         else:
             # All other Errors not returned come here. And we can just print the default TraceBack.
-            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            ctx.send('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     """Below is an example of a Local Error Handler for our command do_repeat"""

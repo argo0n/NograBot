@@ -23,14 +23,14 @@ class Moderation(commands.Cog):
         810007702058565632,
         ]:
             await message.delete()
-        if message.guild.id == 789840820563476482:
-            channel = self.client.get_channel(804260533666578432)
-            await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
-        elif message.guild.id == 796727833048645692:
-            channel = self.client.get_channel(810007702058565632)
-            await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+            if message.guild.id == 789840820563476482:
+                channel = self.client.get_channel(804260533666578432)
+                await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
+                    message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+            elif message.guild.id == 796727833048645692:
+                channel = self.client.get_channel(810007702058565632)
+                await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
+                    message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
             await message.delete()

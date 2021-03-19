@@ -73,10 +73,6 @@ async def on_message(message):
     ):
         await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
 
-    if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
-        await message.delete()
-        await message.channel.send(f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>", delete_after=3.0)
-
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 
@@ -181,13 +177,13 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-@client.event
+'''@client.event
 async def on_member_join(member):
     if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
         server = member.guild
         await member.send("Hii! I'm Argon's bot. <:catPeeposmile:813288614275579925>\nYou got this DM from me as you joined **" + server.name + "**. If you want more emojis, join these two servers:\nhttps://discord.gg/y7WQHWFBnR\nhttps://discord.gg/RKvYrrhy2y \n<:catpeepoBlush:813288688352100352>")
-        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")
+        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")'''
 
 # Bot COMMANDS go here.
 

@@ -1,6 +1,25 @@
 ![Nogra on Discord](https://i.imgur.com/wOmBZdk.png)
 
+<p align="center">
+  <a href="https://www.gnu.org/licenses/gpl-3.0">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3">
+  </a>
+  <a href="https://www.python.org/downloads/">
+    <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/Red-Discordbot">
+  </a>
+  <a href="https://github.com/Rapptz/discord.py/">
+     <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
+  </a>
+  <a href="https://heroku.com">
+    <img src="https://heroku-badge.herokuapp.com/?app=heroku-badge" alt="Heroku">
+  </a>
+  <a href='https://www.jetbrains.com/pycharm/'>
+      <img src='https://img.shields.io/badge/IDLE-PyCharm-18d68c' alt='PyCharm Community' />
+  </a>
+</p>
+
 # NograBot (Also known as Nogra)
+
 Discord.py bot written by Argon#0002
 
 ## What is Nogra?

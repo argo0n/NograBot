@@ -35,9 +35,8 @@ class CommandErrorHandler(commands.Cog):
 
         # This prevents any cogs with an overwritten cog_command_error being handled here.
         cog = ctx.cog
-        if cog:
-            if cog._get_overridden_method(cog.cog_command_error) is not None:
-                return
+        if cog and cog._get_overridden_method(cog.cog_command_error) is not None:
+            return
 
         ignored = (commands.CommandNotFound, )
 
@@ -89,9 +88,11 @@ class CommandErrorHandler(commands.Cog):
         """
 
         # Check if our required argument inp is missing.
-        if isinstance(error, commands.MissingRequiredArgument):
-            if error.param.name == 'inp':
-                await ctx.send("You forgot to give me input to repeat!")
+        if (
+            isinstance(error, commands.MissingRequiredArgument)
+            and error.param.name == 'inp'
+        ):
+            await ctx.send("You forgot to give me input to repeat!")
 
 
 def setup(client):

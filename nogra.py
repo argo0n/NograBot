@@ -54,25 +54,6 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_message(message):
 
-    if message.author.id == 650647680837484556 and "a.emojis" in message.content:
-        await message.delete()
-
-    if message.author == client.user:
-        return
-
-    if "frenzy" in message.content:
-        await message.channel.send(":c")
-
-    if (
-        message.author.id == 560251854399733760
-        and (
-            "argon" in message.content
-            or "<@650647680837484556>" in message.content
-        )
-        and ("slap" in message.content or "bully" in message.content)
-    ):
-        await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
-
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 

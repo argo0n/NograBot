@@ -170,9 +170,8 @@ for filename in os.listdir('./cogs'):
 async def say(ctx, *, arg):
     if ctx.author.id == 560251854399733760:
         return
-    else:
-        await ctx.send(arg)
-        print(f"{ctx.author.name}#{ctx.author.disriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
+    await ctx.send(arg)
+    print(f"{ctx.author.name}#{ctx.author.disriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.nention}")
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):
@@ -466,32 +465,10 @@ async def uglie(ctx):
 
     else:
         var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        m = ctx.guild.get_member(651047556360699911)
-        await ctx.send(f"Power of ugliness granted to ****{m.name}#{m.discriminator}****")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(642318626044772362)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(744919095211982892)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(264019387009204224)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(604212608941424640)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(680331233624195132)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(560251854399733760)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(560251854399733760)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of ugliness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(730974500111515648)
-        await m.remove_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
+        memberid = [651047556360699911, 642318626044772362, 744919095211982892, 264019387009204224, 604212608941424640, 680331233624195132, 560251854399733760, 730974500111515648]
+        for m in memberid:
+            m = ctx.guild.get_member(memberid)
+            await ctx.send(f"Power of ugliness granted to ****{m.name}#{m.discriminator}****")
         await ctx.send("`if you have this role you're cute uwu` Role removed from everyone. ")
 @client.command()
 async def admon(ctx, member:discord.Member=None, durationinseconds=None):

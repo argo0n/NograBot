@@ -172,8 +172,9 @@ async def say(ctx, *, arg=None):
         return
     elif arg == None:
         await ctx.send("Give me something to say <:ff_hmph:818436762333610014>")
-    await ctx.send(arg)
-    print(f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.mention}")
+    else:
+        await ctx.send(arg)
+        print(f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.mention}")
 
 @client.command(pass_context=True, brief="h", description="h")
 async def calc(ctx, *, yourcalculation):

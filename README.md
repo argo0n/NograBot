@@ -18,6 +18,7 @@
   </a>
 </p>
 
+# Please read <a href="https://github.com/argo0n/NograBot/blob/ec369f74af96f986ed71530b269585a0d0f1881d/LICENSE.md">LICENSE.md</a> before having anything to do with Nogra!
 # NograBot (Also known as Nogra)
 
 Discord.py bot written by Argon#0002

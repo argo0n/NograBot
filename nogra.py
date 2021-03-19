@@ -375,16 +375,28 @@ async def bon(ctx, member:discord.Member=None, *, reason=None):
 async def cutie(ctx):
     if ctx.author.id != 650647680837484556:
         await ctx.send("you can only call others a cutie if you are argon <a:nograkekgiggle:821318605274218516>")
-
     else:
         var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [651047556360699911, 642318626044772362, 744919095211982892, 264019387009204224, 604212608941424640,
-            680331233624195132, 560251854399733760, 730974500111515648]
+        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 744919095211982892, 560251854399733760]
         for m in memberid:
             m = ctx.guild.get_member(m)
             await m.add_roles(var)
             await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
         await ctx.send("`if you have this role you're cute uwu` Role given to everyone. ")
+        return
+
+@client.command()
+async def uglie(ctx):
+    if ctx.author.id != 650647680837484556:
+        await ctx.send("you can only call others ugly if you are argon <a:nograkekgiggle:821318605274218516>")
+    else:
+        var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
+        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 744919095211982892, 560251854399733760]
+        for m in memberid:
+            m = ctx.guild.get_member(m)
+            await m.remove_roles(var)
+            await ctx.send(f"Power of ugliness granted to ****{m.name}#{m.discriminator}****")
+        await ctx.send("`if you have this role you're cute uwu` Role removed from everyone. ")
 
 @client.command()
 async def allow(ctx):
@@ -431,19 +443,7 @@ async def kicc(ctx):
         await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
     else:
         ctx.send("imagine not being frenzy or argon lol")
-@client.command()
-async def uglie(ctx):
-    if ctx.author.id != 650647680837484556:
-        await ctx.send("you can only call others ugly if you are argon <a:nograkekgiggle:821318605274218516>")
 
-    else:
-        var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [651047556360699911, 642318626044772362, 744919095211982892, 264019387009204224, 604212608941424640, 680331233624195132, 560251854399733760, 730974500111515648]
-        for m in memberid:
-            m = ctx.guild.get_member(m)
-            await m.remove_roles(var)
-            await ctx.send(f"Power of ugliness granted to ****{m.name}#{m.discriminator}****")
-        await ctx.send("`if you have this role you're cute uwu` Role removed from everyone. ")
 @client.command()
 async def admon(ctx, member:discord.Member=None, durationinseconds=None):
     if member is None:

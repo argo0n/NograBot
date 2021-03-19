@@ -12,7 +12,7 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.client.user:
+        if message.author.id == 800184970298785802:
             return
         if message.channel.id in [
         803662591690932235,

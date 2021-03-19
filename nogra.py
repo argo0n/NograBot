@@ -73,10 +73,6 @@ async def on_message(message):
     ):
         await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
 
-    if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
-        await message.delete()
-        await message.channel.send(f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>", delete_after=3.0)
-
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 

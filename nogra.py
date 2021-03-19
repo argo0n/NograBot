@@ -378,40 +378,13 @@ async def cutie(ctx):
 
     else:
         var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-#        for m in ctx.guild.members:
- #           await m.add_roles(var)
-        m = ctx.guild.get_member(651047556360699911)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(642318626044772362)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(744919095211982892)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(264019387009204224)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(604212608941424640)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(680331233624195132)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        m = ctx.guild.get_member(560251854399733760) #frenzy
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        m = ctx.guild.get_member(730974500111515648)
-        await m.add_roles(var)
-        await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        # await asyncio.sleep(1)
-        await ctx.send("`if you have this role you're cute uwu` Role given to everyone. ")
+        memberid = [651047556360699911, 642318626044772362, 744919095211982892, 264019387009204224, 604212608941424640,
+            680331233624195132, 560251854399733760, 730974500111515648]
+        for m in memberid:
+            m = ctx.guild.get_member(m)
+            await m.add_roles(var)
+            await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
+            await ctx.send("`if you have this role you're cute uwu` Role given to everyone. ")
 
 @client.command()
 async def allow(ctx):

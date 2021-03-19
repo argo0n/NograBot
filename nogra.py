@@ -63,10 +63,15 @@ async def on_message(message):
     if "frenzy" in message.content:
         await message.channel.send(":c")
 
-    if message.author.id == 560251854399733760:
-        if "argon" in message.content or "<@650647680837484556>" in message.content:
-            if "slap" in message.content or "bully" in message.content:
-                await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
+    if (
+        message.author.id == 560251854399733760
+        and (
+            "argon" in message.content
+            or "<@650647680837484556>" in message.content
+        )
+        and ("slap" in message.content or "bully" in message.content)
+    ):
+        await message.channel.send("Stop bullying argon when <a:nograsad:821002803190431764>")
 
     if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
         await message.delete()
@@ -81,10 +86,13 @@ async def on_message(message):
 #        await message.channel.send('<a:zsleepy:801094263168303144>')
     if "owo" in message.content and "<@650647680837484556>" in message.content:
         owocommand, action, mention = message.split(" ")
-        if mention == "<@650647680837484556>":
-            if action == "slap" or action == "punch" or action == "bite":
-                await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
-                await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
+        if mention == "<@650647680837484556>" and action in [
+            "slap",
+            "punch",
+            "bite",
+        ]:
+            await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
+            await message.channel.send("Stop bullying Argon when <a:nograsad:821002803190431764>")
 
     if "<@800184970298785802>   " in message.content:
         embedVar = discord.Embed(title="Nogra's Help Page",
@@ -151,7 +159,14 @@ async def on_message(message):
 
 
     # BLOCK CHANNEL MESSAGE SENDING
-    if message.channel.id == 803662591690932235 or message.channel.id == 813288124460826669 or message.channel.id == 802581920886030406 or message.channel.id == 804260533666578432 or message.channel.id == 810007696057040906 or message.channel.id == 810007702058565632:
+    if message.channel.id in [
+        803662591690932235,
+        813288124460826669,
+        802581920886030406,
+        804260533666578432,
+        810007696057040906,
+        810007702058565632,
+    ]:
         await message.delete()
         #await message.channel.send('you can\'t send messages in here idot <a:distorteddisgust:796382813279879218>',delete_after=3.0)
         if message.guild.id == 789840820563476482:
@@ -340,7 +355,7 @@ async def setstatus(ctx):
 @client.command(pass_context=True)
 @commands.has_permissions(manage_channels=True)
 async def cchan(ctx, *, channel_name=None):
-    if channel_name == None:
+    if channel_name is None:
         await ctx.send("You need to tell me what is the name of the channel you want to create.")
     else:
         guild = ctx.message.guild
@@ -350,13 +365,12 @@ async def cchan(ctx, *, channel_name=None):
 @client.command(pass_context=True)
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, number=None):
-    if number == None:
+    if number is None:
         await ctx.send("Try again, but do tell me how many messages do you want to clear.")
     else:
         number = int(number)
         await ctx.channel.purge(limit=number + 1, check=lambda msg: not msg.pinned)
         await ctx.send(str(number) + " messages were cleared in bulk. <a:Tick:796984073603383296>", delete_after=3.0)
-
     # choosing a channel to send the ar.lear mod log if command is used in different servers
 
         if ctx.guild.id == 738632364208554095:
@@ -365,7 +379,6 @@ async def clear(ctx, number=None):
             channel = client.get_channel(781064310758572063)
         if ctx.guild.id == 789840820563476482:
             channel = client.get_channel(802786241799651330)
-
     # embed to be posted in modlogs
         timestamp = ctx.message.created_at
         clearembed = discord.Embed(title="`Clear` action done with Nogra", color=0xff0000)
@@ -397,7 +410,7 @@ async def timeout(ctx, user: discord.Member, hms):
 @client.command()
 @commands.has_permissions(manage_permissions=True)
 async def stopabusing(ctx, member:discord.Member=None):
-    if member == None:
+    if member is None:
         await ctx.send("https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
     else:
         await ctx.send(f"{member.mention} {ctx.author.name} felt that you weren't worthy of abusing. <:nograhahausuck:819085149525245962>")
@@ -407,10 +420,10 @@ async def stopabusing(ctx, member:discord.Member=None):
 @client.command()
 async def bon(ctx, member:discord.Member=None, *, reason=None):
     duration = ["30 years, 7 months, and 10 days", "11 years, 3 months, and 9 days", "4 years, 1 month, and 5 days", "8 months and 3 days", "6 months and 1 day", "3 months and 27 days", "22 days, 14 hours and 3 minutes.","4 days, 2 hours and 58 minutes.","21 hours and 17 minutes.", "9 minutes and 4 seconds."]
-    if reason== None:
+    if reason is None:
         await ctx.send(f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**.")
     else:
-         await ctx.send(f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
+        await ctx.send(f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
 @client.command()
 async def cutie(ctx):
@@ -457,7 +470,7 @@ async def cutie(ctx):
 
 @client.command()
 async def allow(ctx):
-    if ctx.author.id == 560251854399733760 or ctx.author.id == 650647680837484556:
+    if ctx.author.id in [560251854399733760, 650647680837484556]:
         channel = client.get_channel(821033788262842438)
         overwrite = discord.PermissionOverwrite()
         overwrite.send_messages = True
@@ -491,7 +504,7 @@ async def blacklist(ctx, member:discord.Member=None, duration=None, *, reason =N
 
 @client.command()
 async def kicc(ctx):
-    if ctx.author.id == 560251854399733760 or ctx.author.id == 650647680837484556:
+    if ctx.author.id in [560251854399733760, 650647680837484556]:
         channel = client.get_channel(821033788262842438)
         overwrite = discord.PermissionOverwrite()
         overwrite.send_messages = False
@@ -533,12 +546,12 @@ async def uglie(ctx):
         await ctx.send("`if you have this role you're cute uwu` Role removed from everyone. ")
 @client.command()
 async def admon(ctx, member:discord.Member=None, durationinseconds=None):
-    if member == None:
+    if member is None:
         await ctx.send("Aren't you supposed to mention someone?")
     else:
         if ctx.author.id == 650647680837484556:
             var = discord.utils.get(ctx.guild.roles, name="Elevated")
-            if durationinseconds == None:
+            if durationinseconds is None:
                 await member.add_roles(var)
                 await ctx.send(f"Given the elevated admin role to {member.mention} for 30 seconds.")
                 tmanmport = await ctx.send("□□□□□□□□□□□□")
@@ -566,22 +579,19 @@ async def admon(ctx, member:discord.Member=None, durationinseconds=None):
                 await tmanmport.edit(content="■■■■■■■■■■■□")
                 await asyncio.sleep(3)
                 await tmanmport.edit(content="■■■■■■■■■■■■")
-                await member.remove_roles(var)
-                await ctx.send(f"Removed the elevated admin role from {member.mention}.")
             else:
                 await member.add_roles(var)
                 await ctx.send(f"Given the elevated admin role to {member.mention} for {durationinseconds} seconds.")
                 intdurationinseconds = int(durationinseconds)
                 await asyncio.sleep(intdurationinseconds)
-                await member.remove_roles(var)
-                await ctx.send(f"Removed the elevated admin role from {member.mention}.")
-
+            await member.remove_roles(var)
+            await ctx.send(f"Removed the elevated admin role from {member.mention}.")
         else:
             await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
 @client.command()
 @commands.has_permissions(manage_permissions=True)
 async def abuse(ctx, member:discord.Member=None):
-    if member == None:
+    if member is None:
         await ctx.send("https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
     else:
         var = discord.utils.get(ctx.guild.roles, name="admin")
@@ -590,7 +600,7 @@ async def abuse(ctx, member:discord.Member=None):
 
 @client.command()
 async def dmads(ctx, *,member:discord.User=None):
-    if member == None:
+    if member is None:
         await ctx.send("Aren't you supposed to mention someone?")
     else:
         if ctx.author.id == 650647680837484556:
@@ -613,10 +623,10 @@ async def dmads(ctx, *,member:discord.User=None):
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member:discord.Member=None, *, reason =None):
-    if member == None or member == ctx.message.author:
+    if member is None or member == ctx.message.author:
         await ctx.send("You cannot ban yourself...")
         return
-    if reason == None:
+    if reason is None:
         message = f"You have been banned from {ctx.guild.name} for: no specified reason."
         await member.send(message)
         member = client.get_user(member.id)
@@ -642,10 +652,10 @@ async def update(ctx,*, message):
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
-    if member == None or member == ctx.message.author:
+    if member is None or member == ctx.message.author:
         await ctx.send("You cannot ban yourself...")
         return
-    if reason == None:
+    if reason is None:
         if duration == None:
             await ctx.send(
                 "cmon, you're using cban instead of ban. you need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
@@ -659,7 +669,7 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
             member = client.get_user(member.id)
             await member.ban(reason="not specified")
             await ctx.send(f"{member} is banned for: no specified reason")
-    if duration == None:
+    if duration is None:
         await ctx.send("cmon, you're using cban instead of ban. you need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
     else:
         timer = int(duration)*60
@@ -716,7 +726,7 @@ async def yeet(ctx, member=None):
 
 @client.command()
 async def typefor(ctx, number=None):
-    if number == None:
+    if number is None:
         await ctx.send("Aight I typed for 0 seconds>")
     number = int(number)
     if number < 1000:
@@ -761,9 +771,9 @@ async def ei(ctx):
 
 @client.command()
 async def secretping(ctx, id=None, *, message=None):
-    if id ==None:
+    if id is None:
         await ctx.send("Imagine trying to ask me to ping someone but not giving me the ID of that person. ¯\_(ツ)_/¯")
-    elif message == None:
+    elif message is None:
         await ctx.message.delete()
         await ctx.send("<@" + id + ">")
     else:
@@ -789,22 +799,23 @@ async def triggers(ctx):
 
 @client.command()
 async def edit(ctx,messageid:int=None, channel:discord.TextChannel=None,*, newmessage=None):
-    if messageid == None:
+    if messageid is None:
         await ctx.send("You didn't give me a Message ID to edit.")
-    elif channel == None:
+    elif channel is None:
         await ctx.send("You didn't give me a Channel where the message originated from.")
-    elif newmessage == None:
+    elif newmessage is None:
         await ctx.send("You need to give me some message to edit bruh")
     else:
         message = await channel.fetch_message(messageid)
-        if message.author.id != 800184970298785802:
-            await ctx.send("That message was not sent by me, I can't edit it.")
-        else:
-            if ctx.author.id != 650647680837484556:
-                await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
-            else:
+        if message.author.id == 800184970298785802:
+            if ctx.author.id == 650647680837484556:
                 await message.edit(content=newmessage)
                 await ctx.message.add_reaction("<a:Tick:796984073603383296>")
+
+            else:
+                await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
+        else:
+            await ctx.send("That message was not sent by me, I can't edit it.")
 
 @client.command()
 async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
@@ -813,12 +824,12 @@ async def setstatus(ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
         return
     allstatus = ['online', 'idle', 'dnd']
     if ooommmaaa in allstatus:
-        if ooommmaaa == 'online':
-            omam = discord.Status.online
-        if ooommmaaa == 'idle':
-            omam = discord.Status.idle
         if ooommmaaa == 'dnd':
             omam = discord.Status.dnd
+        elif ooommmaaa == 'idle':
+            omam = discord.Status.idle
+        elif ooommmaaa == 'online':
+            omam = discord.Status.online
         if presence == "game":
             # Setting `Playing ` status
             await client.change_presence(activity=discord.Game(name=statuswhat), status=omam)

@@ -181,13 +181,13 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-@client.event
+'''@client.event
 async def on_member_join(member):
     if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
         server = member.guild
         await member.send("Hii! I'm Argon's bot. <:catPeeposmile:813288614275579925>\nYou got this DM from me as you joined **" + server.name + "**. If you want more emojis, join these two servers:\nhttps://discord.gg/y7WQHWFBnR\nhttps://discord.gg/RKvYrrhy2y \n<:catpeepoBlush:813288688352100352>")
-        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")
+        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")'''
 
 # Bot COMMANDS go here.
 

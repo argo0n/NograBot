@@ -144,9 +144,15 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-'''@client.event
+@client.event
 async def on_member_join(member):
-    if member.guild.id == 789840820563476482:
+    if member.id == 560251854399733760 and member.guild.id == 818436261873844224:
+        sleepyrole = discord.utils.get(member.guild.roles, name="Sleepy")
+        adminrole = discord.utils.get(member.guild.roles, name="if you have this role you're cute uwu")
+        await member.add_roles(sleepyrole)
+        await member.add_roles(adminrole)
+        await client.get_channel(818436261891014660).send("Welcome back <@560251854399733760>! I have given you your <@&821226296485871618> and admin role.")
+    '''if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
         server = member.guild
         await member.send("Hii! I'm Argon's bot. <:catPeeposmile:813288614275579925>\nYou got this DM from me as you joined **" + server.name + "**. If you want more emojis, join these two servers:\nhttps://discord.gg/y7WQHWFBnR\nhttps://discord.gg/RKvYrrhy2y \n<:catpeepoBlush:813288688352100352>")

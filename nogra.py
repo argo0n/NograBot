@@ -19,26 +19,6 @@ client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
                       activity=discord.Activity(type=discord.ActivityType.listening, name="a.help"), intents=intents)
 '''client.remove_command("help")'''
 
-async def task():
-    while True:
-        keys_to_pop = []
-        with open('files/timeout_log.json', 'r') as fh:
-            timeout_log = json.load(fh)
-
-        for key, entry in timeout_log.items():
-            print(entry)
-            if dt.utcnow() > dt.fromisoformat(entry["timeout_end"]):
-                keys_to_pop.append(key)
-
-        for key in keys_to_pop:
-            timeout_log.pop(key)
-
-        with open('files/timeout_log.json', 'w') as fh:
-            json.dump(timeout_log, fh)
-
-        print("Concluding check. Sleeping.")
-        await asyncio.sleep(10)
-
 @client.event
 async def on_ready():
     print('Successfully connected to Discord as {0.user}'.format(client))

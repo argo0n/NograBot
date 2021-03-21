@@ -156,7 +156,7 @@ for filename in os.listdir('./cogs'):
 async def say(ctx, *, arg=None):
     if ctx.author.id == 560251854399733760:
         return
-    elif arg == None:
+    elif arg is None:
         await ctx.send("Give me something to say <:ff_hmph:818436762333610014>")
     else:
         await ctx.send(arg)
@@ -348,7 +348,7 @@ async def cutie(ctx):
         await ctx.send("you can only call others a cutie if you are argon <a:nograkekgiggle:821318605274218516>")
     else:
         var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911]
+        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 560251854399733760]
         for m in memberid:
             m = ctx.guild.get_member(m)
             await m.add_roles(var)
@@ -362,7 +362,7 @@ async def uglie(ctx):
         await ctx.send("you can only call others ugly if you are argon <a:nograkekgiggle:821318605274218516>")
     else:
         var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911]
+        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 560251854399733760]
         for m in memberid:
             m = ctx.guild.get_member(m)
             await m.remove_roles(var)

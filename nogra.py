@@ -324,24 +324,6 @@ async def cchan(ctx, *, channel_name=None):
         await guild.create_text_channel(channel_name)
         await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
 
-'''@client.command()
-async def timeout(ctx, user: discord.Member, hms):
-    with open('files/timeout_log.json', 'r') as fh:
-        timeout_log = json.load(fh)
-    hms_array = hms.lower().replace("h", ",").replace("m", ",").replace("s", ",").strip(",").split(",")
-    timeout_end = dt.utcnow() + datetime.timedelta(hours=int(hms_array[0]), minutes=int(hms_array[1]),
-                                                   seconds=int(hms_array[2]))
-    try:
-        user_entry = timeout_log[user.id]
-        user_entry["timeout_end"] = timeout_end.isoformat()
-    except KeyError:
-        timeout_log[user.id] = {"timeout_end": timeout_end.isoformat()}
-
-    with open('files/timeout_log.json', 'w') as fh:
-        json.dump(timeout_log, fh)
-
-    await ctx.send(f'Successfully timed {user.mention} until {timeout_end}!')
-'''
 @client.command()
 @commands.has_permissions(manage_permissions=True)
 async def stopabusing(ctx, member:discord.Member=None):

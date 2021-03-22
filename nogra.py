@@ -551,11 +551,6 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: " + reason)
 
-@client.command(name='eval')
-async def eval(ctx, *, arg):
-    result = eval(arg)
-    await ctx.send(result)
-
 @client.command(aliases=['ur','reverse'])
 async def unoreverse(ctx):
     '''unogif = ['https://giphy.com/gifs/mattel-uno-reverse-card-unogame-MQwnNsDJ1MJZ0E0w1u',

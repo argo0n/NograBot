@@ -816,7 +816,7 @@ async def abuse_error(ctx,error):
 
 '''with open("token.0", "r", encoding="utf-8") as f:
     bottoken = f.read()'''
-#client.run(os.environ['DISCORD_TOKEN'])
-client.run("NjY2MTUyNjAzMzM5NzE4NjY3.XhwA9Q.Gm8kLIVZtG-NJhef6B1xeRpISSc")
+client.run(os.environ['DISCORD_TOKEN'])
+# betargon's ID was reset btw
 
 

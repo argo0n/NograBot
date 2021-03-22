@@ -553,7 +553,8 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
 
 @client.command(name='eval')
 async def eval(ctx, *, arg):
-    await ctx.send("How tf do I make an eval command")
+    result = eval(arg)
+    await ctx.send(arg)
 
 @client.command(aliases=['ur','reverse'])
 async def unoreverse(ctx):
@@ -759,6 +760,10 @@ async def say_error(ctx,error):
 
 @bon.error
 async def bon_error(ctx,error):
+    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+@eval.error
+async def eval_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 

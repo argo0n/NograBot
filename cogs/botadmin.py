@@ -1,14 +1,14 @@
 import discord
 from discord.ext import commands
 
-class Admin(commands.cog):
+class Admin(commands.Cog):
 
     def __init__(self, client):
         self.client = client
 
-    @commands.Cog.listener()
+    '''@commands.Cog.listener()
     async def on_ready(self):
-        print('Cog Admin loaded')
+        print('Cog Admin loaded')'''
 
     @commands.command(pass_context=True)
     #@commands.is_owner()

@@ -816,9 +816,7 @@ async def abuse_error(ctx,error):
     else:
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-@edit.error
-async def edit_error(ctx, error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 
 '''with open("token.0", "r", encoding="utf-8") as f:
     bottoken = f.read()'''

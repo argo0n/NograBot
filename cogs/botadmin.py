@@ -26,6 +26,15 @@ class Admin(commands.Cog):
         self._last_result = None
         self.sessions = set()
 
+    def cleanup_code(self, content):
+        """Automatically removes code blocks from the code."""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+    async def cog_check(self, ctx):
+        return await self.client.is_owner(ctx.author)
+
     '''@commands.Cog.listener()
     async def on_ready(self):
         print('Cog Admin loaded')'''

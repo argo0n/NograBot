@@ -145,6 +145,7 @@ async def on_member_join(member):
 async def load(ctx,extension):
     client.load_extension(f'cogs.{extension}')
 
+@client.command()
 async def unload(ctx,extension):
     client.unload_extension(f'cogs.{extension}')
 
@@ -815,4 +816,7 @@ async def abuse_error(ctx,error):
 
 '''with open("token.0", "r", encoding="utf-8") as f:
     bottoken = f.read()'''
-client.run(os.environ['DISCORD_TOKEN'])
+#client.run(os.environ['DISCORD_TOKEN'])
+client.run("NjY2MTUyNjAzMzM5NzE4NjY3.XhwA9Q.Gm8kLIVZtG-NJhef6B1xeRpISSc")
+
+

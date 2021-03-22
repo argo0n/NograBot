@@ -156,7 +156,7 @@ for filename in os.listdir('./cogs'):
 async def say(ctx, *, arg=None):
     if ctx.author.id == 560251854399733760:
         return
-    elif arg == None:
+    elif arg is None:
         await ctx.send("Give me something to say <:ff_hmph:818436762333610014>")
     else:
         await ctx.send(arg)

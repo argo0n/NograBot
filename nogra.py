@@ -757,11 +757,6 @@ async def say_error(ctx,error):
 async def bon_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-@eval.error
-async def eval_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-
 @unoreverse.error
 async def unoreverse_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")

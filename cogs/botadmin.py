@@ -40,7 +40,7 @@ class Admin(commands.Cog):
         """Evaluates a code"""
 
         env = {
-            'bot': self.bot,
+            'bot': self.client,
             'ctx': ctx,
             'channel': ctx.channel,
             'author': ctx.author,
@@ -84,6 +84,10 @@ class Admin(commands.Cog):
 
     @edit.error
     async def edit_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @_eval.error
+    async def _eval_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 def setup(client):

@@ -31,5 +31,9 @@ class Admin(commands.Cog):
             else:
                 await ctx.send("That message was not sent by me, I can't edit it.")
 
+    @edit.error
+    async def edit_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 def setup(client):
     client.add_cog(Admin(client))

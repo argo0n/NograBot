@@ -1,5 +1,7 @@
 from discord.ext import commands
-import discord, datetime, time
+import discord
+from datetime import datetime, time, date, timezone
+import math
 
 start_time = time.time()
 class Moderation(commands.Cog):
@@ -76,7 +78,7 @@ class Moderation(commands.Cog):
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
         embed.add_field(name="Uptime", value=text)
-        embed.set_footer(text="Nogra")
+        embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:
             await ctx.send(embed=embed)
         except discord.HTTPException:
@@ -85,6 +87,14 @@ class Moderation(commands.Cog):
     '''@clear.error
     async def cog_command_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''
+
+    @uptime.error
+    async def uptime_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @clear.error
+    async def clear_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 
 def setup(client):

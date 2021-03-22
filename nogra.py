@@ -554,7 +554,7 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
 @client.command(name='eval')
 async def eval(ctx, *, arg):
     result = eval(arg)
-    await ctx.send(arg)
+    await ctx.send(result)
 
 @client.command(aliases=['ur','reverse'])
 async def unoreverse(ctx):

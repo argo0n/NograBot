@@ -1,14 +1,30 @@
-import discord
 from discord.ext import commands
-from contextlib import redirect_stdout
+import asyncio
 import traceback
+import discord
+import inspect
 import textwrap
+import importlib
+from contextlib import redirect_stdout
 import io
+import os
+import re
+import sys
+import copy
+import time
+import subprocess
+from typing import Union, Optional
+
+# to expose to the eval command
+import datetime
+from collections import Counter
 
 class Admin(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self._last_result = None
+        self.sessions = set()
 
     '''@commands.Cog.listener()
     async def on_ready(self):

@@ -1,5 +1,8 @@
 from discord.ext import commands
 import discord
+import datetime
+from datetime import datetime as dt
+from datetime import date
 from datetime import datetime
 import time
 import math
@@ -78,6 +81,8 @@ class Moderation(commands.Cog):
         difference = int(round(current_time - start_time))
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
+        embed.add_field(name="Time since last reboot", value="1970-01-01 00:00:00", inline=True)
+        embed.add_field(name="Time now", value="1970-01-01 00:00:00", inline=True)
         embed.add_field(name="Uptime", value=text)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:

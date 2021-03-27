@@ -75,9 +75,9 @@ class Moderation(commands.Cog):
         difference = int(round(current_time - start_time))
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
-        embed.add_field(name="Time since last reboot", value="1970-01-01 00:00:00", inline=True)
-        embed.add_field(name="Time now", value="1970-01-01 00:00:00", inline=True)
-        embed.add_field(name="Uptime", value=text)
+        embed.add_field(name="Time of last reboot", value=start_time, inline=True)
+        embed.add_field(name="Time now", value=current_time, inline=True)
+        embed.add_field(name="Uptime", value=text, inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:
             await ctx.send(embed=embed)

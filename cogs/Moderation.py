@@ -1,10 +1,8 @@
 from discord.ext import commands
-import discord
-import datetime
+import discord, datetime, time
 from datetime import datetime as dt
 from datetime import date
-from datetime import datetime
-import time
+from datetime import datetime, timedelta
 import math
 
 start_time = time.time()

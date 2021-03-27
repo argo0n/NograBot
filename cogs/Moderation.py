@@ -9,8 +9,7 @@ def nodecimaltime(x):
 def timetosgtime(x):
     timezone = pytz.timezone('Asia/Singapore')
     without_timezone = x
-    with_timezone = timezone.localize(without_timezone)
-    return with_timezone
+    return timezone.localize(without_timezone)
 
 start_time = time.time()
 boottimedate = nodecimaltime(str(datetime.datetime.now()))

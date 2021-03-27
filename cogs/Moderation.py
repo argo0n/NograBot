@@ -1,9 +1,16 @@
 from discord.ext import commands
 import discord, datetime, time
+import pytz
 
 
 def nodecimaltime(x):
     return x[0:19]
+
+def timetosgtime(x):
+    timezone = pytz.timezone('Asia/Singapore')
+    without_timezone = x
+    with_timezone = timezone.localize(without_timezone)
+    return with_timezone
 
 start_time = time.time()
 boottimedate = nodecimaltime(str(datetime.datetime.now()))
@@ -82,7 +89,7 @@ class Moderation(commands.Cog):
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
         embed.add_field(name="Time of last reboot", value=boottimedate, inline=True)
-        embed.add_field(name="Time now", value=nodecimaltime(str(datetime.datetime.now())), inline=True)
+        embed.add_field(name="Time now", value=nodecimaltime(str(timetosgtime((datetime.datetime.now())))), inline=True)
         embed.add_field(name="Uptime", value=text, inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:

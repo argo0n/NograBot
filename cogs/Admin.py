@@ -117,8 +117,6 @@ class Admin(commands.Cog):
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):
         return "\n".join(content.split("\n")[1:][:-3])
-    else:
-        pass
     '''@_eval.error
     async def _eval_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''

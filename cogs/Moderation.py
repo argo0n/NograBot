@@ -1,7 +1,13 @@
 from discord.ext import commands
 import discord, datetime, time
 
+
+def nodecimaltime(x):
+    return x[0:19]
+
 start_time = time.time()
+boottimedate = nodecimaltime(str(datetime.datetime.now()))
+
 class Moderation(commands.Cog):
 
     def __init__(self, client):
@@ -75,8 +81,8 @@ class Moderation(commands.Cog):
         difference = int(round(current_time - start_time))
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
-        embed.add_field(name="Time of last reboot", value=start_time, inline=True)
-        embed.add_field(name="Time now", value=current_time, inline=True)
+        embed.add_field(name="Time of last reboot", value=boottimedate, inline=True)
+        embed.add_field(name="Time now", value=nodecimaltime(str(datetime.datetime.now())), inline=True)
         embed.add_field(name="Uptime", value=text, inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:

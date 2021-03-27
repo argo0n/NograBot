@@ -15,8 +15,13 @@ intents = discord.Intents(messages=True, guilds=True)
 intents.reactions = True
 intents.members = True
 
+statuses = ["a.help is a good start", "almond stanky", "before asking use the help command", "Spotify", "No.", "your pestering", "another reboot?"]
+
+newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
-                      activity=discord.Activity(type=discord.ActivityType.listening, name="a.help"), intents=intents)
+                                  activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
+                                  intents=intents)
+
 '''client.remove_command("help")'''
 
 @client.event
@@ -142,11 +147,11 @@ async def on_member_join(member):
 
 # clear (purge command)
 @client.command()
-async def load(ctx,extension):
+async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
 
 @client.command()
-async def unload(ctx,extension):
+async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
 
 for filename in os.listdir('./cogs'):

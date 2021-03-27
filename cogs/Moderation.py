@@ -1,9 +1,5 @@
 from discord.ext import commands
-import discord
-from datetime import datetime as dt
-from datetime import date
-from datetime import datetime, time, timedelta
-import math
+import discord, datetime, time
 
 start_time = time.time()
 class Moderation(commands.Cog):

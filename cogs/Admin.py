@@ -43,9 +43,9 @@ class Admin(commands.Cog):
     async def cog_check(self, ctx):
         return await self.client.is_owner(ctx.author)
 
-    '''@commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_ready(self):
-        print('Cog Admin loaded')'''
+        print('Cog \"Admin\" loaded')
 
     @commands.command(pass_context=True)
     @commands.is_owner()
@@ -84,7 +84,7 @@ class Admin(commands.Cog):
             "message": ctx.message
         }
 
-        stdout = io.StringID()
+        stdout = io.StringIO()
 
         try:
             with contextlib.redirect_stdout(stdout):

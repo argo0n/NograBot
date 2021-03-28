@@ -101,6 +101,16 @@ class Moderation(commands.Cog):
     @commands.command()
     async def invite(self, ctx):
         embed = discord.Embed(colour=0x00FF00)
+        embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
+        embed.add_field(name="Recommended Invite Link",
+                        value="[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id=800184970298785802&permissions=1544416503&scope=bot)")
+        embed.add_field(name="Admin Invite Link",
+                        value="[Nogra with Admin Invite Permissoin](https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot)")
+        embed.set_thumbnail(url=str(self.client.user.avatar_url))
+        try:
+            await ctx.send(embed=embed)
+        except discord.HTTPException:
+            await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):

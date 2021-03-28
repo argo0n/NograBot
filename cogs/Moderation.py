@@ -86,7 +86,7 @@ class Moderation(commands.Cog):
         current_time = time.time()
         current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
-        text = datetime.datetime(seconds=difference)
+        text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
         embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)

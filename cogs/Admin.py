@@ -71,7 +71,6 @@ class Admin(commands.Cog):
     @commands.command(name="eval", aliases=["exec"])
     @commands.is_owner()
     async def _eval(self,ctx,*,code):
-        code = clean_code(code)
 
         local_variables = {
             "discord": discord,

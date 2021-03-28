@@ -1,19 +1,18 @@
 from discord.ext import commands
 import discord, datetime, time
 import pytz
+from pytz import timezone
 
 
-def nodecimaltime(x):
-    return x[0:19]
-
+timeformat = "%Y-%m-%d %H:%M:%S"
+durationformat = "%-dd %-Hh %-Mm %-Ss"
 def timetosgtime(x):
-    timezone = pytz.timezone('Asia/Singapore')
-    without_timezone = x
-    with_timezone = timezone.localize(without_timezone)
-    return with_timezone
+    utctime = x
+    sgttime = utctime.astimezone(timezone("Asia/Singapore"))
+    return sgttime.strftime(timeformat)
 
 start_time = time.time()
-boottimedate = nodecimaltime(str(datetime.datetime.now()))
+utcbootime = datetime.datetime.now(timezone("UTC"))
 
 class Moderation(commands.Cog):
 
@@ -85,11 +84,12 @@ class Moderation(commands.Cog):
     @commands.command(pass_context=True)
     async def uptime(self, ctx):
         current_time = time.time()
+        current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
-        embed.add_field(name="Time of last reboot", value=boottimedate, inline=True)
-        embed.add_field(name="Time now", value=nodecimaltime(str(timetosgtime((datetime.datetime.now())))), inline=True)
+        embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
+        embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
         embed.add_field(name="Uptime", value=text, inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:

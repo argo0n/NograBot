@@ -113,6 +113,51 @@ class Admin(commands.Cog):
     async def edit_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
+    @commands.command()
+    async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
+        if ctx.author.id != 650647680837484556:
+            await ctx.send("You can only change the status of the bot if you are Argon!")
+            return
+        allstatus = ['online', 'idle', 'dnd']
+        if ooommmaaa in allstatus:
+            if ooommmaaa == 'dnd':
+                omam = discord.Status.dnd
+            elif ooommmaaa == 'idle':
+                omam = discord.Status.idle
+            elif ooommmaaa == 'online':
+                omam = discord.Status.online
+            if presence == "game":
+                # Setting `Playing ` status
+                await self.client.change_presence(activity=discord.Game(name=statuswhat), status=omam)
+                await ctx.send(
+                    "I have set my status to **playing " + statuswhat + "** while being " + ooommmaaa)
+            elif presence == "stream":
+                # Setting `Streaming ` status
+                await ctx.send("Argon use this command when you have a twitch stream url ready")
+                # await bot.change_presence(activity=discord.Streaming(name="My Stream", url=my_twitch_url))
+            elif presence == "listen":
+                # Setting `Listening ` status
+                await self.client.change_presence(
+                    activity=discord.Activity(type=discord.ActivityType.listening, name=statuswhat),
+                    status=omam)
+                await ctx.send(
+                    "I have set my status to **listening to " + statuswhat + "** while being " + ooommmaaa)
+            elif presence == "watch":
+                # Setting `Watching ` status
+                await self.client.change_presence(
+                    activity=discord.Activity(type=discord.ActivityType.watching, name=statuswhat),
+                    status=omam)
+                await ctx.send(
+                    "I have set my status to **watching " + statuswhat + "** while being " + ooommmaaa)
+            else:
+                await ctx.send("you can only use `game`, `stream`, `listen`, and `watch` stupid.")
+        else:
+            await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
+
+    @setstatus.error
+    async def setstatus_error(ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):
         return "\n".join(content.split("\n")[1:][:-3])

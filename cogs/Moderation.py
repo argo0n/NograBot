@@ -21,7 +21,7 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('This message should appear succesfully.')
+        print("Cog \"Moderation\" loaded")
 
     @commands.Cog.listener()
     async def on_message(self, message):

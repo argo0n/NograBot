@@ -66,6 +66,7 @@ async def on_message(message):
         embedVar.add_field(name="📲 setstatus `[sta]` `[pre]` `[prectx]`", value="Changes the bot's status.\nNeeds: `Bot Owner`", inline=True)
         embedVar.add_field(name="__All Dank Memer cooldown helpers have been removed.__", value="\u200b", inline=False)
         embedVar.set_footer(text="Do ar.help <command> to know how to use a command!")
+
         await message.channel.send(embed=embedVar)
 
 
@@ -137,11 +138,12 @@ async def on_member_join(member):
         await member.add_roles(sleepyrole)
         await member.add_roles(adminrole)
         await client.get_channel(818436261891014660).send("Welcome back <@560251854399733760>! I have given you your <@&821226296485871618> and admin role.")
-    '''if member.guild.id == 789840820563476482:
+    elif member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
         server = member.guild
-        await member.send("Hii! I'm Argon's bot. <:catPeeposmile:813288614275579925>\nYou got this DM from me as you joined **" + server.name + "**. If you want more emojis, join these two servers:\nhttps://discord.gg/y7WQHWFBnR\nhttps://discord.gg/RKvYrrhy2y \n<:catpeepoBlush:813288688352100352>")
-        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")'''
+        await member.send("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        await client.get_channel(789840820563476485).send(f"{member.mention} AAAAAA")
+        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")
 
 # Bot COMMANDS go here.
 

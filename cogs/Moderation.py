@@ -51,7 +51,7 @@ class Moderation(commands.Cog):
                 f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
                 delete_after=3.0)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, name="clear", brief="Purges messages", description="purges messages")
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, number=None):
         if number is None:
@@ -81,7 +81,7 @@ class Moderation(commands.Cog):
             clearembed.set_footer(text="ID: " + str(ctx.author.id) + " • " + str(timestamp))
             await channel.send(embed=clearembed)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, name="uptime", brief="Uptime go brr", description="Shows you Nogra's uptime.")
     async def uptime(self, ctx):
         current_time = time.time()
         current_datetime = datetime.datetime.now(timezone("UTC"))
@@ -98,7 +98,7 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             await ctx.send("Current uptime: " + text)
 
-    @commands.command()
+    @commands.command(name="invite", brief="Invite the bot", description="Gives you invite links for Nogra")
     async def invite(self, ctx):
         embed = discord.Embed(colour=0x00FF00)
         embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))

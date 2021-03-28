@@ -88,7 +88,7 @@ class Moderation(commands.Cog):
         difference = int(round(current_time - start_time))
         text = datetime.datetime(seconds=difference)
         embed = discord.Embed(colour=0xc8dc6c)
-        embed.set_author(name=f"{str(self.client.name)}'s Uptime", icon_url=str(self.client.avatar_url))
+        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
         embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
         embed.add_field(name="Uptime", value=text, inline=False)
@@ -97,6 +97,10 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
         except discord.HTTPException:
             await ctx.send("Current uptime: " + text)
+
+    @commands.command()
+    async def invite(self, ctx):
+        embed = discord.Embed(colour=0x00FF00)
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):

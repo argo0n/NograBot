@@ -21,7 +21,7 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('This message should appear succesfully.')
+        print("Cog \"Moderation\" loaded")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -87,12 +87,11 @@ class Moderation(commands.Cog):
         current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
         text = datetime.datetime(seconds=difference)
-        newformat = text.strftime(durationformat)
         embed = discord.Embed(colour=0xc8dc6c)
         embed.set_author(name=f"{str(self.client.name)}'s Uptime", icon_url=str(self.client.avatar_url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
         embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
-        embed.add_field(name="Uptime", value=newformat, inline=False)
+        embed.add_field(name="Uptime", value=text, inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:
             await ctx.send(embed=embed)

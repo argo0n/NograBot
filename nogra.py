@@ -371,18 +371,18 @@ async def allow(ctx):
         ctx.send("imagine not being frenzy or argon lol")
 
 @client.command()
-async def nosendmessages(ctx):
+async def nosee(ctx):
     if ctx.author.id in [650647680837484556]:
         for c in ctx.guild.channels:
-            await c.set_permissions(ctx.guild.default_role, send_messages=False)
+            await c.set_permissions(ctx.guild.default_role, view_channel=False)
     else:
         ctx.send("imagine not being argon lol")
 
 @client.command()
-async def yessendmessages(ctx):
+async def yessee(ctx):
     if ctx.author.id in [650647680837484556]:
         for c in ctx.guild.channels:
-            await c.set_permissions(ctx.guild.default_role, send_messages=True)
+            await c.set_permissions(ctx.guild.default_role, view_channel=True)
     else:
         ctx.send("imagine not being argon lol")
 

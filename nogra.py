@@ -371,15 +371,36 @@ async def allow(ctx):
         ctx.send("imagine not being frenzy or argon lol")
 
 @client.command()
-async def aprilfools(ctx):
+async def nosendmessages(ctx):
     if ctx.author.id in [650647680837484556]:
         for c in ctx.guild.channels:
-            overwrite = discord.PermissionOverwrite()
-            overwrite.read_message_history = False
-            overwrite.read_message_history = False
-            await c.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+            await c.set_permissions(ctx.guild.default_role, send_messages=False)
     else:
-        ctx.send("imagine not being frenzy or argon lol")
+        ctx.send("imagine not being argon lol")
+
+@client.command()
+async def yessendmessages(ctx):
+    if ctx.author.id in [650647680837484556]:
+        for c in ctx.guild.channels:
+            await c.set_permissions(ctx.guild.default_role, send_messages=True)
+    else:
+        ctx.send("imagine not being argon lol")
+
+@client.command()
+async def noread(ctx):
+    if ctx.author.id in [650647680837484556]:
+        for c in ctx.guild.channels:
+            await c.set_permissions(ctx.guild.default_role, read_message_history=False)
+    else:
+        ctx.send("imagine not being argon lol")
+
+@client.command()
+async def yesread(ctx):
+    if ctx.author.id in [650647680837484556]:
+        for c in ctx.guild.channels:
+            await c.set_permissions(ctx.guild.default_role, read_message_history=True)
+    else:
+        ctx.send("imagine not being argon lol")
 
 @client.command()
 async def kicc(ctx):

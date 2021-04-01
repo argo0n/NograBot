@@ -371,6 +371,18 @@ async def allow(ctx):
         ctx.send("imagine not being frenzy or argon lol")
 
 @client.command()
+async def aprilfools(ctx):
+    if ctx.author.id in [650647680837484556]:
+        for c in ctx.guild.channels:
+            overwrite = discord.PermissionOverwrite()
+            overwrite.read_message_history = False
+            overwrite.read_message_history = False
+            await c.send("Changed message perms here")
+            await c.set_permissions(ctx.guild.default_role, overwrite=overwrite)
+    else:
+        ctx.send("imagine not being frenzy or argon lol")
+
+@client.command()
 async def kicc(ctx):
     if ctx.author.id in [560251854399733760, 650647680837484556]:
         channel = client.get_channel(821033788262842438)

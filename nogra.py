@@ -377,7 +377,6 @@ async def aprilfools(ctx):
             overwrite = discord.PermissionOverwrite()
             overwrite.read_message_history = False
             overwrite.read_message_history = False
-            await c.send("Changed message perms here")
             await c.set_permissions(ctx.guild.default_role, overwrite=overwrite)
     else:
         ctx.send("imagine not being frenzy or argon lol")

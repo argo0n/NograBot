@@ -24,7 +24,7 @@ class Fun(commands.Cog):
         if message.author.id == 800184970298785802:
             return
 
-    @commands.command()
+    @commands.command(name="says", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
     async def say(self, ctx, *, arg=None):
         if ctx.author.id == 560251854399733760:
             return
@@ -39,7 +39,7 @@ class Fun(commands.Cog):
     async def say_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(name="pogpong", brief="real ping !! 1 ms!!", description="Creates a fake ping duration.")
     async def pogpong(self, ctx, pong):
         await ctx.send(f'Pong! {pong}ms  🏓')
 
@@ -47,7 +47,7 @@ class Fun(commands.Cog):
     async def pogpong_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(name="bon", brief="Fake ban", description="Makes a fake ban message")
     async def bon(self, ctx, member: discord.Member = None, *, reason=None):
         duration = ["30 years, 7 months, and 10 days", "11 years, 3 months, and 9 days", "4 years, 1 month, and 5 days",
                     "8 months and 3 days", "6 months and 1 day", "3 months and 27 days",
@@ -64,7 +64,7 @@ class Fun(commands.Cog):
     async def bon_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
         '''def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
@@ -89,7 +89,7 @@ class Fun(commands.Cog):
     async def blacklist_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(name="typefor", brief="types", description="Types for however you want, but must be below 1000 seconds")
     async def typefor(self, ctx, number=None):
         if number is None:
             await ctx.send("Aight I typed for 0 seconds>")
@@ -112,17 +112,17 @@ class Fun(commands.Cog):
     async def typefor_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
-    async def secretping(self, ctx, id=None, *, message=None):
+    @commands.command(name="secretping", brief="Pings user secretly", description="Have Nogra help you ping someone, you just need that person's ID.")
+    async def secretping(self, ctx, userid=None, *, message=None):
         if id is None:
             await ctx.send(
                 "Imagine trying to ask me to ping someone but not giving me the ID of that person. ¯\_(ツ)_/¯")
         elif message is None:
             await ctx.message.delete()
-            await ctx.send("<@" + id + ">")
+            await ctx.send("<@" + userid + ">")
         else:
             await ctx.message.delete()
-            await ctx.send("<@" + id + "> " + message)
+            await ctx.send("<@" + userid + "> " + message)
 
     @secretping.error
     async def secretping_error(self, ctx, error):

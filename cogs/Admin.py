@@ -47,7 +47,7 @@ class Admin(commands.Cog):
     async def on_ready(self):
         print('Cog \"Admin\" loaded')
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, name="edit", brief="Edit Nogra's messages", description="Edit's Nogra's messages")
     @commands.is_owner()
     async def edit(self, ctx,messageid:int=None, channel:discord.TextChannel=None,*, newmessage=None):
         if messageid is None:
@@ -113,7 +113,7 @@ class Admin(commands.Cog):
     async def edit_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
         if ctx.author.id != 650647680837484556:
             await ctx.send("You can only change the status of the bot if you are Argon!")

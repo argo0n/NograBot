@@ -51,7 +51,7 @@ class Moderation(commands.Cog):
                 f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
                 delete_after=3.0)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, name="clear", brief="Purges messages", description="purges messages")
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, number=None):
         if number is None:
@@ -81,13 +81,14 @@ class Moderation(commands.Cog):
             clearembed.set_footer(text="ID: " + str(ctx.author.id) + " • " + str(timestamp))
             await channel.send(embed=clearembed)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, name="uptime", brief="Uptime go brr", description="Shows you Nogra's uptime.")
     async def uptime(self, ctx):
         current_time = time.time()
         current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
         text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
+        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
         embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
         embed.add_field(name="Uptime", value=text, inline=False)
@@ -96,6 +97,20 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
         except discord.HTTPException:
             await ctx.send("Current uptime: " + text)
+
+    @commands.command(name="invite", brief="Invite the bot", description="Gives you invite links for Nogra")
+    async def invite(self, ctx):
+        embed = discord.Embed(colour=0x00FF00)
+        embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
+        embed.add_field(name="Recommended Invite Link",
+                        value="[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id=800184970298785802&permissions=1544416503&scope=bot)")
+        embed.add_field(name="Admin Invite Link",
+                        value="[Nogra with Admin Invite Permissoin](https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot)")
+        embed.set_thumbnail(url=str(self.client.user.avatar_url))
+        try:
+            await ctx.send(embed=embed)
+        except discord.HTTPException:
+            await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):

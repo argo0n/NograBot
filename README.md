@@ -50,6 +50,10 @@ To install Nogra:
   2. `cd` the directory where you want to copy my bot's code to.
   3. `git clone https://github.com/argo0n/NograBot/` to copy my repository to your directory.
   You may want to use a virtual environment like I used to do when Nogra was hosted locally using Anaconda.
+ If you are hosting locally:
+  - Create a .env file in the directory and store your token there.
+ If you are hosting on a VPS such as Heroku:
+ - Enter your token in the variable for the environment in Heroku.
   
  ## Future Plans
  Currently all of Nogra's codes are on one single file, nogra.py. I soon plan to split them into cogs once I get the hang of it. I do not have any intention to make my bot wide spread.

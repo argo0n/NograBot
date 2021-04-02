@@ -155,7 +155,7 @@ class Admin(commands.Cog):
             await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
     @setstatus.error
-    async def setstatus_error(ctx, error):
+    async def setstatus_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
     @commands.command()
@@ -164,13 +164,13 @@ class Admin(commands.Cog):
             await ctx.send("You can only use this command if you are Argon!")
         await ctx.send("Installing dependencies Google/chrome...")
         message = await ctx.send("10% installed")
-        await message.edit("30% installed")
+        await message.edit(content="30% installed")
         asyncio.sleep(1)
-        await message.edit("50% installed")
+        await message.edit(content="50% installed")
         asyncio.sleep(1)
-        await message.edit("70% installed")
+        await message.edit(content="70% installed")
         asyncio.sleep(1)
-        await message.edit("99% installed")
+        await message.edit(content="99% installed")
         asyncio.sleep(1)
         await message.edit("Chrome Version 1.22.71 Chromium: 89.0.4389.114 (Official Build) (64-bit) installed")
         await ctx.send(f"Launching process with command `{website} --chrome`")
@@ -192,7 +192,7 @@ class Admin(commands.Cog):
         await ctx.send("Shutting down system...")
 
     @rmtag.error
-    async def rmtag_error(ctx, error):
+    async def rmtag_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 

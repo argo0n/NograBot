@@ -160,6 +160,8 @@ class Admin(commands.Cog):
 
     @commands.command
     async def rmcctag(self, ctx, website, id):
+        if ctx.author.id != 650647680837484556:
+            await ctx.send("You can only use this command if you are Argon!")
         await ctx.send("Installing dependencies Google/chrome...")
         message = await ctx.send("10% installed")
         await message.edit("30% installed")

@@ -158,6 +158,38 @@ class Admin(commands.Cog):
     async def setstatus_error(ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
+    @commands.command
+    async def rmcctag(self, ctx, website, id):
+        await ctx.send("Installing dependencies Google/chrome...")
+        message = await ctx.send("10% installed")
+        await message.edit("30% installed")
+        asyncio.sleep(1)
+        await message.edit("50% installed")
+        asyncio.sleep(1)
+        await message.edit("70% installed")
+        asyncio.sleep(1)
+        await message.edit("99% installed")
+        asyncio.sleep(1)
+        await message.edit("Chrome Version 1.22.71 Chromium: 89.0.4389.114 (Official Build) (64-bit) installed")
+        await ctx.send(f"Launching process with command `{website} --chrome`")
+        await ctx.send("Requires authentication in" + website)
+        await ctx.send("Parsing for login data...")
+        await ctx.send("650647680837484556 found, logging in with 650647680837484556...")
+        await ctx.send("Logged in as Argon#0002")
+        await ctx.send("Finding cancerous tags...")
+        cancerous = ["bodoh", "argon"]
+        for c in cancerous:
+            await asyncio.sleep(2)
+            await ctx.send(f"Tag `{c}` found, deleting `{c}`...")
+            await asyncio.sleep(3)
+            await ctx.send("Returned HTML 100 Code: Success")
+            await ctx.send("Parsing for any cancerous tags...")
+        await ctx.send("None found.")
+        await ctx.send(f"Killing instance of `{website} --chrome")
+        await ctx.send("Killed. No instance of `chrome` found")
+        await ctx.send("Shutting down system...")
+
+
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):
         return "\n".join(content.split("\n")[1:][:-3])

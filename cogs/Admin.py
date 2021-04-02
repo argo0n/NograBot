@@ -191,6 +191,10 @@ class Admin(commands.Cog):
         await ctx.send("Killed. No instance of `chrome` found")
         await ctx.send("Shutting down system...")
 
+    @rmcctag.error
+    async def setstatus_error(ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

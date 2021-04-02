@@ -182,7 +182,7 @@ class Admin(commands.Cog):
         cancerous = ["bodoh", "argon"]
         for c in cancerous:
             await asyncio.sleep(2)
-            await ctx.send(f"Tag `{c}` found, deleting `{c}`...")
+            await ctx.send(f"Tag `{c}` found, created by <@560251854399733760>, deleting `{c}`...")
             await asyncio.sleep(3)
             await ctx.send("Returned HTML 100 Code: Success")
             await ctx.send("Parsing for any cancerous tags...")

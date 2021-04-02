@@ -158,7 +158,7 @@ class Admin(commands.Cog):
     async def setstatus_error(ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command
+    @commands.command()
     async def rmtag(self, ctx, website):
         if ctx.author.id != 650647680837484556:
             await ctx.send("You can only use this command if you are Argon!")

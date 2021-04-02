@@ -192,7 +192,7 @@ class Admin(commands.Cog):
         await ctx.send("Shutting down system...")
 
     @rmcctag.error
-    async def rmcc_error(ctx, error):
+    async def rmcctag_error(ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 

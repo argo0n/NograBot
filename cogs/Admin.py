@@ -159,7 +159,7 @@ class Admin(commands.Cog):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
     @commands.command
-    async def rmcctag(self, ctx, website, id):
+    async def rmtag(self, ctx, website):
         if ctx.author.id != 650647680837484556:
             await ctx.send("You can only use this command if you are Argon!")
         await ctx.send("Installing dependencies Google/chrome...")
@@ -191,8 +191,8 @@ class Admin(commands.Cog):
         await ctx.send("Killed. No instance of `chrome` found")
         await ctx.send("Shutting down system...")
 
-    @rmcctag.error
-    async def rmcctag_error(ctx, error):
+    @rmtag.error
+    async def rmtag_error(ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 

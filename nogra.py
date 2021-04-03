@@ -40,6 +40,7 @@ async def on_command_error(ctx, error):
 async def on_guild_join(guild):
     print(f"I have joined {guild.name}")
     general = find(lambda x: x.name == 'general',  guild.text_channels)
+    print(f"general chat name: {general.name} | general chat mention: {general.mention}")
     if general and general.permissions_for(guild.me).send_messages:
         joinembed = discord.Embed(title="Thanks for inviting me!",
                                  description="This is a Python bot, expect bugs to occur when using me.",

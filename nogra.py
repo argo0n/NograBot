@@ -39,7 +39,7 @@ async def on_command_error(ctx, error):
 @client.event
 async def on_guild_join(guild):
     print(f"I have joined {guild.name}")
-    general = find(lambda x: x.name == 'general',  guild.text_channels)
+    general = find(lambda x: 'general' in x.name,  guild.text_channels)
     print(f"general chat name: {general.name} | general chat mention: {general.mention}")
     if general and general.permissions_for(guild.me).send_messages:
         joinembed = discord.Embed(title="Thanks for inviting me!",
@@ -48,8 +48,8 @@ async def on_guild_join(guild):
         joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
         joinembed.add_field(name="**__Pre-use Configuration__**", value="\u200b", inline=False)
         joinembed.add_field(name="__Admin role commands__", value=f"{client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.",inline=False)
-        joinembed.add_field(name="__Emoji Utilities", value=f"Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.", inline=True)
-        joinembed.add_field(name=f"__{client.user.name}__'s permissions__", value=f"If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.", inline=True)
+        joinembed.add_field(name="__Emoji Utilities__", value=f"Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.", inline=True)
+        joinembed.add_field(name=f"__{client.user.name}'s permissions__", value=f"If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.", inline=True)
         joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
         try:

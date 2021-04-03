@@ -1,3 +1,4 @@
+from discord.utils import find
 import random
 import asyncio
 import discord
@@ -36,13 +37,33 @@ async def on_command_error(ctx, error):
 # This is for the bot to react to various situations
 
 @client.event
+async def on_guild_join(guild):
+    general = find(lambda x: x.name == 'general',  guild.text_channels)
+    if general and general.permissions_for(guild.me).send_messages:
+        joinembed = discord.Embed(title="Thanks for inviting me!",
+                                 description="This is a Python bot, expect bugs to occur when using me.",
+                                 color=0x00ff00)
+        joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
+        joinembed.add_field(name="**__Pre-use Configuration__**", value="\u200b", inline=False)
+        joinembed.add_field(name="__Admin role commands__", value=f"{client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.",inline=False)
+        joinembed.add_field(name="__Emoji Utilities", value=f"Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.", inline=True)
+        joinembed.add_field(name=f"__{client.user.name}__'s permissions__", value=f"If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.", inline=True)
+        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.")
+        joinembed.set_thumbnail(url=str(client.user.avatar_url))
+        try:
+            await general.send(embed=joinembed)
+        except discord.HTTPException:
+            message = f"Thanks for inviting me!\nThis is a Python bot, expect bugs to occur when using me.\n\n**__Pre-use Configuration__**\n\n__Admin role commands__\n{client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.\n__Emoji Utilities\nGive {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.\n__{client.user.name}'s permissions__\nIf you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.\n\nDo a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.\n\n- Nogra"
+            await general.send(message)
+@client.event
+
 async def on_message(message):
 
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 
     if "<@800184970298785802>" in message.content:
-        embedVar = discord.Embed(title="Nogra's Help Page",
+        embedVar = discord.Embed(title=f"{client.user.name}'s Help Page",
                                  description="Just a pretty bad bot that stalks you lmfao <:kekcamera:814488911261859861>",
                                  color=0x00ff00)
         embedVar.add_field(name="Prefix", value="`a.`", inline=False)
@@ -185,7 +206,7 @@ async def hmmm(ctx):
 
 '''@client.group(invoke_without_command=True)
 async def help(ctx):
-    embedVar = discord.Embed(title="Nogra's Help Page", description="Just a pretty useless bot tbh lmfao", color=0x00ff00)
+    embedVar = discord.Embed(title=f"{client.user.name}'s Help Page", description="Just a pretty useless bot tbh lmfao", color=0x00ff00)
     embedVar.add_field(name="Prefix", value="`a.`", inline=False)
     embedVar.add_field(name="My commands so far", value="\u200b", inline=False)
     embedVar.add_field(name="🏓️ ping", value="Tells you my latency", inline=True)

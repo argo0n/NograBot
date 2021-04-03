@@ -38,6 +38,7 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_guild_join(guild):
+    print(f"I have joined {guild.name}")
     general = find(lambda x: x.name == 'general',  guild.text_channels)
     if general and general.permissions_for(guild.me).send_messages:
         joinembed = discord.Embed(title="Thanks for inviting me!",

@@ -169,9 +169,21 @@ class Moderation(commands.Cog):
         if member is None or member == ctx.message.author:
             await ctx.send("You cannot ban yourself...")
             return
+        if member.top_role >= ctx.author.top_role:
+            await ctx.send(
+                f"You cannot ban {member.name} as your highest role is the same as or lower than your target's highest role.")
+            return
         if reason is None:
-            reason = "no specified reason"
-            message = f"You have been banned from {ctx.guild.name} for: no specified reason."
+            reason = "No specified reason"
+            message = f"You have been banned from {ctx.guild.name} for: {reason}"
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
+            await member.ban(reason=reason)
+            await ctx.send(f"{member} is banned for: {reason}")
+        else:
+            message = f"You have been banned from {ctx.guild.name} for: {reason}"
             try:
                 await member.send(message)
             except discord.errors.Forbidden:
@@ -188,19 +200,30 @@ class Moderation(commands.Cog):
         if duration is None:
             await ctx.send(
                 "You need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
+        if member.top_role >= ctx.author.top_role:
+            await ctx.send(f"You cannot ban {member.name} as your highest role is the same as or lower than your target's highest role.")
+            return
+        timer = int(duration) * 60
+        await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
+        await asyncio.sleep(timer)
+        if reason is None:
+            reason = "no specified reason"
+            message = f"You have been banned from {ctx.guild.name} for: {reason}"
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
+            await member.ban(reason=reason)
+            await ctx.send(f"{member} is banned for: {reason}")
         else:
-            if reason is None:
-                reason = "no specified reason"
-                timer = int(duration) * 60
-                await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
-                await asyncio.sleep(timer)
-                message = f"You have been banned from {ctx.guild.name} for: no specified reason."
-                try:
-                    await member.send(message)
-                except discord.errors.Forbidden:
-                    pass
-                await member.ban(reason=reason)
-                await ctx.send(f"{member} is banned for: {reason}")
+            message = f"You have been banned from {ctx.guild.name} for: {reason}"
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
+            await member.ban(reason=reason)
+            await ctx.send(f"{member} is banned for: {reason}")
+
 
     @ban.error
     async def ban_error(self, ctx, error):

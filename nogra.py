@@ -345,143 +345,6 @@ async def cchan(ctx, *, channel_name=None):
         await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
 
 @client.command()
-@commands.has_permissions(manage_permissions=True)
-async def stopabusing(ctx, member:discord.Member=None):
-    if member is None:
-        await ctx.send("https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
-    else:
-        await ctx.send(f"{member.mention} {ctx.author.name} felt that you weren't worthy of abusing. <:nograhahausuck:819085149525245962>")
-        var = discord.utils.get(ctx.guild.roles, name="admin")
-        await member.remove_roles(var)
-
-@client.command()
-async def cutie(ctx):
-    if ctx.author.id != 650647680837484556:
-        await ctx.send("you can only call others a cutie if you are argon <a:nograkekgiggle:821318605274218516>")
-    else:
-        var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 560251854399733760]
-        for m in memberid:
-            m = ctx.guild.get_member(m)
-            await m.add_roles(var)
-            await ctx.send(f"Power of cuteness granted to **{m.name}#{m.discriminator}**")
-        await ctx.send("`if you have this role you're cute uwu` Role given to everyone. ")
-        return
-
-@client.command()
-async def uglie(ctx):
-    if ctx.author.id != 650647680837484556:
-        await ctx.send("you can only call others ugly if you are argon <a:nograkekgiggle:821318605274218516>")
-    else:
-        var = discord.utils.get(ctx.guild.roles, name="if you have this role you're cute uwu")
-        memberid = [730974500111515648, 680331233624195132, 604212608941424640, 264019387009204224, 642318626044772362, 651047556360699911, 560251854399733760]
-        for m in memberid:
-            m = ctx.guild.get_member(m)
-            await m.remove_roles(var)
-            await ctx.send(f"Power of ugliness granted to ****{m.name}#{m.discriminator}****")
-        await ctx.send("`if you have this role you're cute uwu` Role removed from everyone. ")
-
-@client.command()
-async def allow(ctx):
-    if ctx.author.id in [560251854399733760, 650647680837484556]:
-        channel = client.get_channel(821033788262842438)
-        overwrite = discord.PermissionOverwrite()
-        overwrite.send_messages = True
-        overwrite.read_messages = True
-        await ctx.send("I opened the door do your bedroom. <a:nograexcitedwave:821394571522342922>")
-        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
-    else:
-        ctx.send("imagine not being frenzy or argon lol")
-
-@client.command()
-async def kicc(ctx):
-    if ctx.author.id in [560251854399733760, 650647680837484556]:
-        channel = client.get_channel(821033788262842438)
-        overwrite = discord.PermissionOverwrite()
-        overwrite.send_messages = False
-        overwrite.read_messages = False
-        await ctx.send("Yeeted everyone out of your bedroom. <a:nograexcitedwave:821394571522342922>")
-        await channel.set_permissions(ctx.guild.default_role, overwrite=overwrite)
-    else:
-        ctx.send("imagine not being frenzy or argon lol")
-
-@client.command()
-async def admon(ctx, member:discord.Member=None, durationinseconds=None):
-    if member is None:
-        await ctx.send("Aren't you supposed to mention someone?")
-    else:
-        if ctx.author.id == 650647680837484556:
-            var = discord.utils.get(ctx.guild.roles, name="Elevated")
-            if durationinseconds is None:
-                await member.add_roles(var)
-                await ctx.send(f"Given the elevated admin role to {member.mention} for 30 seconds.")
-                tmanmport = await ctx.send("□□□□□□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■□□□□□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■□□□□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■□□□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■□□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■□□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■□□□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■□□□□□ tick tock!")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■■□□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■■■□□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■■■■□□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■■■■■□")
-                await asyncio.sleep(3)
-                await tmanmport.edit(content="■■■■■■■■■■■■")
-            else:
-                await member.add_roles(var)
-                await ctx.send(f"Given the elevated admin role to {member.mention} for {durationinseconds} seconds.")
-                intdurationinseconds = int(durationinseconds)
-                await asyncio.sleep(intdurationinseconds)
-            await member.remove_roles(var)
-            await ctx.send(f"Removed the elevated admin role from {member.mention}.")
-        else:
-            await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
-@client.command()
-@commands.has_permissions(manage_permissions=True)
-async def abuse(ctx, member:discord.Member=None):
-    if member is None:
-        await ctx.send("https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
-    else:
-        var = discord.utils.get(ctx.guild.roles, name="admin")
-        await member.add_roles(var)
-        await ctx.send(f"{member.mention} {ctx.author.name} granted you the power of abuse here, have fun! <:nogracuteblush:806168390003064883>")
-
-@client.command()
-async def dmads(ctx, *,member:discord.User=None):
-    if member is None:
-        await ctx.send("Aren't you supposed to mention someone?")
-    else:
-        if ctx.author.id == 650647680837484556:
-            channel = client.get_channel(810426819995893780)
-            invitelink = await channel.create_invite(reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002", max_age = 1800, max_uses = 1, unique = True)
-            channel2 = client.get_channel(813288124460826667)
-            invitelink2 = await channel2.create_invite(reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",max_age=1800, max_uses=1, unique=True)
-            channel3 = client.get_channel(802544393122742312)
-            invitelink3 = await channel3.create_invite(reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",max_age=1800, max_uses=1, unique=True)
-            channel4 = client.get_channel(810007699579338762)
-            invitelink4 = await channel4.create_invite(reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",max_age=1800, max_uses=1, unique=True)
-            channel5 = client.get_channel(818436261891014659)
-            invitelink5 = await channel5.create_invite(reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",max_age=1800, max_uses=1, unique=True)
-            messagetousers = f"Either you asked Argon for the emoji server invites, or Argon decided to invite you anyways. \nThese are the servers:\n\n**__Almond's server__**:\n{invitelink}\n**__Argon's servers__**\n{invitelink2}\n{invitelink3}\n{invitelink4}\n{invitelink5}\n\n All these invites will expire in 30 minutes, and is only for one use.\nhave fun! <:nogracuteblush:806168390003064883>"
-            await member.send(messagetousers)
-            await ctx.message.add_reaction("<a:Tick:796984073603383296>")
-        else:
-            await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
-
-@client.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member:discord.Member=None, *, reason =None):
     if member is None or member == ctx.message.author:
@@ -526,7 +389,10 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
             await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
             await asyncio.sleep(timer)
             message = f"You have been banned from {ctx.guild.name} for: no specified reason."
-            await member.send(message)
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
             member = client.get_user(member.id)
             await member.ban(reason="not specified")
             await ctx.send(f"{member} is banned for: no specified reason")
@@ -537,49 +403,14 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
         await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
         await asyncio.sleep(timer)
         message = f"You have been banned from {ctx.guild.name} for {reason}"
-        await member.send(message)
+        try:
+            await member.send(message)
+        except discord.errors.Forbidden:
+            pass
+        member = client.get_user(member.id)
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: " + reason)
 
-@client.command(aliases=['ur','reverse'])
-async def unoreverse(ctx):
-    '''unogif = ['https://giphy.com/gifs/mattel-uno-reverse-card-unogame-MQwnNsDJ1MJZ0E0w1u',
-              'https://thumbs.gfycat.com/BackInsignificantAfricanaugurbuzzard-max-1mb.gif',
-              'https://media1.tenor.com/images/6b5ca3359a3d4709dd2a0464149617c4/tenor.gif?itemid=16161336',
-              'https://media2.giphy.com/media/hve06ZtT78MpseC74V/giphy.gif',
-              'https://media.tenor.com/images/ee6e6bb6f35b030eab0dbb7c12040275/tenor.gif',
-              'https://media1.tenor.com/images/ce763f9e11ac6a405411e9665fac332e/tenor.gif?itemid=18291118',
-              'https://tenor.com/view/uno-reverse-jaholl-gif-19324012',
-              'https://tenor.com/view/no-u-reverse-card-anti-orders-gif-19358543',
-              'https://tenor.com/view/uno-no-u-reverse-card-reflect-glitch-gif-14951171']
-
-    uno = discord.Embed(title="PLAYS A UNO REVERSE!", color=0xff0000)
-    uno.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator), icon_url=str(ctx.author.avatar_url))
-    uno.set_image(url=random.choice(unogif))
-    uno.set_footer(text="imagine playing uno reverse tho")'''
-    await ctx.send("command disabled while i try to find better quality GIFs.")
-
-@client.command()
-async def yeet(ctx, member=None):
-    # if member == None:
-#         await ctx.send("I assume you want to yeet yourself... but how can you even do that??")
-    '''unogif = ['https://media.tenor.com/images/8367c8974b349e6f7222c4f6fafc0d21/tenor.gif',
-              'https://tenor.com/view/mort-king-julien-madagascar-all-hail-king-julien-angry-gif-4585733',
-              'https://www.icegif.com/wp-content/uploads/icegif-54.gif',
-              'https://media3.giphy.com/media/J1ABRhlfvQNwIOiAas/giphy.gif',
-              'https://tenor.com/view/throw-throwing-it-away-mountain-top-adventures-games-gif-13764512',
-              'https://tenor.com/view/ya-yeet-yeet-cant-handle-my-yeet-big-yeet-yeet-baby-gif-18124551',
-              'https://tenor.com/view/twaimz-yeet-shit-gif-5449237',
-              'https://tenor.com/view/yeet-no-flying-dawg-gif-17850873',
-              'https://media1.tenor.com/images/74b79a7dc96b93b0e47adab94adcf25c/tenor.gif?itemid=8217719']
-        if "<@" in member:
-        uno = discord.Embed(title="\u000b", color=0xff0000)
-        uno.add_field(name="\u200b", value="**JUST YEETED " + member + " **", inline=True)
-        uno.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator),icon_url=str(ctx.author.avatar_url))
-        uno.set_image(url=random.choice(unogif))
-        uno.set_footer(text="YEET")'''
-
-    await ctx.send("command disabled while I try to find better quality GIFs.")
 
 # ping (bot latency command)
 @client.command()
@@ -629,21 +460,10 @@ async def triggers(ctx):
 async def ei_error(ctx, error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-@admon.error
-async def admon_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
 @ban.error
 async def ban_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("wheeze you don't even have permissions to ban people")
-    else:
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@stopabusing.error
-async def stopabusing_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("lmfao no you need \"manage permissions\" to stop people from wrecking the server")
     else:
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
@@ -653,54 +473,18 @@ async def cban_error(ctx, error):
         await ctx.send('You don\'t have the permission to ban others. Fuck off.')
     else:
         print(error)
-@dmads.error
-async def dmads_error(ctx, error):
-    await ctx.send("I encountered an error while sending the invites. The user you pinged might have his DMs closed. More info about this error:")
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-
-@unoreverse.error
-async def unoreverse_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 @hmmm.error
 async def hmmm_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@allow.error
-async def allow_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@kicc.error
-async def kicc_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@yeet.error
-async def yeet_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 @ping.error
 async def ping_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-@cutie.error
-async def cutie_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@uglie.error
-async def uglie_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
 @calc.error
 async def calc_error(ctx,error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@abuse.error
-async def abuse_error(ctx,error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("lmfao no you need manage permissions to let people abuse")
-    else:
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 
 

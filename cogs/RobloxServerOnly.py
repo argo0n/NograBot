@@ -49,7 +49,7 @@ class RobloxServerOnly(commands.Cog):
 
     @commands.command()
     async def admon(self, ctx, member: discord.Member = None, durationinseconds=None):
-        if ctx.guild.id == 818436261873844224:
+        if ctx.guild.id != 818436261873844224:
             ctx.send("You are using this in the wrong guild!")
         else:
             if member is None:

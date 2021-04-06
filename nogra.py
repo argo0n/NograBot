@@ -407,7 +407,7 @@ async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
             await member.send(message)
         except discord.errors.Forbidden:
             pass
-        member = client.get_user(member.id)
+        #member = client.get_user(member.id)
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: " + reason)
 

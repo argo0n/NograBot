@@ -158,7 +158,7 @@ class Admin(commands.Cog):
     async def setstatus_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(brief="Removes carl tags that targets argon", description="Removes carlbot tags that targets argon")
     async def rmtag(self, ctx, website):
         if ctx.author.id != 650647680837484556:
             await ctx.send("You can only use this command if you are Argon!")
@@ -195,6 +195,56 @@ class Admin(commands.Cog):
     async def rmtag_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
+    @commands.command()
+    async def dmads(self, ctx, *, member: discord.User = None):
+        if member is None:
+            await ctx.send("Aren't you supposed to mention someone?")
+        else:
+            if ctx.author.id == 650647680837484556:
+                channel = self.client.get_channel(810426819995893780)
+                invitelink = await channel.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    max_age=1800, max_uses=1, unique=True)
+                channel2 = self.client.get_channel(813288124460826667)
+                invitelink2 = await channel2.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    max_age=1800, max_uses=1, unique=True)
+                channel3 = self.client.get_channel(802544393122742312)
+                invitelink3 = await channel3.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    max_age=1800, max_uses=1, unique=True)
+                channel4 = self.client.get_channel(810007699579338762)
+                invitelink4 = await channel4.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    max_age=1800, max_uses=1, unique=True)
+                channel5 = self.client.get_channel(818436261891014659)
+                invitelink5 = await channel5.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    max_age=1800, max_uses=1, unique=True)
+                messagetousers = f"Either you asked Argon for the emoji server invites, or Argon decided to invite you anyways. \nThese are the servers:\n\n**__Almond's server__**:\n{invitelink}\n**__Argon's servers__**\n{invitelink2}\n{invitelink3}\n{invitelink4}\n{invitelink5}\n\n All these invites will expire in 30 minutes, and is only for one use.\nhave fun! <:nogracuteblush:806168390003064883>"
+                await member.send(messagetousers)
+                await ctx.message.add_reaction("<a:Tick:796984073603383296>")
+            else:
+                await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
+
+    @dmads.error
+    async def dmads_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
+    @commands.is_owner()
+    async def update(self, ctx, *, message):
+        channel = self.client.get_channel(789840820563476485)
+        channel2 = self.client.get_channel(810426819995893780)
+        channel3 = self.client.get_channel(818436261891014660)
+        await ctx.message.delete()
+        await channel.send(message)
+        await channel2.send(message)
+        await channel3.send(message)
+
+    @update.error
+    async def update_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

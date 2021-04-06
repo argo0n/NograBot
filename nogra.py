@@ -344,71 +344,7 @@ async def cchan(ctx, *, channel_name=None):
         await guild.create_text_channel(channel_name)
         await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
 
-@client.command()
-@commands.has_permissions(ban_members=True)
-async def ban(ctx, member:discord.Member=None, *, reason =None):
-    if member is None or member == ctx.message.author:
-        await ctx.send("You cannot ban yourself...")
-        return
-    if reason is None:
-        message = f"You have been banned from {ctx.guild.name} for: no specified reason."
-        await member.send(message)
-        member = client.get_user(member.id)
-        await member.ban(reason="not specified")
-        await ctx.send(f"{member} is banned for: no specified reason")
 
-    else:
-        message = f"You have been banned from {ctx.guild.name} for {reason}"
-        await member.send(message)
-        await member.ban(reason=reason)
-        await ctx.send(f"{member} is banned for: " + reason)
-
-@client.command()
-@commands.is_owner()
-async def update(ctx,*, message):
-    channel = client.get_channel(789840820563476485)
-    channel2 = client.get_channel(810426819995893780)
-    channel3 = client.get_channel(818436261891014660)
-    await ctx.message.delete()
-    await channel.send(message)
-    await channel2.send(message)
-    await channel3.send(message)
-@client.command()
-@commands.has_permissions(ban_members=True)
-async def cban(ctx, member:discord.Member=None, duration=None, *, reason =None):
-    if member is None or member == ctx.message.author:
-        await ctx.send("You cannot ban yourself...")
-        return
-    if reason is None:
-        if duration == None:
-            await ctx.send(
-                "cmon, you're using cban instead of ban. you need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
-            return
-        else:
-            timer = int(duration) * 60
-            await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
-            await asyncio.sleep(timer)
-            message = f"You have been banned from {ctx.guild.name} for: no specified reason."
-            try:
-                await member.send(message)
-            except discord.errors.Forbidden:
-                pass
-            await member.ban(reason="not specified")
-            await ctx.send(f"{member} is banned for: no specified reason")
-    if duration is None:
-        await ctx.send("cmon, you're using cban instead of ban. you need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
-    else:
-        timer = int(duration)*60
-        await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
-        await asyncio.sleep(timer)
-        message = f"You have been banned from {ctx.guild.name} for {reason}"
-        try:
-            await member.send(message)
-        except discord.errors.Forbidden:
-            pass
-        #member = client.get_user(member.id)
-        await member.ban(reason=reason)
-        await ctx.send(f"{member} is banned for: " + reason)
 
 
 # ping (bot latency command)
@@ -458,20 +394,6 @@ async def triggers(ctx):
 @ei.error
 async def ei_error(ctx, error):
     await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@ban.error
-async def ban_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("wheeze you don't even have permissions to ban people")
-    else:
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-@cban.error
-async def cban_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send('You don\'t have the permission to ban others. Fuck off.')
-    else:
-        print(error)
 
 @hmmm.error
 async def hmmm_error(ctx,error):

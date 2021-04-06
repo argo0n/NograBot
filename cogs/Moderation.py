@@ -2,6 +2,7 @@ from discord.ext import commands
 import discord, datetime, time
 import pytz
 from pytz import timezone
+import asyncio
 
 
 timeformat = "%Y-%m-%d %H:%M:%S"
@@ -112,6 +113,44 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 
+    @commands.command()
+    @commands.has_permissions(manage_permissions=True)
+    async def abuse(self, ctx, member:discord.Member=None):
+        if member is None:
+            await ctx.send(
+                "https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
+        else:
+            var = discord.utils.get(ctx.guild.roles, name="admin")
+            await member.add_roles(var)
+            await ctx.send(
+                f"{member.mention} {ctx.author.name} granted you the power of abuse here, have fun! <:nogracuteblush:806168390003064883>")
+
+    @abuse.error
+    async def abuse_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("lmfao no you need \"manage permissions\" to let people abuse")
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command()
+    @commands.has_permissions(manage_permissions=True)
+    async def stopabusing(self, ctx, member: discord.Member = None):
+        if member is None:
+            await ctx.send(
+                "https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
+        else:
+            await ctx.send(
+                f"{member.mention} {ctx.author.name} felt that you weren't worthy of abusing. <:nograhahausuck:819085149525245962>")
+            var = discord.utils.get(ctx.guild.roles, name="admin")
+            await member.remove_roles(var)
+
+    @stopabusing.error
+    async def stopabusing_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("lmfao no you need \"manage permissions\" to stop people from wrecking the server")
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
     '''@clear.error
     async def cog_command_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''
@@ -123,6 +162,59 @@ class Moderation(commands.Cog):
     @clear.error
     async def clear_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command()
+    @commands.has_permissions(ban_members=True)
+    async def ban(self, ctx, member: discord.Member = None, *, reason=None):
+        if member is None or member == ctx.message.author:
+            await ctx.send("You cannot ban yourself...")
+            return
+        if reason is None:
+            reason = "no specified reason"
+            message = f"You have been banned from {ctx.guild.name} for: no specified reason."
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
+            await member.ban(reason=reason)
+            await ctx.send(f"{member} is banned for: {reason}")
+
+    @commands.command()
+    @commands.has_permissions(ban_members=True)
+    async def cban(ctx, member: discord.Member = None, duration=None, *, reason=None):
+        if member is None or member == ctx.message.author:
+            await ctx.send("You cannot ban yourself...")
+            return
+        if duration is None:
+            await ctx.send(
+                "You need to specify how long before " + member.name + " is banned. <:nograpepeuhh:803857251072081991>")
+        else:
+            if reason is None:
+                reason = "no specified reason"
+                timer = int(duration) * 60
+                await ctx.send("Alright, I will ban " + member.name + " in " + duration + " minutes.")
+                await asyncio.sleep(timer)
+                message = f"You have been banned from {ctx.guild.name} for: no specified reason."
+                try:
+                    await member.send(message)
+                except discord.errors.Forbidden:
+                    pass
+                await member.ban(reason=reason)
+                await ctx.send(f"{member} is banned for: {reason}")
+
+    @ban.error
+    async def ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("wheeze you don't even have permissions to ban people")
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @cban.error
+    async def cban_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send('You don\'t have the permission to ban others.')
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 
 def setup(client):

@@ -127,5 +127,53 @@ class Fun(commands.Cog):
     @secretping.error
     async def secretping_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command(brief="YA YEET", description="Use this command to yeet anyone you hate or do it just for fun ;)")
+    async def yeet(self, ctx, member=None):
+        # if member == None:
+        #         await ctx.send("I assume you want to yeet yourself... but how can you even do that??")
+        '''unogif = ['https://media.tenor.com/images/8367c8974b349e6f7222c4f6fafc0d21/tenor.gif',
+                  'https://tenor.com/view/mort-king-julien-madagascar-all-hail-king-julien-angry-gif-4585733',
+                  'https://www.icegif.com/wp-content/uploads/icegif-54.gif',
+                  'https://media3.giphy.com/media/J1ABRhlfvQNwIOiAas/giphy.gif',
+                  'https://tenor.com/view/throw-throwing-it-away-mountain-top-adventures-games-gif-13764512',
+                  'https://tenor.com/view/ya-yeet-yeet-cant-handle-my-yeet-big-yeet-yeet-baby-gif-18124551',
+                  'https://tenor.com/view/twaimz-yeet-shit-gif-5449237',
+                  'https://tenor.com/view/yeet-no-flying-dawg-gif-17850873',
+                  'https://media1.tenor.com/images/74b79a7dc96b93b0e47adab94adcf25c/tenor.gif?itemid=8217719']
+            if "<@" in member:
+            uno = discord.Embed(title="\u000b", color=0xff0000)
+            uno.add_field(name="\u200b", value="**JUST YEETED " + member + " **", inline=True)
+            uno.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator),icon_url=str(ctx.author.avatar_url))
+            uno.set_image(url=random.choice(unogif))
+            uno.set_footer(text="YEET")'''
+
+        await ctx.send("command disabled while I try to find better quality GIFs.")
+
+    @yeet.error
+    async def yeet_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command(aliases=['ur', 'reverse'])
+    async def unoreverse(self, ctx, member=None):
+        '''unogif = ['https://giphy.com/gifs/mattel-uno-reverse-card-unogame-MQwnNsDJ1MJZ0E0w1u',
+                  'https://thumbs.gfycat.com/BackInsignificantAfricanaugurbuzzard-max-1mb.gif',
+                  'https://media1.tenor.com/images/6b5ca3359a3d4709dd2a0464149617c4/tenor.gif?itemid=16161336',
+                  'https://media2.giphy.com/media/hve06ZtT78MpseC74V/giphy.gif',
+                  'https://media.tenor.com/images/ee6e6bb6f35b030eab0dbb7c12040275/tenor.gif',
+                  'https://media1.tenor.com/images/ce763f9e11ac6a405411e9665fac332e/tenor.gif?itemid=18291118',
+                  'https://tenor.com/view/uno-reverse-jaholl-gif-19324012',
+                  'https://tenor.com/view/no-u-reverse-card-anti-orders-gif-19358543',
+                  'https://tenor.com/view/uno-no-u-reverse-card-reflect-glitch-gif-14951171']
+
+        uno = discord.Embed(title="PLAYS A UNO REVERSE!", color=0xff0000)
+        uno.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator), icon_url=str(ctx.author.avatar_url))
+        uno.set_image(url=random.choice(unogif))
+        uno.set_footer(text="imagine playing uno reverse tho")'''
+        await ctx.send("command disabled while i try to find better quality GIFs.")
+
+    @unoreverse.error
+    async def unoreverse_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 def setup(client):
     client.add_cog(Fun(client))

@@ -113,7 +113,7 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 
-    @commands.command()
+    @commands.command(brief="gib power to aboos", description = "Gives admin role to a member")
     @commands.has_permissions(manage_permissions=True)
     async def abuse(self, ctx, member:discord.Member=None):
         if member is None:
@@ -132,7 +132,7 @@ class Moderation(commands.Cog):
         else:
             await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(brief="Removes admin role to prevent aboos", description = "Removes admin role in a guild from a player to prevent abuse")
     @commands.has_permissions(manage_permissions=True)
     async def stopabusing(self, ctx, member: discord.Member = None):
         if member is None:
@@ -163,7 +163,7 @@ class Moderation(commands.Cog):
     async def clear_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(brief="ban hammer", description = "Bans members")
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None, *, reason=None):
         if member is None or member == ctx.message.author:
@@ -179,7 +179,7 @@ class Moderation(commands.Cog):
             await member.ban(reason=reason)
             await ctx.send(f"{member} is banned for: {reason}")
 
-    @commands.command()
+    @commands.command(brief="Ban members with a countdown in minutes", description = "Ban members with a countdown specified by you")
     @commands.has_permissions(ban_members=True)
     async def cban(ctx, member: discord.Member = None, duration=None, *, reason=None):
         if member is None or member == ctx.message.author:

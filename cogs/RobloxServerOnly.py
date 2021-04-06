@@ -9,7 +9,7 @@ class RobloxServerOnly(commands.Cog):
         self.client = client
 
 
-    @commands.command()
+    @commands.command(brief="kicks everyone out of frenzy's sleeping channel", description = "kicks everyone out of freny's sleeping channel")
     async def kicc(self, ctx):
         if ctx.author.id in [560251854399733760, 650647680837484556]:
             if ctx.guild.id == 818436261873844224:
@@ -28,7 +28,7 @@ class RobloxServerOnly(commands.Cog):
     async def kicc_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(brief="Lets everyone into frenzy's sleeping channel", description = "Gives everyone read message perms in frenzy's sleeping channel")
     async def allow(self, ctx):
         if ctx.author.id in [560251854399733760, 650647680837484556]:
             if ctx.guild.id == 818436261873844224:
@@ -47,7 +47,7 @@ class RobloxServerOnly(commands.Cog):
     async def allow_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
-    @commands.command()
+    @commands.command(brief="Better than cutie role", description = "Gives elevated admin role for a while")
     async def admon(self, ctx, member: discord.Member = None, durationinseconds=None):
         if ctx.guild.id != 818436261873844224:
             ctx.send("You are using this in the wrong guild!")

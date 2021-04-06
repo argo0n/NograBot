@@ -170,26 +170,30 @@ async def on_member_join(member):
 # Bot COMMANDS go here.
 
 # clear (purge command)
-@client.command()
+@client.command(brief="Loads cogs", description = "Loads cogs")
+@commands.is_owner()
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
+    await ctx.send(f"{extension} loaded.")
 
-@client.command()
+@client.command(brief="Unloads cogs", description = "Unloads cogs")
+@commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
+    await ctx.send(f"{extension} unloaded.")
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-@client.command(pass_context=True, brief="h", description="h")
+@client.command(pass_context=True, brief="calculates", description="calculates your stupid math problems")
 async def calc(ctx, *, yourcalculation):
-    strsent = str(yourcalculation)
+    strsent = int(yourcalculation)
     result = eval(strsent)
     await ctx.send(str(yourcalculation) + " = " + str(result))
 
 
-@client.command(name="emojis", brief="Lists out emojis", description="Lmao ok")
+@client.command(name="emojis", brief="Lists out emojis", description="Lists out emojis")
 async def hmmm(ctx):
     #allowedChannels = [813288124460826667, 802544393122742312, 810007699579338762, 800669048974213150] if ctx.channel.id in allowedChannels
     if ctx.message.author.id == 650647680837484556:
@@ -334,7 +338,7 @@ async def setstatus(ctx):
     ee.add_field(name="__**Needs**__",value="`Bot Owner`", inline=False)
     await ctx.send(embed = ee)'''
 
-@client.command(pass_context=True)
+@client.command(pass_context=True, brief="Creates channel", description = "Creates a channel in a guild")
 @commands.has_permissions(manage_channels=True)
 async def cchan(ctx, *, channel_name=None):
     if channel_name is None:
@@ -348,13 +352,13 @@ async def cchan(ctx, *, channel_name=None):
 
 
 # ping (bot latency command)
-@client.command()
+@client.command(brief="Shows client latency", description = "shows client latency")
 async def ping(ctx):
     await ctx.send(f'Pong! {round(client.latency * 1000)}ms  🏓')
     if client.latency > 0.250:
         await ctx.send('Well, that is rather slow..')
 
-@client.command()
+@client.command(brief="gives emojis info in guild", description = "Gives info about emojis in guild")
 async def ei(ctx):
     emojino = len(ctx.guild.emojis)
     limit = ctx.guild.emoji_limit + 50
@@ -369,7 +373,7 @@ async def ei(ctx):
 
     # showing triggers
 
-@client.command()
+'''@client.command()
 async def triggers(ctx):
     if ctx.guild.id == 738632364208554095:
         triggerembed = discord.Embed(title="Triggers for " + str(ctx.guild.name),
@@ -384,7 +388,7 @@ async def triggers(ctx):
         triggerembed.set_footer(text="mmm monke")
         await ctx.send(embed=triggerembed)
     else:
-        await ctx.send("There are no triggers for this server!")
+        await ctx.send("There are no triggers for this server!")'''
 
 
 

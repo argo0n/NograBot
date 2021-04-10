@@ -175,5 +175,34 @@ class Fun(commands.Cog):
     @unoreverse.error
     async def unoreverse_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command()
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    async def firefight(self, ctx, member:discord.Member=None):
+        duration = random.randint(1,120)
+        decidingmoment = ["yes", "no"]
+        doesauthorwin = random.choice(decidingmoment)
+        channel = ctx.channel
+        if doesauthorwin == "yes":
+            overwrite = discord.PermissionOverwrite()
+            overwrite.send_messages = False
+            await channel.set_permissions(member, overwrite=overwrite)
+            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} won against {member.mention} and has been muted for {duration} seconds.")
+            await asyncio.sleep(duration)
+            await channel.set_permissions(member, overwrite=None)
+
+        else:
+            overwrite = discord.PermissionOverwrite()
+            overwrite.send_messages = False
+            await channel.set_permissions(ctx.author, overwrite=overwrite)
+            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} lost against {member.mention} and has been muted for {duration} seconds.")
+            await asyncio.sleep(duration)
+            await channel.set_permissions(ctx.author, overwrite=None)
+
+
+    @unoreverse.error
+    async def unoreverse_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 def setup(client):
     client.add_cog(Fun(client))

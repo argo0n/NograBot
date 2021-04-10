@@ -42,16 +42,30 @@ class DankMemerHelp(commands.Cog):
                 delete_after=3.0)
 
         if ("were caught HAHAHA") in message.content:
-            await message.channel.send("Wait for 10 seconds <a:uwushyyy:807637815226531932>")
+            await message.channel.send("Wait for 30 seconds <a:uwushyyy:807637815226531932>")
             tmanmfail = await message.channel.send("□□□□□□□□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■□□□□□□□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■□□□□□□□□")
             await asyncio.sleep(3)
             await tmanmfail.edit(content="■■■□□□□□□□")
             await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■□□□□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■■□□□□□")
+            await asyncio.sleep(3)
             await tmanmfail.edit(content="■■■■■■□□□□")
-            await asyncio.sleep(4)
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■■■■□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■■■■■□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■■■■■■□")
+            await asyncio.sleep(3)
             await tmanmfail.edit(content="■■■■■■■■■■")
             for m in message.guild.members:
-                if m.mention in message.content:
+                if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
             else:
                 await message.channel.send("No proper mention was found.")
@@ -89,7 +103,7 @@ class DankMemerHelp(commands.Cog):
             await asyncio.sleep(10)
             await tmanmport.edit(content="■■■■■■■■■■■■")
             for m in message.guild.members:
-                if m.mention in message.content:
+                if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
             else:
                 await message.channel.send("No proper mention was found.")

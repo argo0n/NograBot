@@ -187,7 +187,10 @@ class Fun(commands.Cog):
             overwrite = discord.PermissionOverwrite()
             overwrite.send_messages = False
             await channel.set_permissions(member, overwrite=overwrite)
-            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} won against {member.mention} and has been muted for {duration} seconds.")
+            embed = discord.Embed(colour=0x00FF00)
+            embed.add_field(name="**get rekt noob**", value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>", inline=True)
+            embed.set_footer(text=f"Exercise more tbh {member.name}")
+            await ctx.send(embed=embed)
             await asyncio.sleep(duration)
             await channel.set_permissions(member, overwrite=None)
 
@@ -195,8 +198,11 @@ class Fun(commands.Cog):
             overwrite = discord.PermissionOverwrite()
             overwrite.send_messages = False
             await channel.set_permissions(ctx.author, overwrite=overwrite)
-            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} lost against {member.mention} and has been muted for {duration} seconds..")
-            await asyncio.sleep(duration)
+            embed = discord.Embed(colour=0xFF0000)
+            embed.add_field(name="**get rekt noob**",
+                            value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
+                            inline=True)
+            embed.set_footer(text=f"Exercise more tbh {member.name}")
             await channel.set_permissions(ctx.author, overwrite=None)
 
 

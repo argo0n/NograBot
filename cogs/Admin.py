@@ -62,7 +62,6 @@ class Admin(commands.Cog):
                 if ctx.author.id == 650647680837484556:
                     await message.edit(content=newmessage)
                     await ctx.message.add_reaction("<a:Tick:796984073603383296>")
-
                 else:
                     await ctx.send("Only the bot owner (<@650647680837484556>) is allowed to edit Nogra's messages.")
             else:
@@ -203,23 +202,23 @@ class Admin(commands.Cog):
             if ctx.author.id == 650647680837484556:
                 channel = self.client.get_channel(810426819995893780)
                 invitelink = await channel.create_invite(
-                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
                 channel2 = self.client.get_channel(813288124460826667)
                 invitelink2 = await channel2.create_invite(
-                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
                 channel3 = self.client.get_channel(802544393122742312)
                 invitelink3 = await channel3.create_invite(
-                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
                 channel4 = self.client.get_channel(810007699579338762)
                 invitelink4 = await channel4.create_invite(
-                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
                 channel5 = self.client.get_channel(818436261891014659)
                 invitelink5 = await channel5.create_invite(
-                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by Argon#0002",
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
                 messagetousers = f"Either you asked Argon for the emoji server invites, or Argon decided to invite you anyways. \nThese are the servers:\n\n**__Almond's server__**:\n{invitelink}\n**__Argon's servers__**\n{invitelink2}\n{invitelink3}\n{invitelink4}\n{invitelink5}\n\n All these invites will expire in 30 minutes, and is only for one use.\nhave fun! <:nogracuteblush:806168390003064883>"
                 await member.send(messagetousers)

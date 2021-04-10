@@ -2,3 +2,4 @@ discord.py
 utils~=1.0.1
 buttons
 pytz
+googletrans

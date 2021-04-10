@@ -195,7 +195,7 @@ class Fun(commands.Cog):
             overwrite = discord.PermissionOverwrite()
             overwrite.send_messages = False
             await channel.set_permissions(ctx.author, overwrite=overwrite)
-            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} lost against {member.mention} and has been muted for {duration} seconds.")
+            await ctx.send(f"**get rekt noob <a:RobloxDancee:830440782657486890>**\n {ctx.author.mention} lost against {member.mention} and has been muted for {duration} seconds..")
             await asyncio.sleep(duration)
             await channel.set_permissions(ctx.author, overwrite=None)
 

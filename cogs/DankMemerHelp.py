@@ -41,6 +41,20 @@ class DankMemerHelp(commands.Cog):
                 f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
                 delete_after=3.0)
 
+        if ("were caught HAHAHA") in message.content:
+            await message.channel.send("Wait for 10 seconds <a:uwushyyy:807637815226531932>")
+            tmanmfail = await message.channel.send("□□□□□□□□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■□□□□□□□")
+            await asyncio.sleep(3)
+            await tmanmfail.edit(content="■■■■■■□□□□")
+            await asyncio.sleep(4)
+            await tmanmfail.edit(content="■■■■■■■■■■")
+            for m in message.guild.members:
+                if m.mention in message.content:
+                    await message.channel.send(f"{m.mention} rob now!")
+            else:
+                await message.channel.send("No proper mention was found.")
 
         if ("BASICALLY EVERYTHING") in message.content:
             if message.author == 270904126974590976:
@@ -48,40 +62,37 @@ class DankMemerHelp(commands.Cog):
 
         if ("a TINY portion") in message.content or ("a small portion") in message.content or (
         "fairly decent chunk") in message.content:
-            if message.guild.id == 789840820563476482:
-                return
-            if message.author == 650647680837484556:
-                await message.channel.send("Wait for 2 minutes <a:uwushyyy:807637815226531932>")
-                tmanmport = await message.channel.send("□□□□□□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■□□□□□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■□□□□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■□□□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■□□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■□□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■□□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■□□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■■□□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■■■□□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■■■■□□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■■■■■□")
-                await asyncio.sleep(10)
-                await tmanmport.edit(content="■■■■■■■■■■■■")
-                for m in message.guild.members:
-                    if m.mention in message.content:
-                        await message.channel.send(f"{m.mention} rob now!")
-                else:
-                    await message.channel.send("No proper mention was found.")
+            await message.channel.send("Wait for 2 minutes <a:uwushyyy:807637815226531932>")
+            tmanmport = await message.channel.send("□□□□□□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■□□□□□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■□□□□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■□□□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■□□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■□□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■□□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■□□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■■□□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■■■□□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■■■■□□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■■■■■□")
+            await asyncio.sleep(10)
+            await tmanmport.edit(content="■■■■■■■■■■■■")
+            for m in message.guild.members:
+                if m.mention in message.content:
+                    await message.channel.send(f"{m.mention} rob now!")
+            else:
+                await message.channel.send("No proper mention was found.")
 
         if message.content.startswith("Nice I'm proud of you"):
             if message.author.id == 805251248488054794:

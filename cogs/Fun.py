@@ -200,9 +200,12 @@ class Fun(commands.Cog):
             await channel.set_permissions(ctx.author, overwrite=None)
 
 
-    @unoreverse.error
-    async def unoreverse_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    @firefight.error
+    async def firefight_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send("Imagine not having patience smh")
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 def setup(client):
     client.add_cog(Fun(client))

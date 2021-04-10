@@ -200,7 +200,7 @@ class Fun(commands.Cog):
             await channel.set_permissions(ctx.author, overwrite=overwrite)
             embed = discord.Embed(colour=0xFF0000)
             embed.add_field(name="**get rekt noob**",
-                            value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
+                            value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
                             inline=True)
             embed.set_footer(text=f"Exercise more tbh {member.name}")
             await ctx.send(embed=embed)
@@ -212,7 +212,7 @@ class Fun(commands.Cog):
     async def firefight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown= error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {cooldown} seconds?")
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
         else:
             await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 

@@ -203,6 +203,8 @@ class Fun(commands.Cog):
                             value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
                             inline=True)
             embed.set_footer(text=f"Exercise more tbh {member.name}")
+            await ctx.send(embed=embed)
+            await asyncio.sleep(duration)
             await channel.set_permissions(ctx.author, overwrite=None)
 
 

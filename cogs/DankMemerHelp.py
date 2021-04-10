@@ -41,7 +41,7 @@ class DankMemerHelp(commands.Cog):
                 f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
                 delete_after=3.0)
 
-        if ("were caught HAHAHA") in message.content:
+        if ("were caught **HAHAHA**") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 30 seconds <a:uwushyyy:807637815226531932>")
             tmanmfail = await message.channel.send("□□□□□□□□□□")
             await asyncio.sleep(3)
@@ -70,12 +70,11 @@ class DankMemerHelp(commands.Cog):
             else:
                 await message.channel.send("No proper mention was found.")
 
-        if ("BASICALLY EVERYTHING") in message.content:
-            if message.author == 270904126974590976:
-                await message.channel.send("nice i'm proud of you <:nogracuteblush:806168390003064883>")
+        if ("BASICALLY EVERYTHING") in message.content and message.author.id == 270904126974590976:
+            await message.channel.send("nice i'm proud of you <:nogracuteblush:806168390003064883>")
 
         if ("a TINY portion") in message.content or ("a small portion") in message.content or (
-        "fairly decent chunk") in message.content:
+        "fairly decent chunk") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 2 minutes <a:uwushyyy:807637815226531932>")
             tmanmport = await message.channel.send("□□□□□□□□□□□□")
             await asyncio.sleep(10)

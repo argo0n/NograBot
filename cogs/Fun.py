@@ -211,7 +211,7 @@ class Fun(commands.Cog):
     @firefight.error
     async def firefight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            cooldown= commands.CommandOnCooldown.retry_after
+            cooldown= error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {cooldown} seconds?")
         else:
             await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")

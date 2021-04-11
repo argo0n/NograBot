@@ -244,6 +244,22 @@ class Admin(commands.Cog):
     @update.error
     async def update_error(self, ctx, error):
         await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    
+    @commands.command()
+    @commands.is_owner()
+    async def reboot(self, ctx):
+        message = await ctx.send("nograred Logging off bot account and shutting down ")
+        await asyncio.sleep(2)
+        await message.edit(content="nograoffline Nogra is offline")
+        await ctx.bot.logout()
+        await login(os.environ['DISCORD_TOKEN'], bot=True)
+        await message.edit(content="nograyellow Nogra is starting up...")
+        await asyncio.sleep(3)
+        await message.edit(content="nograonline Nogra is now online.")
+  
+    @reboot.error
+    async def reboot_error(self, ctx, error):
+        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

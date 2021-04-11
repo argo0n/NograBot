@@ -202,7 +202,7 @@ class Fun(commands.Cog):
             embed.add_field(name="**get rekt noob**",
                             value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
                             inline=True)
-            embed.set_footer(text=f"Exercise more tbh {member.name}")
+            embed.set_footer(text=f"Exercise more tbh {ctx.author.mention}")
             await ctx.send(embed=embed)
             await asyncio.sleep(duration)
             await channel.set_permissions(ctx.author, overwrite=None)

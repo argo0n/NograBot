@@ -1,3 +1,13 @@
+# |------------------------------------------------------------------------------------|
+# |                                                                                    |
+# |                                                                                    |
+# |                               Fun Cog for Nogra Bot                                |
+# |                               Written by Argon#0002                                |
+# |                               Commands in this cog:                                |
+# |   say, pogpong, bon, blacklisttypefor, secretping, yeet, unoreverse, dumbfight     |
+# |                                                                                    |
+# |                                                                                    |
+# |------------------------------------------------------------------------------------
 from discord.ext import commands
 import discord
 import datetime
@@ -24,7 +34,7 @@ class Fun(commands.Cog):
         if message.author.id == 800184970298785802:
             return
 
-    @commands.command(name="says", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
+    @commands.command(name="say", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
     async def say(self, ctx, *, arg=None):
         if ctx.author.id == 560251854399733760:
             return

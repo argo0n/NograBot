@@ -1,3 +1,13 @@
+# |------------------------------------------------------------------------------------|
+# |                                                                                    |
+# |                                                                                    |
+# |                              Admin Cog for Nogra Bot                               |
+# |                               Written by Argon#0002                                |
+# |                               Commands in this cog:                                |
+# |                edit, eval, setstatus, rmtag, dmads, update, reboot                 |
+# |                                                                                    |
+# |                                                                                    |
+# |------------------------------------------------------------------------------------
 from discord.ext import commands
 import asyncio
 import traceback

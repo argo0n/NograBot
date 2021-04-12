@@ -1,3 +1,13 @@
+# |------------------------------------------------------------------------------------|
+# |                                                                                    |
+# |                                                                                    |
+# |                          DankMemerHelp Cog for Nogra Bot                           |
+# |                               Written by Argon#0002                                |
+# |                               Commands in this cog:                                |
+# |                           pls lottery and rob reminders                            |
+# |                                                                                    |
+# |                                                                                    |
+# |------------------------------------------------------------------------------------
 from discord.ext import commands
 import discord, datetime, time
 import pytz

@@ -1,3 +1,13 @@
+# |------------------------------------------------------------------------------------|
+# |                                                                                    |
+# |                                                                                    |
+# |                         RobloxServerOnly Cog for Nogra Bot                         |
+# |                               Written by Argon#0002                                |
+# |                               Commands in this cog:                                |
+# |                          kicc, allow, admon, cutie, uglie                          |
+# |                                                                                    |
+# |                                                                                    |
+# |------------------------------------------------------------------------------------
 import discord
 from discord.ext import commands
 import asyncio

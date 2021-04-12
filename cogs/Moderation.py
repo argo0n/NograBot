@@ -1,3 +1,13 @@
+# |------------------------------------------------------------------------------------|
+# |                                                                                    |
+# |                                                                                    |
+# |                            Moderation Cog for Nogra Bot                            |
+# |                               Written by Argon#0002                                |
+# |                               Commands in this cog:                                |
+# |                clear, uptime, invite, abuse, stopabusing, ban, cban                |
+# |                                                                                    |
+# |                                                                                    |
+# |------------------------------------------------------------------------------------
 from discord.ext import commands
 import discord, datetime, time
 import pytz
@@ -112,44 +122,6 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
         except discord.HTTPException:
             await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
-
-    @commands.command(brief="gib power to aboos", description = "Gives admin role to a member")
-    @commands.has_permissions(manage_permissions=True)
-    async def abuse(self, ctx, member:discord.Member=None):
-        if member is None:
-            await ctx.send(
-                "https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
-        else:
-            var = discord.utils.get(ctx.guild.roles, name="admin")
-            await member.add_roles(var)
-            await ctx.send(
-                f"{member.mention} {ctx.author.name} granted you the power of abuse here, have fun! <:nogracuteblush:806168390003064883>")
-
-    @abuse.error
-    async def abuse_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send("lmfao no you need \"manage permissions\" to let people abuse")
-        else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
-
-    @commands.command(brief="Removes admin role to prevent aboos", description = "Removes admin role in a guild from a player to prevent abuse")
-    @commands.has_permissions(manage_permissions=True)
-    async def stopabusing(self, ctx, member: discord.Member = None):
-        if member is None:
-            await ctx.send(
-                "https://cdn.discordapp.com/attachments/797711768696651787/818796868758274059/unknown.png")
-        else:
-            await ctx.send(
-                f"{member.mention} {ctx.author.name} felt that you weren't worthy of abusing. <:nograhahausuck:819085149525245962>")
-            var = discord.utils.get(ctx.guild.roles, name="admin")
-            await member.remove_roles(var)
-
-    @stopabusing.error
-    async def stopabusing_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send("lmfao no you need \"manage permissions\" to stop people from wrecking the server")
-        else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):

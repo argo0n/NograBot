@@ -103,25 +103,6 @@ async def on_message(message):
             text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source: The Straits Times")
         await message.channel.send(embed=cheongembed)
 
-    if "let me abuse" in message.content:
-#        if message.author.id == 642318626044772362 or message.author.id == 526403874802892822:
-#            await message.channel.send("You can already aboos in this server <a:nografan:814870109343449088>"
-#        elif message.author.id == 650647680837484556:
-        var = discord.utils.get(message.guild.roles, name="admin")
-        await message.author.add_roles(var)
-        await message.channel.send("You're worthy of aboosing, this server is shit anyways.")
-
-    if "stop abusing" in message.content:
-        var = discord.utils.get(message.guild.roles, name="admin")
-        await message.author.remove_roles(var)
-        await message.channel.send("Good boye")
-
-    if "nogra help mintyy" in message.content:
-        var = discord.utils.get(message.guild.roles, name="admin")
-        member = message.guild.get_member(604212608941424640)
-        await member.remove_roles(var)
-        await message.channel.send("i've helped mintyy ")
-
     # LEM CATFISH
  ##   if message.author.id == 781764427287756841:
  #       await message.channel.send('Bad and poor catfish <a:jensmh:801615739034402836>')

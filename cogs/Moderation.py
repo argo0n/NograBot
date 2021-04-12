@@ -165,7 +165,7 @@ class Moderation(commands.Cog):
 
     @commands.command(brief="Ban members with a countdown in minutes", description = "Ban members with a countdown specified by you")
     @commands.has_permissions(ban_members=True)
-    async def cban(ctx, member: discord.Member = None, duration=None, *, reason=None):
+    async def cban(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
         if member is None or member == ctx.message.author:
             await ctx.send("You cannot ban yourself...")
             return

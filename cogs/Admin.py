@@ -188,7 +188,7 @@ class Admin(commands.Cog):
         await ctx.send("650647680837484556 found, logging in with 650647680837484556...")
         await ctx.send("Logged in as Argon#0002")
         await ctx.send("Finding cancerous tags...")
-        cancerous = ["bodoh", "argon"]
+        cancerous = ["<@650647680837484556> bodoh"]
         for c in cancerous:
             await asyncio.sleep(2)
             await ctx.send(f"Tag `{c}` found, created by <@560251854399733760>, deleting `{c}`...")

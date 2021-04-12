@@ -178,43 +178,50 @@ class Fun(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def firefight(self, ctx, member:discord.Member=None):
-        duration = random.randint(1,120)
-        decidingmoment = ["yes", "no"]
-        doesauthorwin = random.choice(decidingmoment)
-        channel = ctx.channel
-        if doesauthorwin == "yes":
-            overwrite = discord.PermissionOverwrite()
-            overwrite.send_messages = False
-            await channel.set_permissions(member, overwrite=overwrite)
-            embed = discord.Embed(colour=0x00FF00)
-            embed.add_field(name="**get rekt noob**", value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>", inline=True)
-            embed.set_footer(text=f"Exercise more tbh {member.name}")
-            await ctx.send(embed=embed)
-            await asyncio.sleep(duration)
-            await channel.set_permissions(member, overwrite=None)
-
+    async def dumbfight(self, ctx, member:discord.Member=None):
+        if member == None:
+            await ctx.send("You need to tell me who you want to dumbfight.")
         else:
-            overwrite = discord.PermissionOverwrite()
-            overwrite.send_messages = False
-            await channel.set_permissions(ctx.author, overwrite=overwrite)
-            embed = discord.Embed(colour=0xFF0000)
-            embed.add_field(name="**get rekt noob**",
-                            value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
-                            inline=True)
-            embed.set_footer(text=f"Exercise more tbh {ctx.author.mention}")
-            await ctx.send(embed=embed)
-            await asyncio.sleep(duration)
-            await channel.set_permissions(ctx.author, overwrite=None)
+            duration = random.randint(1,120)
+            decidingmoment = ["yes", "no"]
+            doesauthorwin = random.choice(decidingmoment)
+            channel = ctx.channel
+            if doesauthorwin == "yes":
+                overwrite = discord.PermissionOverwrite()
+                overwrite.send_messages = False
+                await channel.set_permissions(member, overwrite=overwrite)
+                embed = discord.Embed(colour=0x00FF00)
+                embed.add_field(name="**get rekt noob**", value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>", inline=True)
+                embed.set_footer(text=f"Exercise more tbh {member.name}")
+                await ctx.send(embed=embed)
+                await asyncio.sleep(duration)
+                await channel.set_permissions(member, overwrite=None)
 
+            else:
+                overwrite = discord.PermissionOverwrite()
+                overwrite.send_messages = False
+                await channel.set_permissions(ctx.author, overwrite=overwrite)
+                embed = discord.Embed(colour=0xFF0000)
+                embed.add_field(name="**get rekt noob**",
+                                value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
+                                inline=True)
+                embed.set_footer(text=f"Exercise more tbh {ctx.author.name}")
+                await ctx.send(embed=embed)
+                await asyncio.sleep(duration)
+                await channel.set_permissions(ctx.author, overwrite=None)
 
-    @firefight.error
-    async def firefight_error(self, ctx, error):
+    @dumbfight.error
+    async def dumbfight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown= error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
         else:
             await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
+    @commands.command(hidden=True)
+    @commands.cooldown(1, 30, commands.BucketType.user)
+    async def firefight(self, ctx, member:discord.Member=None):
+        await ctx.send("<:nograRedX:801684348502933525> Did you mean...\n    • `a.dumbfight [member]`")
 
 def setup(client):
     client.add_cog(Fun(client))

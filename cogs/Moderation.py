@@ -158,7 +158,7 @@ class Moderation(commands.Cog):
             message = f"You have been banned from {ctx.guild.name} for: {reason}"
             try:
                 await member.send(message)
-            except discord.errors.Forbidden:
+            except discord.Forbidden:
                 pass
             await member.ban(reason=reason)
             await ctx.send(f"{member} is banned for: {reason}")

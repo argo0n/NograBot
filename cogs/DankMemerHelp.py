@@ -41,9 +41,16 @@ class DankMemerHelp(commands.Cog):
         if message.author.id == 800184970298785802:
             return
         if "pls lottery" in message.content or "Pls lottery" in message.content:
-            await message.channel.send("Will remind you in 1 hour")
-            await asyncio.sleep(3600)
-            await message.channel.send(f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+            if message.author.id == 392127809939570688:
+                await message.channel.send("Will remind you in 1 hour via DMS")
+                await asyncio.sleep(3600)
+                await message.author.send(
+                    f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
+            else:
+                await message.channel.send("Will remind you in 1 hour")
+                await asyncio.sleep(3600)
+                await message.channel.send(f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471> \n ||If you want to be DMed for these reminders instead, message Argon||")
 
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
             await message.delete()

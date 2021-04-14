@@ -135,7 +135,7 @@ class DankMemerHelp(commands.Cog):
         durationinminutes = duration*60
         member = ctx.guild.get_member(memberid)
         await asyncio.sleep(durationinminutes)
-        if ctx.author.id == 392127809939570688 or ctx.author.id == 650647680837484556:
+        if memberid == 392127809939570688 or memberid == 650647680837484556:
             await member.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
             print(f"I've sent a lottery message to {member.name}#{member.discriminator}")
         else:

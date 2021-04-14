@@ -130,6 +130,7 @@ class DankMemerHelp(commands.Cog):
 
     @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
     async def manualremind(self, ctx, memberid, duration):
+        memberid == int(memberid)
         durationinminutes = duration*60
         member = ctx.guild.get_member(memberid)
         await asyncio.sleep(durationinminutes)

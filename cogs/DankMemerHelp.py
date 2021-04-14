@@ -127,5 +127,26 @@ class DankMemerHelp(commands.Cog):
         if message.content.startswith("Nice I'm proud of you"):
             if message.author.id == 805251248488054794:
                 await message.channel.send("<:nogracuteblush:806168390003064883> ty")
+
+        @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
+        async def manualremind(self, ctx, memberid, duration):
+            durationinminutes = duration*60
+            member = ctx.guild.get_member(memberid)
+            await asyncio.sleep(durationinminutes)
+            if ctx.author.id == 392127809939570688 or ctx.author.id == 650647680837484556:
+                await member.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                print(f"I've sent a lottery message to {member.name}#{member.discriminator}")
+            else:
+                await ctx.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+
+
+
+
+
+            try:
+                await ctx.send(embed=embed)
+            except discord.HTTPException:
+                await ctx.send(
+                    f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 def setup(client):
     client.add_cog(DankMemerHelp(client))

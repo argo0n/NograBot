@@ -45,7 +45,7 @@ class DankMemerHelp(commands.Cog):
                 await message.channel.send("Will remind you in 1 hour via DMS")
                 await asyncio.sleep(3600)
                 await message.author.send(
-                    f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                    f"{message.author.mention} You were reminded in **{message.guild.name}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
                 print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
             else:
                 await message.channel.send("Will remind you in 1 hour")
@@ -130,13 +130,13 @@ class DankMemerHelp(commands.Cog):
 
     @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
     async def manualremind(self, ctx, memberid, duration):
-        memberid == int(memberid)
-        duration == int(duration)
+        memberid = int(memberid)
+        duration = int(duration)
         durationinminutes = duration*60
         member = ctx.guild.get_member(memberid)
         await asyncio.sleep(durationinminutes)
         if memberid == 392127809939570688 or memberid == 650647680837484556:
-            await member.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+            await member.send(f"{member.mention} You were reminded in **{ctx.guild.name}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
             print(f"I've sent a lottery message to {member.name}#{member.discriminator}")
         else:
             await ctx.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")

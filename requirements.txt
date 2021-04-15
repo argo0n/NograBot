@@ -1,5 +1,6 @@
-discord.py
+discord.py[voice]
 utils~=1.0.1
 buttons
 pytz
 googletrans
+PyNaCl

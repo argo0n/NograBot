@@ -9,6 +9,7 @@ import os
 import datetime
 from datetime import datetime as dt
 from datetime import date
+import nacl
 
 blacklist = {"560251854399733760"}
 intents = discord.Intents(messages=True, guilds=True)
@@ -156,6 +157,12 @@ async def on_member_join(member):
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"{extension} loaded.")
+
+@client.command()
+async def join(ctx):
+    author = ctx.author
+    channel = author.voice_channel
+    await client.join_voice_channel(channel)
 
 @client.command(brief="Unloads cogs", description = "Unloads cogs")
 @commands.is_owner()

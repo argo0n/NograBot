@@ -84,11 +84,12 @@ class DankMemerHelp(commands.Cog):
             for m in message.guild.members:
                 if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
+                    return
             else:
                 await message.channel.send("No proper mention was found.")
 
         if ("BASICALLY EVERYTHING") in message.content and message.author.id == 270904126974590976:
-            await message.channel.send("nice i'm proud of you <:nogracuteblush:806168390003064883>")
+            await message.channel.send("nice i'm proud of you <:nograblushsuit:831001647005564970>")
 
         if ("a TINY portion") in message.content or ("a small portion") in message.content or (
         "fairly decent chunk") in message.content and message.author.id == 270904126974590976:
@@ -121,12 +122,13 @@ class DankMemerHelp(commands.Cog):
             for m in message.guild.members:
                 if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
+                    return
             else:
                 await message.channel.send("No proper mention was found.")
 
         if message.content.startswith("Nice I'm proud of you"):
             if message.author.id == 805251248488054794:
-                await message.channel.send("<:nogracuteblush:806168390003064883> ty")
+                await message.channel.send("<:nograblushsuit:831001647005564970> ty")
 
     @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
     async def manualremind(self, ctx, memberid, duration):

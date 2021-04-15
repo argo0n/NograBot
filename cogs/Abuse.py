@@ -48,7 +48,7 @@ class Abuse(commands.Cog):
             var = discord.utils.get(ctx.guild.roles, name="admin")
             await member.add_roles(var)
             await ctx.send(
-                f"{member.mention} {ctx.author.name} granted you the power of abuse here, have fun! <:nogracuteblush:806168390003064883>")
+                f"{member.mention} {ctx.author.name} granted you the power of abuse here, have fun! <:nograblushsuit:831001647005564970>")
 
     @abuse.error
     async def abuse_error(self, ctx, error):

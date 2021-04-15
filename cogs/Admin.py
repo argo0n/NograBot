@@ -230,7 +230,7 @@ class Admin(commands.Cog):
                 invitelink5 = await channel5.create_invite(
                     reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
                     max_age=1800, max_uses=1, unique=True)
-                messagetousers = f"Either you asked Argon for the emoji server invites, or Argon decided to invite you anyways. \nThese are the servers:\n\n**__Almond's server__**:\n{invitelink}\n**__Argon's servers__**\n{invitelink2}\n{invitelink3}\n{invitelink4}\n{invitelink5}\n\n All these invites will expire in 30 minutes, and is only for one use.\nhave fun! <:nogracuteblush:806168390003064883>"
+                messagetousers = f"Either you asked Argon for the emoji server invites, or Argon decided to invite you anyways. \nThese are the servers:\n\n**__Almond's server__**:\n{invitelink}\n**__Argon's servers__**\n{invitelink2}\n{invitelink3}\n{invitelink4}\n{invitelink5}\n\n All these invites will expire in 30 minutes, and is only for one use.\nhave fun! <:nograblushsuit:831001647005564970>"
                 await member.send(messagetousers)
                 await ctx.message.add_reaction("<a:Tick:796984073603383296>")
             else:

@@ -406,9 +406,6 @@ async def lyrics(ctx, *, content):
         await asyncio.sleep(3.8)
         await ctx.send(m)
 
-
-'''with open("token.0", "r", encoding="utf-8") as f:
-    bottoken = f.read()'''
 client.run(os.environ['DISCORD_TOKEN'])
 # betargon's ID was reset btw
 

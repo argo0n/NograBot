@@ -62,6 +62,15 @@ async def on_guild_join(guild):
 
 async def on_message(message):
 
+    argon = message.guild.get_member(650647680837484556)
+    if argon.mentioned_in(message):
+        joinembed = discord.Embed(title="Argon is AFK", color=0x00ff00)
+        joinembed.set_author(name=f"{argon.name}", icon_url=str(argon.avatar_url))
+        joinembed.add_field(name=":(",value="having exams, won't respond to you as quickly <:RoarHeart:825742996350828556>\n- argon",inline=True)
+        joinembed.set_footer(text=f"This feature is predefined in the bot's code and not a AFK command.")
+        joinembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/694973517434978445.png?v=1")
+        await message.channel.send(embed=joinembed)
+
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 

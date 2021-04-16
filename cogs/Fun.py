@@ -233,5 +233,44 @@ class Fun(commands.Cog):
     async def firefight(self, ctx, member:discord.Member=None):
         await ctx.send("<:nograRedX:801684348502933525> Did you mean...\n    • `a.dumbfight [member]`")
 
+    @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
+    async def hug(self, ctx, target1:discord.Member=None, target2:discord.Member=None):
+        huggif = ['https://i.imgur.com/r9aU2xv.gif',
+                  'https://i.pinimg.com/originals/89/cb/38/89cb38963c452858e9336f8693a99e9c.gif',
+                  'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
+                  'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
+                  'https://acegif.com/wp-content/gif/anime-hug-9.gif',
+                  'https://25.media.tumblr.com/tumblr_ma7l17EWnk1rq65rlo1_500.gif',
+                  'https://i.pinimg.com/originals/85/72/a1/8572a1d1ebaa45fae290e6760b59caac.gif',
+                  'https://media2.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif',
+                  'https://media1.giphy.com/media/JUwliZWcyDmTQZ7m9L/giphy.gif',
+                  'https://media.tenor.com/images/ca88f916b116711c60bb23b8eb608694/tenor.gif',
+                  'https://thumbs.gfycat.com/AlienatedUnawareArcherfish-size_restricted.gif',
+                  'https://i.pinimg.com/originals/42/8b/7e/428b7ed57db9d7aeb2e3f70f21f7bb25.gif']
+        if target1 == None:
+            await ctx.send("You need to tell me who you want to hug <:sadsit:826716508750086195>")
+        else:
+            if target2 == None:
+                hug1, hug2 = ctx.author, target1
+                hugembed = discord.Embed(title="", color=0xff0000)
+                hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
+                hugembed.set_image(url=str(random.choice(huggif)))
+                await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
+            else:
+                hug1, hug2 = target1, target2
+                hugembed = discord.Embed(title="", color=0xff0000)
+                hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
+                hugembed.set_image(url=str(random.choice(huggif)))
+                await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
+
+    @hug.error
+    async def hug_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
+        else:
+            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+
 def setup(client):
     client.add_cog(Fun(client))

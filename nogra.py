@@ -20,7 +20,7 @@ statuses = ["a.help is a good start", "almond stanky", "before asking use the he
 
 newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
-                                  activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
+                                  activity=discord.Activity(type=discord.ActivityType.listening, name="studying go brr"),
                                   intents=intents)
 
 '''client.remove_command("help")'''
@@ -66,8 +66,8 @@ async def on_message(message):
     if argon.mentioned_in(message):
         joinembed = discord.Embed(title="Argon is AFK", color=0x00ff00)
         joinembed.set_author(name=f"{argon.name}", icon_url=str(argon.avatar_url))
-        joinembed.add_field(name=":(",value="having exams, won't respond to you as quickly <:RoarHeart:825742996350828556>\n- argon",inline=True)
-        joinembed.set_footer(text=f"This feature is predefined in the bot's code and not a AFK command.")
+        joinembed.add_field(name=":(",value="having exams, won't respond to you as quickly <a:nyakiss:832467845417009162>\n- argon",inline=True)
+        joinembed.set_footer(text=f"This feature is predefined in the bot's code and not used with a AFK command.")
         joinembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/694973517434978445.png?v=1")
         await message.channel.send(embed=joinembed)
 

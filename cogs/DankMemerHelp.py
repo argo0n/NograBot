@@ -34,7 +34,7 @@ class DankMemerHelp(commands.Cog):
     async def on_ready(self):
         print("Cog \"Moderation\" loaded")
         channel = self.client.get_channel(830352644027449354)
-        await channel.send("Nogra has just rebooted, any existing reminders have been wiped.")
+        await channel.send("Rebooted, reminders erased.")
 
     @commands.Cog.listener()
     async def on_message(self, message):

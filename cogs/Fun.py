@@ -251,13 +251,13 @@ class Fun(commands.Cog):
         else:
             if target2 == None:
                 hug1, hug2 = ctx.author, target1
-                hugembed = discord.Embed(title="", color=0xff0000)
+                hugembed = discord.Embed(title="", color=0x8B95C9)
                 hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
                 hugembed.set_image(url=str(random.choice(huggif)))
                 await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
             else:
                 hug1, hug2 = target1, target2
-                hugembed = discord.Embed(title="", color=0xff0000)
+                hugembed = discord.Embed(title="", color=0x8B95C9)
                 hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
                 hugembed.set_image(url=str(random.choice(huggif)))
                 await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)

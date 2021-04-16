@@ -236,7 +236,6 @@ class Fun(commands.Cog):
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
     async def hug(self, ctx, target1:discord.Member=None, target2:discord.Member=None):
         huggif = ['https://i.imgur.com/r9aU2xv.gif',
-                  'https://i.pinimg.com/originals/89/cb/38/89cb38963c452858e9336f8693a99e9c.gif',
                   'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
                   'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
                   'https://acegif.com/wp-content/gif/anime-hug-9.gif',

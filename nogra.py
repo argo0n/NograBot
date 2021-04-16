@@ -63,11 +63,12 @@ async def on_guild_join(guild):
 async def on_message(message):
 
     argon = message.guild.get_member(650647680837484556)
-    if argon.mentioned_in(message):
+    if argon.mentioned_in(message) and message.author != client.user:
         joinembed = discord.Embed(title="Argon is AFK", color=0x00ff00)
         joinembed.set_author(name=f"{argon.name}", icon_url=str(argon.avatar_url))
         joinembed.add_field(name=":(",value="having exams, won't respond to you as quickly <a:nyakiss:832467845417009162>\n- argon",inline=True)
         joinembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/694973517434978445.png?v=1")
+        joinembed.set_footer(text=f"Argon has been AFK since: 16 April 2021, 06:00 UTC")
         await message.channel.send(embed=joinembed)
 
     if message.channel.id == 821042728849768478:

@@ -77,7 +77,7 @@ async def on_message(message):
         joinembed.set_author(name=f"{argon.name}", icon_url=str(argon.avatar_url))
         joinembed.add_field(name=":(",value="having exams, won't respond to you as quickly <a:nyakiss:832467845417009162>\n- argon",inline=True)
         joinembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/694973517434978445.png?v=1")
-        joinembed.set_footer(text=f"Argon has been AFK for {afksince}. Also this is __not__ a afk command lmao")
+        joinembed.set_footer(text=f"Argon has been AFK for {afksince}. Also this is not a afk command lmao")
         await message.channel.send(embed=joinembed)
 
     if message.channel.id == 821042728849768478:

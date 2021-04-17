@@ -60,7 +60,7 @@ class RobloxServerOnly(commands.Cog):
     @commands.command(brief="Better than cutie role", description = "Gives elevated admin role for a while")
     async def admon(self, ctx, member: discord.Member = None, durationinseconds=None):
         if ctx.guild.id != 818436261873844224:
-            ctx.send("You are using this in the wrong guild!")
+            await ctx.send("You are using this in the wrong guild!")
         else:
             if member is None:
                 await ctx.send("Aren't you supposed to mention someone?")

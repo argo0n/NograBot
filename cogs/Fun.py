@@ -33,7 +33,9 @@ class Fun(commands.Cog):
     async def on_message(self, message):
 
         argon = message.guild.get_member(650647680837484556)
-        if argon.mentioned_in(message) and message.author != self.client.user:
+        if argon == None:
+            return
+        elif argon.mentioned_in(message) and message.author != self.client.user:
             date_time_obj = datetime.datetime.strptime('16/04/21 06:00:00', '%d/%m/%y %H:%M:%S')
             sinceafktime = date_time_obj.timestamp()
             formatofdatesinceafk = date_time_obj.strftime("%A, %d %B %Y, %H:%M:%S")

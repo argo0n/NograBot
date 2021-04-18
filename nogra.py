@@ -386,19 +386,47 @@ async def triggers(ctx):
 
 @ei.error
 async def ei_error(ctx, error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+    await ctx.send(embed=errorembed)
+    print(error)
 
 @hmmm.error
 async def hmmm_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+    await ctx.send(embed=errorembed)
+    print(error)
 
 @ping.error
 async def ping_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+    await ctx.send(embed=errorembed)
+    print(error)
 
 @calc.error
 async def calc_error(ctx,error):
-    await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+    errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+    await ctx.send(embed=errorembed)
+    print(error)
 
 @client.command()
 async def lyrics(ctx, *, content):

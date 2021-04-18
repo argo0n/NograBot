@@ -120,7 +120,14 @@ class Admin(commands.Cog):
 
     @edit.error
     async def edit_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
@@ -165,7 +172,14 @@ class Admin(commands.Cog):
 
     @setstatus.error
     async def setstatus_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="Removes carl tags that targets argon", description="Removes carlbot tags that targets argon")
     async def rmtag(self, ctx, website):
@@ -202,7 +216,14 @@ class Admin(commands.Cog):
 
     @rmtag.error
     async def rmtag_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command()
     async def dmads(self, ctx, *, member: discord.User = None):
@@ -238,7 +259,14 @@ class Admin(commands.Cog):
 
     @dmads.error
     async def dmads_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
     @commands.is_owner()
@@ -253,7 +281,14 @@ class Admin(commands.Cog):
 
     @update.error
     async def update_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
     
     @commands.command()
     @commands.is_owner()
@@ -269,14 +304,28 @@ class Admin(commands.Cog):
   
     @reboot.error
     async def reboot_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):
         return "\n".join(content.split("\n")[1:][:-3])
     '''@_eval.error
     async def _eval_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+print(error)'''
 
 def setup(client):
     client.add_cog(Admin(client))

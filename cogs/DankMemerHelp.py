@@ -144,6 +144,13 @@ class DankMemerHelp(commands.Cog):
             await ctx.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
     @manualremind.error
     async def manualremind_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 def setup(client):
     client.add_cog(DankMemerHelp(client))

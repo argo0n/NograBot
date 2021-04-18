@@ -68,7 +68,14 @@ class Fun(commands.Cog):
 
     @say.error
     async def say_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="pogpong", brief="real ping !! 1 ms!!", description="Creates a fake ping duration.")
     async def pogpong(self, ctx, pong):
@@ -76,7 +83,14 @@ class Fun(commands.Cog):
 
     @pogpong.error
     async def pogpong_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="bon", brief="Fake ban", description="Makes a fake ban message")
     async def bon(self, ctx, member: discord.Member = None, *, reason=None):
@@ -93,7 +107,14 @@ class Fun(commands.Cog):
 
     @bon.error
     async def bon_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
@@ -118,7 +139,14 @@ class Fun(commands.Cog):
 
     @blacklist.error
     async def blacklist_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="typefor", brief="types", description="Types for however you want, but must be below 1000 seconds")
     async def typefor(self, ctx, number=None):
@@ -141,7 +169,14 @@ class Fun(commands.Cog):
 
     @typefor.error
     async def typefor_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(name="secretping", brief="Pings user secretly", description="Have Nogra help you ping someone, you just need that person's ID.")
     async def secretping(self, ctx, userid=None, *, message=None):
@@ -157,7 +192,14 @@ class Fun(commands.Cog):
 
     @secretping.error
     async def secretping_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="YA YEET", description="Use this command to yeet anyone you hate or do it just for fun ;)")
     async def yeet(self, ctx, member=None):
@@ -183,7 +225,14 @@ class Fun(commands.Cog):
 
     @yeet.error
     async def yeet_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(aliases=['ur', 'reverse'])
     async def unoreverse(self, ctx, member=None):
@@ -205,7 +254,14 @@ class Fun(commands.Cog):
 
     @unoreverse.error
     async def unoreverse_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -247,7 +303,14 @@ class Fun(commands.Cog):
             cooldown= error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
     @commands.command(hidden=True)
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -290,7 +353,14 @@ class Fun(commands.Cog):
             await ctx.send(
                 f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
 def setup(client):
     client.add_cog(Fun(client))

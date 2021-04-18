@@ -55,7 +55,14 @@ class Abuse(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("lmfao no you need \"manage permissions\" to let people abuse")
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
     @commands.command(brief="Removes admin role to prevent aboos", description = "Removes admin role in a guild from a player to prevent abuse")
     @commands.has_permissions(manage_permissions=True)
@@ -74,7 +81,14 @@ class Abuse(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("lmfao no you need \"manage permissions\" to stop people from wrecking the server")
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
 def setup(client):
     client.add_cog(Abuse(client))

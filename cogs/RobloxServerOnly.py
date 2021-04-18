@@ -36,7 +36,14 @@ class RobloxServerOnly(commands.Cog):
 
     @kicc.error
     async def kicc_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="Lets everyone into frenzy's sleeping channel", description = "Gives everyone read message perms in frenzy's sleeping channel")
     async def allow(self, ctx):
@@ -55,7 +62,14 @@ class RobloxServerOnly(commands.Cog):
 
     @allow.error
     async def allow_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="Better than cutie role", description = "Gives elevated admin role for a while")
     async def admon(self, ctx, member: discord.Member = None, durationinseconds=None):
@@ -108,7 +122,14 @@ class RobloxServerOnly(commands.Cog):
 
     @admon.error
     async def admon_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command()
     async def cutie(self, ctx):
@@ -141,11 +162,25 @@ class RobloxServerOnly(commands.Cog):
 
     @cutie.error
     async def cutie_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @uglie.error
     async def uglie_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
 def setup(client):
     client.add_cog(RobloxServerOnly(client))

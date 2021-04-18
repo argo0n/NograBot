@@ -125,15 +125,36 @@ class Moderation(commands.Cog):
 
     '''@clear.error
     async def cog_command_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")'''
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)'''
 
     @uptime.error
     async def uptime_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @clear.error
     async def clear_error(self, ctx, error):
-        await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+        errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        await ctx.send(embed=errorembed)
+        print(error)
 
     @commands.command(brief="ban hammer", description = "Bans members")
     @commands.has_permissions(ban_members=True)
@@ -205,14 +226,28 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
     @cban.error
     async def cban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send('You don\'t have the permission to ban others.')
         else:
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
 
 

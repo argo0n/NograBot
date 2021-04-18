@@ -66,7 +66,14 @@ class CommandErrorHandler(commands.Cog):
             # All other Errors not returned come here. And we can just print the default TraceBack.
             '''ctx.send('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.ctx.send_exception(type(error), error, error.__traceback__, file=sys.stderr)'''
-            await ctx.send(f"```diff\n- Error encountered!\n# erorr:\n+ {error}```")
+            errorembed = discord.Embed(title=f"Oops!",
+                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                     color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
+            print(error)
 
     """Below is an example of a Local Error Handler for our command do_repeat"""
 

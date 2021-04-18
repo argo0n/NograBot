@@ -46,10 +46,10 @@ class argonafk(commands.Cog):
             nowtime = timenow.timestamp()
             difference = int(round(nowtime - sinceafktime))
             afksince = str(datetime.timedelta(seconds=difference))
-            joinembed = discord.Embed(title="Argon is AFK", color=0x00ff00)
+            joinembed = discord.Embed(title="Argon is AFK", color=0xff0000)
             joinembed.set_author(name=f"{argon.name}", icon_url=str(argon.avatar_url))
             joinembed.add_field(name=":(",
-                                value="am in an exam rn <a:nyakiss:832467845417009162>\n- argon",
+                                value="am in an exam rn <:prayge:833354794503634974>\n- argon",
                                 inline=True)
             joinembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/679796247896391783.png?v=1")
             joinembed.set_footer(text=f"Argon has been AFK for {afksince}. Also this is not a afk command lmao")

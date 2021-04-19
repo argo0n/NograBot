@@ -435,7 +435,7 @@ async def lyrics(ctx, *, content):
         await asyncio.sleep(3.8)
         await ctx.send(m)
 
-client.run(os.environ['DISCORD_TOKEN'])
+client.run(os.environ['NOGRAtoken'])
 # betargon's ID was reset btw
 
 

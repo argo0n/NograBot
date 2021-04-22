@@ -18,6 +18,9 @@ class RobloxServerOnly(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Cogs \"RobloxServerOnly\" has loaded")
 
     @commands.command(brief="kicks everyone out of frenzy's sleeping channel", description = "kicks everyone out of freny's sleeping channel")
     async def kicc(self, ctx):

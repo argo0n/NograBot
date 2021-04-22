@@ -21,7 +21,7 @@ statuses = ["a.help is a good start", "almond stanky", "before asking use the he
 
 newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
-                                  activity=discord.Activity(type=discord.ActivityType.listening, name="studying go brr"),
+                                  activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
                                   intents=intents)
 
 '''client.remove_command("help")'''
@@ -59,8 +59,8 @@ async def on_guild_join(guild):
         except discord.HTTPException:
             message = f"Thanks for inviting me!\nThis is a Python bot, expect bugs to occur when using me.\n\n**__Pre-use Configuration__**\n\n__Admin role commands__\n    • {client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.\n__Emoji Utilities\n    • Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.\n__{client.user.name}'s permissions__\n    • If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.\n\nDo a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.\n\n- Nogra"
             await general.send(message)
-@client.event
 
+@client.event
 async def on_message(message):
 
     if message.channel.id == 821042728849768478:
@@ -137,13 +137,7 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
-    if member.id == 560251854399733760 and member.guild.id == 818436261873844224:
-        sleepyrole = discord.utils.get(member.guild.roles, name="Sleepy")
-        adminrole = discord.utils.get(member.guild.roles, name="if you have this role you're cute uwu")
-        await member.add_roles(sleepyrole)
-        await member.add_roles(adminrole)
-        await client.get_channel(818436261891014660).send("Welcome back <@560251854399733760>! I have given you your <@&821226296485871618> and admin role.")
-    elif member.guild.id == 789840820563476482:
+    if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
         server = member.guild
         await member.send("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
@@ -159,12 +153,6 @@ async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"{extension} loaded.")
 
-@client.command()
-async def join(ctx):
-    author = ctx.author
-    channel = author.voice_channel
-    await client.join_voice_channel(channel)
-
 @client.command(brief="Unloads cogs", description = "Unloads cogs")
 @commands.is_owner()
 async def unload(ctx, extension):
@@ -174,30 +162,6 @@ async def unload(ctx, extension):
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
-
-@client.command(pass_context=True, brief="calculates", description="calculates your stupid math problems")
-async def calc(ctx, *, yourcalculation):
-    strsent = int(yourcalculation)
-    result = eval(strsent)
-    await ctx.send(str(yourcalculation) + " = " + str(result))
-
-
-@client.command(name="emojis", brief="Lists out emojis", description="Lists out emojis")
-async def hmmm(ctx):
-    #allowedChannels = [813288124460826667, 802544393122742312, 810007699579338762, 800669048974213150] if ctx.channel.id in allowedChannels
-    if ctx.message.author.id == 650647680837484556:
-        await ctx.send(f"**__Emojis in {ctx.guild.name}__**")
-        output = ''
-        for emoji in ctx.guild.emojis:
-            if len(output) < 1600:
-                output += f"{str(emoji)} `:{emoji.name}:`\n"
-            else:
-                await ctx.send(output)
-                output = f"{str(emoji)} `:{emoji.name}:`\n"
-
-        await ctx.send(output)
-    else:
-        await ctx.send("You can only use this command if you are Argon.")
 
 '''@client.group(invoke_without_command=True)
 async def help(ctx):
@@ -326,115 +290,6 @@ async def setstatus(ctx):
     ee.add_field(name="__**Usage**__", value="`ar.setstatus <online/idle/dnd> <game/stream/listen/watch> <what I am doing>`")
     ee.add_field(name="__**Needs**__",value="`Bot Owner`", inline=False)
     await ctx.send(embed = ee)'''
-
-@client.command(pass_context=True, brief="Creates channel", description = "Creates a channel in a guild")
-@commands.has_permissions(manage_channels=True)
-async def cchan(ctx, *, channel_name=None):
-    if channel_name is None:
-        await ctx.send("You need to tell me what is the name of the channel you want to create.")
-    else:
-        guild = ctx.message.guild
-        await guild.create_text_channel(channel_name)
-        await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
-
-
-
-
-# ping (bot latency command)
-@client.command(brief="Shows client latency", description = "shows client latency")
-async def ping(ctx):
-    await ctx.send(f'Pong! {round(client.latency * 1000)}ms  🏓')
-    if client.latency > 0.250:
-        await ctx.send('Well, that is rather slow..')
-
-@client.command(brief="gives emojis info in guild", description = "Gives info about emojis in guild")
-async def ei(ctx):
-    emojino = len(ctx.guild.emojis)
-    limit = ctx.guild.emoji_limit + 50
-    remaining = limit - emojino
-    embed = discord.Embed(title="**__Emoji Info for " + ctx.guild.name + "__**", color=0x00ff40)
-    embed.set_author(name=ctx.guild.name)
-    embed.add_field(name="Number of emojis in this guild", value=str(emojino), inline=False)
-    embed.add_field(name="Maximum number of emojis", value=str(limit), inline=True)
-    embed.add_field(name="Remaining emojis available", value=str(remaining), inline=True)
-    await ctx.send(embed=embed)
-
-
-    # showing triggers
-
-'''@client.command()
-async def triggers(ctx):
-    if ctx.guild.id == 738632364208554095:
-        triggerembed = discord.Embed(title="Triggers for " + str(ctx.guild.name),
-                                     description="<:oma:789840876922601483>", color=0x00ff00)
-        triggerembed.add_field(name="cheong", value="gets cheong's long forgotten meet link", inline=False)
-        triggerembed.set_footer(text="mmm monke")
-        await ctx.send(embed=triggerembed)
-    if ctx.guild.id == 789840820563476482:
-        triggerembed = discord.Embed(title="Triggers for " + str(ctx.guild.name),
-                                     description="<:oma:789840876922601483>", color=0x00ff00)
-        triggerembed.add_field(name="If Lem sends a message", value="I will scold lem", inline=False)
-        triggerembed.set_footer(text="mmm monke")
-        await ctx.send(embed=triggerembed)
-    else:
-        await ctx.send("There are no triggers for this server!")'''
-
-
-
-
-# errors
-
-@ei.error
-async def ei_error(ctx, error):
-    errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-    await ctx.send(embed=errorembed)
-    print(error)
-
-@hmmm.error
-async def hmmm_error(ctx,error):
-    errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-    await ctx.send(embed=errorembed)
-    print(error)
-
-@ping.error
-async def ping_error(ctx,error):
-    errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-    await ctx.send(embed=errorembed)
-    print(error)
-
-@calc.error
-async def calc_error(ctx,error):
-    errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-    errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-    await ctx.send(embed=errorembed)
-    print(error)
-
-@client.command()
-async def lyrics(ctx, *, content):
-    message=["It's not just me, no, you feel it too", "You know and I know, we lost the lotto", "It's like our love cut the line in two", "We're on different sides though, lost in the echo","Our lips are moving, they're makin' words","Words turn to riddles, we make it worse","'Cause I'm not listening, and you're not listening, no","We try to fix it, it never works","We go, breaking up like cell phones","When I speak, 'cause you don't listen when I talk","Dial tone, nothing but that high note","When you speak 'cause I don't listen when you talk","Ooh, yeah, don't think we'll ever get better, better","Gets worse with every letter, letter","Dial tone, nothing but that high note","On repeat 'cause we don't listen when we talk","If we could speak like we're trying to","Share conversation, communication","I'm hearing me and you're hearing you", "We're on different islands, just sounds of silence","Our lips are moving, they're makin' words (oh)","Words turn to riddles, don't make it worse","Cause I'm not listening, I'm not listening","And you're not listening, (and you're not listening) no","We try to fix it, it never works (hey)","We go, breaking up like cell phones","When I speak, 'cause you don't listen when I talk","Dial tone, nothing but that high note","When you speak 'cause I don't listen when you talk","Ooh, yeah, don't think we'll ever get better, better (hey)","Gets worse with every letter, letter","Dial tone, nothing but that high note","On repeat 'cause we don't listen when we talk","Our lips are moving, they're making words (don't make it worse)","Words turn to riddles, we make it worse","Cause I'm not listening, (not listening)","And you're not listening (and you're not listening), no","We try to fix it, it never works (oh)","We go, breaking up like cell phones","When I speak, 'cause you don't listen when I talk","Dial tone, nothing but that high note","When you speak 'cause I don't listen when you talk","Listen when we talk, ooh yeah","Don't think we'll ever get better, better (don't think we'll ever get better, no)","Gets worse with every letter, letter (worse with every letter)","Dial tone"]
-    for m in message:
-        await asyncio.sleep(3.8)
-        await ctx.send(m)
-
 client.run(os.environ['NOGRAtoken'])
 # betargon's ID was reset btw
 

@@ -19,6 +19,10 @@ class Abuse(commands.Cog):
         self.client = client
 
     @commands.Cog.listener()
+    async def on_ready(self):
+        print("Cogs \"Abuse\" has loaded")
+
+    @commands.Cog.listener()
     async def on_message(self, message):
         if "let me abuse" in message.content:
             if message.guild.id == 830612362960437258:
@@ -38,7 +42,7 @@ class Abuse(commands.Cog):
             await message.author.remove_roles(var)
             await message.channel.send("Good boye")
 
-    @commands.command(brief="gib power to aboos", description = "Gives admin role to a member")
+    @commands.command(brief="gib power to aboos", description = "Gives admin role to a member", aliases=['a'])
     @commands.has_permissions(manage_permissions=True)
     async def abuse(self, ctx, member:discord.Member=None):
         if member is None:
@@ -64,7 +68,7 @@ class Abuse(commands.Cog):
             await ctx.send(embed=errorembed)
             print(error)
 
-    @commands.command(brief="Removes admin role to prevent aboos", description = "Removes admin role in a guild from a player to prevent abuse")
+    @commands.command(brief="Removes admin role to prevent aboos", description = "Removes admin role in a guild from a player to prevent abuse", aliases=['sa'])
     @commands.has_permissions(manage_permissions=True)
     async def stopabusing(self, ctx, member: discord.Member = None):
         if member is None:

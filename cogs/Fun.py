@@ -97,20 +97,6 @@ class Fun(commands.Cog):
 
     @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
-        '''def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel
-        await ctx.send("For how many days?")
-        try:
-            msg = await client.wait_for("message", check=check, timeout=10)  # 30 seconds to reply
-            await ctx.send("And for what reason?")
-            try:
-                msg2 = await client.wait_for("message", check=check, timeout=10)  # 30 seconds to reply
-                messagetousers = f"You have been temporarily blacklisted for {msg} days by a Bot Moderator for {msg2}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
-                await member.send(messagetousers)
-            except asyncio.TimeoutError:
-                await ctx.send("Sorry, you didn't reply in time!")
-        except asyncio.TimeoutError:
-            await ctx.send("Sorry, you didn't reply in time!")'''
         messagetousers = f"You have been temporarily blacklisted for {duration} days by a Bot Moderator for {reason}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
         await member.send(messagetousers)
         await ctx.message.add_reaction("<a:Tick:796984073603383296>")

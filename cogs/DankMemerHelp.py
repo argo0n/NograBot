@@ -32,7 +32,7 @@ class DankMemerHelp(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Cog \"Moderation\" loaded")
+        print("Cog \"DankMemerHelp\" loaded")
         channel = self.client.get_channel(830352644027449354)
         await channel.send("Rebooted, reminders erased.")
 

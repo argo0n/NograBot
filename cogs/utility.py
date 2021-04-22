@@ -32,8 +32,6 @@ class utility(commands.Cog):
     async def on_ready(self):
         print("Cogs \"Utility\" has loaded")
 
-    @commands.Cog.listener()
-
     @commands.command(brief="gives emojis info in guild", description="Gives info about emojis in guild")
     async def ei(self, ctx):
         emojino = len(ctx.guild.emojis)
@@ -48,7 +46,7 @@ class utility(commands.Cog):
 
     @commands.command(brief="Shows client latency", description="shows client latency")
     async def ping(self, ctx):
-        await ctx.send(f'Pong! {round(self.latency * 1000)}ms  🏓')
+        await ctx.send(f'Pong! {round(self.client.latency * 1000)}ms  🏓')
         if self.client.latency > 0.250:
             await ctx.send('Well, that is rather slow..')
 

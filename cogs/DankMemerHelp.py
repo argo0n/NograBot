@@ -38,7 +38,7 @@ class DankMemerHelp(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == 800184970298785802:
+        if message.author.id == 800184970298785802 or message.author.id == 341994639395520526:
             return
         if "pls lottery" in message.content or "Pls lottery" in message.content:
             if message.author.id == 392127809939570688 or message.author.id == 650647680837484556:

@@ -11,6 +11,7 @@ from datetime import datetime as dt
 from datetime import date
 import nacl
 from pytz import timezone
+from discord.ext.buttons import Paginator
 
 blacklist = {"560251854399733760"}
 intents = discord.Intents(messages=True, guilds=True)
@@ -23,6 +24,25 @@ newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
                                   activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
                                   intents=intents)
+
+class MyNewHelp(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            emby = discord.Embed(description=page)
+            await destination.send(embed=emby)
+    async def send_command_help(self, command):
+        embed = discord.Embed(title=self.get_command_signature(command))
+        embed.add_field(name="Help", value=command.description)
+        alias = command.aliases
+        if alias:
+            embed.add_field(name="Aliases", value=", ".join(alias), inline=False)
+
+        channel = self.get_destination()
+        await channel.send(embed=embed)
+
+client.help_command = MyNewHelp()
+
 
 '''client.remove_command("help")'''
 
@@ -151,13 +171,23 @@ async def on_member_join(member):
 @commands.is_owner()
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
-    await ctx.send(f"{extension} loaded.")
+    await ctx.send(f"`{extension}` loaded.")
 
 @client.command(brief="Unloads cogs", description = "Unloads cogs")
 @commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
-    await ctx.send(f"{extension} unloaded.")
+    await ctx.send(f"`{extension}` unloaded.")
+
+@client.command(brief="Reboots a cog", description = "Reboots a cog", alias = "cr")
+@commands.is_owner()
+async def cogreboot(ctx, extension):
+    message = await ctx.send(f"<:nograred:830765450412425236> Rebooting `{extension}`:")
+    client.unload_extension(f'cogs.{extension}')
+    await message.edit(content=f"<:nograoffline:830765506792259614> `{extension}` unloaded.")
+    await message.edit(content=f"<:nograyellow:830765423112880148> Restarting `{extension}`...")
+    client.load_extension(f'cogs.{extension}')
+    await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):

@@ -9,6 +9,7 @@
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
 from discord.ext import commands
+from discord.utils import find
 import discord
 import datetime
 from datetime import datetime as dt
@@ -84,8 +85,43 @@ class Fun(commands.Cog):
             await ctx.send(
                 f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
-    @bon.error
-    async def bon_error(self, ctx, error):
+    @commands.command(name="spamping", brief="spam pings people", description="Spam pings people")
+    async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
+        currenttime = 0
+        if times is None:
+            await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
+        else:
+            times = int(times)
+            if times > 1000:
+                times = 1000
+            if "spam" not in ctx.channel.name:
+                await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
+                if message is None:
+                    while currenttime < times:
+                        currenttime += 1
+                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times", delete_after=1)
+                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+                    return
+                else:
+                    while currenttime < times:
+                        currenttime += 1
+                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
+                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+            else:
+                if message is None:
+                    while currenttime < times:
+                        currenttime += 1
+                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times")
+                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+                    return
+                else:
+                    while currenttime < times:
+                        currenttime += 1
+                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times. {message}")
+                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+
+    @spamping.error
+    async def spamping_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
                                      description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
                                      color=0x00ff00)
@@ -116,7 +152,8 @@ class Fun(commands.Cog):
     @commands.command(name="typefor", brief="types", description="Types for however you want, but must be below 1000 seconds")
     async def typefor(self, ctx, number=None):
         if number is None:
-            await ctx.send("Aight I typed for 0 seconds>")
+            await ctx.send("Aight I typed for 0 seconds")
+            return
         number = int(number)
         if number < 1000:
             async with ctx.typing():

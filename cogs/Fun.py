@@ -20,6 +20,47 @@ import math
 import random
 import asyncio
 
+def secondstotiming(seconds):
+    seconds = round(seconds)
+    if seconds < 60:
+        if seconds != 1:
+            secdisplay = "s"
+        else:
+            secdisplay = ""
+        return (f"{seconds} second{secdisplay}")
+    else:
+        minutes = math.trunc(seconds/60)
+        if minutes < 60:
+            seconds = seconds - minutes*60
+            if minutes != 1:
+                mindisplay = "s"
+            else:
+                mindisplay = ""
+            if seconds != 1:
+                secdisplay = "s"
+            else:
+                secisplay = ""
+            return (f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}")
+        else:
+            hours = math.trunc(minutes/60)
+            minutes = minutes - hours*60
+            seconds = seconds - minutes*60 - hours*60*60
+            if hours != 1:
+                hdisplay = "s"
+            else:
+                hdisplay = ""
+            if minutes != 1:
+                mindisplay = "s"
+            else:
+                mindisplay = ""
+            if seconds != 1:
+                secdisplay = "s"
+            else:
+                secisplay = ""
+            return (f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}")
+
+
+
 start_time = time.time()
 class Fun(commands.Cog):
 
@@ -86,6 +127,7 @@ class Fun(commands.Cog):
                 f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people")
+    @commands.cooldown(1, 1800, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
         currenttime = 0
         if times is None:
@@ -122,14 +164,18 @@ class Fun(commands.Cog):
 
     @spamping.error
     async def spamping_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                         description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                         color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            await ctx.send(embed=errorembed)
 
     @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
@@ -303,7 +349,7 @@ class Fun(commands.Cog):
     async def dumbfight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown= error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
         else:
             errorembed = discord.Embed(title=f"Oops!",
                                      description="This command just received an error. It has been sent to Argon and it will be fixed soon.",

@@ -38,10 +38,10 @@ class DankMemerHelp(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == 800184970298785802 or message.author.id == 341994639395520526:
+        if message.author.id in [800184970298785802, 341994639395520526]:
             return
         if "pls lottery" in message.content or "Pls lottery" in message.content:
-            if message.author.id == 392127809939570688 or message.author.id == 650647680837484556:
+            if message.author.id in [392127809939570688, 650647680837484556]:
                 await message.channel.send("Will remind you in 1 hour via DMS")
                 await asyncio.sleep(3600)
                 await message.author.send(
@@ -126,9 +126,11 @@ class DankMemerHelp(commands.Cog):
             else:
                 await message.channel.send("No proper mention was found.")
 
-        if message.content.startswith("Nice I'm proud of you"):
-            if message.author.id == 805251248488054794:
-                await message.channel.send("<:nograblushsuit:831001647005564970> ty")
+        if (
+            message.content.startswith("Nice I'm proud of you")
+            and message.author.id == 805251248488054794
+        ):
+            await message.channel.send("<:nograblushsuit:831001647005564970> ty")
 
     @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
     async def manualremind(self, ctx, memberid, duration):
@@ -137,7 +139,7 @@ class DankMemerHelp(commands.Cog):
         durationinminutes = duration*60
         member = ctx.guild.get_member(memberid)
         await asyncio.sleep(durationinminutes)
-        if memberid == 392127809939570688 or memberid == 650647680837484556:
+        if memberid in [392127809939570688, 650647680837484556]:
             await member.send(f"{member.mention} You were reminded in **{ctx.guild.name}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
             print(f"I've sent a lottery message to {member.name}#{member.discriminator}")
         else:

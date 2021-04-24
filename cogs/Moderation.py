@@ -173,16 +173,14 @@ class Moderation(commands.Cog):
                 await member.send(message)
             except discord.errors.Forbidden:
                 pass
-            await member.ban(reason=reason)
-            await ctx.send(f"{member} is banned for: {reason}")
         else:
             message = f"You have been banned from {ctx.guild.name} for: {reason}"
             try:
                 await member.send(message)
             except discord.Forbidden:
                 pass
-            await member.ban(reason=reason)
-            await ctx.send(f"{member} is banned for: {reason}")
+        await member.ban(reason=reason)
+        await ctx.send(f"{member} is banned for: {reason}")
 
     @commands.command(brief="Ban members with a countdown in minutes", description = "Ban members with a countdown specified by you")
     @commands.has_permissions(ban_members=True)
@@ -204,21 +202,13 @@ class Moderation(commands.Cog):
         await asyncio.sleep(timer)
         if reason is None:
             reason = "no specified reason"
-            message = f"You have been banned from {ctx.guild.name} for: {reason}"
-            try:
-                await member.send(message)
-            except discord.errors.Forbidden:
-                pass
-            await member.ban(reason=reason)
-            await ctx.send(f"{member} is banned for: {reason}")
-        else:
-            message = f"You have been banned from {ctx.guild.name} for: {reason}"
-            try:
-                await member.send(message)
-            except discord.errors.Forbidden:
-                pass
-            await member.ban(reason=reason)
-            await ctx.send(f"{member} is banned for: {reason}")
+        message = f"You have been banned from {ctx.guild.name} for: {reason}"
+        try:
+            await member.send(message)
+        except discord.errors.Forbidden:
+            pass
+        await member.ban(reason=reason)
+        await ctx.send(f"{member} is banned for: {reason}")
 
 
     @ban.error

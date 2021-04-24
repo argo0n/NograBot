@@ -37,8 +37,12 @@ class Afk(commands.Cog):
             afkdetails = json.load(f)
             k = list(afkdetails.keys())
             if str(message.author.id) in k:
+                guildid = afkdetails[str(message.author.id)]['guild_id']
+                guild = self.client.get_guild(guildid)
                 afktime = afkdetails[str(message.author.id)]['time']
-                if timenow < afktime:
+                if guild != message.guild:
+                    return
+                elif timenow < afktime:
                     await message.channel.send(f"You still have {round(afktime - timenow)} more seconds to talk. ")
                     return
                 else:
@@ -57,10 +61,9 @@ class Afk(commands.Cog):
                     afkmessage = afkdetails[i]['message']
                     guild = self.client.get_guild(guildid)
                     member = guild.get_member(userid)
-                    print(afktime, timenow)
                     if guild == message.guild and member.mentioned_in(message):
                         current_time = time.time()
-                        afk_duration = int(round(current_time - afktime))
+                        afk_duration = int(round(current_time - afktime + 30))
                         afk_duration = str(datetime.timedelta(seconds=afk_duration))
                         afk_embed = discord.Embed(title="", color=0x00ff00)
                         afk_embed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=str(member.avatar_url))
@@ -97,7 +100,6 @@ class Afk(commands.Cog):
                     user[str(ctx.author.id)]['time'] = time_now+30
                     user[str(ctx.author.id)]['message'] = message
                     with open('resources/test.json', 'w', encoding='utf8') as f:
-                        print(type(user))
                         json.dump(user,f,sort_keys=True,indent=4,ensure_ascii=False)
                         await ctx.send(f"{member.mention} You are now AFK. message: {message}")
 

@@ -26,7 +26,7 @@ class Abuse(commands.Cog):
     async def on_message(self, message):
         if "let me abuse" in message.content:
             if message.guild.id == 830612362960437258:
-                if message.author.id == 650647680837484556 or message.author.id == 697969807789654076:
+                if message.author.id in [650647680837484556, 697969807789654076]:
                     var = discord.utils.get(message.guild.roles, name="admin")
                     await message.author.add_roles(var)
                     await message.channel.send("You can abuse now <:nograblushsuit:831001647005564970>")

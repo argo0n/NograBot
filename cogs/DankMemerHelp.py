@@ -45,12 +45,12 @@ class DankMemerHelp(commands.Cog):
                 await message.channel.send("Will remind you in 1 hour via DMS")
                 await asyncio.sleep(3600)
                 await message.author.send(
-                    f"{message.author.mention} You were reminded in **{message.guild.name}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                    f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
                 print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
             else:
                 await message.channel.send("Will remind you in 1 hour")
                 await asyncio.sleep(3600)
-                await message.channel.send(f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471> \n ||If you want to be DMed for these reminders instead, message Argon||")
+                await message.channel.send(f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
 
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
             await message.delete()

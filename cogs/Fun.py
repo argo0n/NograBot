@@ -23,19 +23,13 @@ import asyncio
 def secondstotiming(seconds):
     seconds = round(seconds)
     if seconds < 60:
-        if seconds != 1:
-            secdisplay = "s"
-        else:
-            secdisplay = ""
+        secdisplay = "s" if seconds != 1 else ""
         return (f"{seconds} second{secdisplay}")
     else:
         minutes = math.trunc(seconds/60)
         if minutes < 60:
             seconds = seconds - minutes*60
-            if minutes != 1:
-                mindisplay = "s"
-            else:
-                mindisplay = ""
+            mindisplay = "s" if minutes != 1 else ""
             if seconds != 1:
                 secdisplay = "s"
             else:
@@ -45,14 +39,8 @@ def secondstotiming(seconds):
             hours = math.trunc(minutes/60)
             minutes = minutes - hours*60
             seconds = seconds - minutes*60 - hours*60*60
-            if hours != 1:
-                hdisplay = "s"
-            else:
-                hdisplay = ""
-            if minutes != 1:
-                mindisplay = "s"
-            else:
-                mindisplay = ""
+            hdisplay = "s" if hours != 1 else ""
+            mindisplay = "s" if minutes != 1 else ""
             if seconds != 1:
                 secdisplay = "s"
             else:
@@ -129,13 +117,12 @@ class Fun(commands.Cog):
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people")
     @commands.cooldown(1, 1800, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
-        currenttime = 0
         if times is None:
             await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
         else:
             times = int(times)
-            if times > 1000:
-                times = 1000
+            times = min(times, 1000)
+            currenttime = 0
             if "spam" not in ctx.channel.name:
                 await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
                 if message is None:
@@ -314,7 +301,7 @@ class Fun(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dumbfight(self, ctx, member:discord.Member=None):
-        if member == None:
+        if member is None:
             await ctx.send("You need to tell me who you want to dumbfight.")
         else:
             duration = random.randint(1,120)
@@ -367,32 +354,25 @@ class Fun(commands.Cog):
 
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
     async def hug(self, ctx, target1:discord.Member=None, target2:discord.Member=None):
-        huggif = ['https://i.imgur.com/r9aU2xv.gif',
-                  'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
-                  'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
-                  'https://acegif.com/wp-content/gif/anime-hug-9.gif',
-                  'https://25.media.tumblr.com/tumblr_ma7l17EWnk1rq65rlo1_500.gif',
-                  'https://i.pinimg.com/originals/85/72/a1/8572a1d1ebaa45fae290e6760b59caac.gif',
-                  'https://media2.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif',
-                  'https://media1.giphy.com/media/JUwliZWcyDmTQZ7m9L/giphy.gif',
-                  'https://media.tenor.com/images/ca88f916b116711c60bb23b8eb608694/tenor.gif',
-                  'https://thumbs.gfycat.com/AlienatedUnawareArcherfish-size_restricted.gif',
-                  'https://i.pinimg.com/originals/42/8b/7e/428b7ed57db9d7aeb2e3f70f21f7bb25.gif']
-        if target1 == None:
+        if target1 is None:
             await ctx.send("You need to tell me who you want to hug <:sadsit:826716508750086195>")
         else:
-            if target2 == None:
-                hug1, hug2 = ctx.author, target1
-                hugembed = discord.Embed(title="", color=0x8B95C9)
-                hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
-                hugembed.set_image(url=str(random.choice(huggif)))
-                await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
-            else:
-                hug1, hug2 = target1, target2
-                hugembed = discord.Embed(title="", color=0x8B95C9)
-                hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
-                hugembed.set_image(url=str(random.choice(huggif)))
-                await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
+            hug1, hug2 = (ctx.author, target1) if target2 is None else (target1, target2)
+            hugembed = discord.Embed(title="", color=0x8B95C9)
+            hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
+            huggif = ['https://i.imgur.com/r9aU2xv.gif',
+                      'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
+                      'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
+                      'https://acegif.com/wp-content/gif/anime-hug-9.gif',
+                      'https://25.media.tumblr.com/tumblr_ma7l17EWnk1rq65rlo1_500.gif',
+                      'https://i.pinimg.com/originals/85/72/a1/8572a1d1ebaa45fae290e6760b59caac.gif',
+                      'https://media2.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif',
+                      'https://media1.giphy.com/media/JUwliZWcyDmTQZ7m9L/giphy.gif',
+                      'https://media.tenor.com/images/ca88f916b116711c60bb23b8eb608694/tenor.gif',
+                      'https://thumbs.gfycat.com/AlienatedUnawareArcherfish-size_restricted.gif',
+                      'https://i.pinimg.com/originals/42/8b/7e/428b7ed57db9d7aeb2e3f70f21f7bb25.gif']
+            hugembed.set_image(url=str(random.choice(huggif)))
+            await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
 
     @hug.error
     async def hug_error(self, ctx, error):

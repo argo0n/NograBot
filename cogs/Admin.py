@@ -271,13 +271,11 @@ class Admin(commands.Cog):
     @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
     @commands.is_owner()
     async def update(self, ctx, *, message):
-        channel = self.client.get_channel(789840820563476485)
-        channel2 = self.client.get_channel(810426819995893780)
-        channel3 = self.client.get_channel(818436261891014660)
         await ctx.message.delete()
-        await channel.send(message)
-        await channel2.send(message)
-        await channel3.send(message)
+        channelids = [789840820563476485, 822112906014490634, 818436261891014660]
+        for i in channelids:
+            channel = self.client.get_channel(i)
+            await channel.send(message)
 
     @update.error
     async def update_error(self, ctx, error):
@@ -293,14 +291,11 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def reboot(self, ctx):
-        message = await ctx.send("nograred Logging off bot account and shutting down ")
+        message = await ctx.send("<:nograred:830765450412425236> Logging off bot account and shutting down ")
         await asyncio.sleep(2)
-        await message.edit(content="nograoffline Nogra is offline")
+        await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline")
         await ctx.bot.logout()
-        await login(os.environ['DISCORD_TOKEN'], bot=True)
-        await message.edit(content="nograyellow Nogra is starting up...")
-        await asyncio.sleep(3)
-        await message.edit(content="nograonline Nogra is now online.")
+        await ctx.bot.login(os.environ['DISCORD_TOKEN'], bot=True)
   
     @reboot.error
     async def reboot_error(self, ctx, error):

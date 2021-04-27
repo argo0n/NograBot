@@ -14,10 +14,35 @@ import pytz
 from pytz import timezone
 import asyncio
 import json
+import math
 
 start_time = time.time()
-utcbootime = datetime.datetime.now(timezone("UTC"))
-
+def secondstotiming(seconds):
+    seconds = round(seconds)
+    if seconds < 60:
+        secdisplay = "s" if seconds != 1 else ""
+        return (f"{seconds} second{secdisplay}")
+    else:
+        minutes = math.trunc(seconds/60)
+        if minutes < 60:
+            seconds = seconds - minutes*60
+            mindisplay = "s" if minutes != 1 else ""
+            if seconds != 1:
+                secdisplay = "s"
+            else:
+                secisplay = ""
+            return (f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}")
+        else:
+            hours = math.trunc(minutes/60)
+            minutes = minutes - hours*60
+            seconds = seconds - minutes*60 - hours*60*60
+            hdisplay = "s" if hours != 1 else ""
+            mindisplay = "s" if minutes != 1 else ""
+            if seconds != 1:
+                secdisplay = "s"
+            else:
+                secisplay = ""
+            return (f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}")
 
 class Afk(commands.Cog):
 
@@ -65,7 +90,7 @@ class Afk(commands.Cog):
                         afk_embed = discord.Embed(title="", color=0x00ff00)
                         afk_embed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=str(member.avatar_url))
                         afk_embed.add_field(name=f"{member.name} is AFK", value=afkmessage, inline=True)
-                        afk_embed.set_footer(text=f"{member.name} has been AFK for {afk_duration}.")
+                        afk_embed.set_footer(text=f"{member.name} has been AFK for {secondstotiming(afk_duration)}.")
                         await message.channel.send(embed=afk_embed)
 
     @commands.command(name="afk", brief="Let everyone know you are AFK",

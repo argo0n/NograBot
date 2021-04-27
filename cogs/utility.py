@@ -61,9 +61,8 @@ class utility(commands.Cog):
             await ctx.send(f"**{channel_name}** created. <a:Tick:796984073603383296>")
 
     @commands.command(pass_context=True, brief="calculates", description="calculates your stupid math problems")
-    async def calc(ctx, *, yourcalculation):
-        strsent = int(yourcalculation)
-        result = eval(strsent)
+    async def calc(self, ctx, *, yourcalculation):
+        result = eval(yourcalculation)
         await ctx.send(str(yourcalculation) + " = " + str(result))
 
     @commands.command(name="emojis", brief="Lists out emojis", description="Lists out emojis")

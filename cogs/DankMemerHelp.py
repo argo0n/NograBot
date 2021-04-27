@@ -38,19 +38,28 @@ class DankMemerHelp(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        if message.author == self.client.user:
+            return
         if message.author.id in [800184970298785802, 341994639395520526]:
             return
-        if "pls lottery" in message.content or "Pls lottery" in message.content:
-            if message.author.id in [392127809939570688, 650647680837484556]:
-                await message.channel.send("Will remind you in 1 hour via DMS")
-                await asyncio.sleep(3600)
-                await message.author.send(
-                    f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
-                print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
+        if "yes" in message.content or "Yes" in message.content and message.author.id != 270904126974590976:
+            msg = await self.client.wait_for("message", check=lambda m: m.author.id == 270904126974590976 and m.channel.id == message.channel.id)
+            if ("Mate") in msg.content:
+                await message.channel.send("Just wait for the lottery to be done tbh")
+                return
             else:
-                await message.channel.send("Will remind you in 1 hour")
-                await asyncio.sleep(3600)
-                await message.channel.send(f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                if message.author.id == 392127809939570688 or message.author.id == 650647680837484556:
+                    await message.channel.send("Will remind you in 1 hour via DMS")
+                    await asyncio.sleep(3600)
+                    await message.author.send(
+                        f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                    print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
+                else:
+                    await message.channel.send("Will remind you in 1 hour")
+                    await asyncio.sleep(3600)
+                    await message.channel.send(
+                        f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+
 
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
             await message.delete()

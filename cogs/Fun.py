@@ -63,6 +63,12 @@ class Fun(commands.Cog):
     async def on_message(self, message):
         if message.author.id == 800184970298785802:
             return
+        else:
+            if isinstance(message.channel, discord.channel.DMChannel) and message.author != self.client.user and "orange" in message.content or "Orange" in message.content:
+                await message.channel.send("u have been infected...\nnow change ur status to: Dm me the word \"orange\"\n\nit shallspread it silently\nsigh\n🍪\nhave cookie")
+                channel = self.client.get_channel(797711768696651787)
+                await channel.send(f"<@650647680837484556> LMFAOOO {message.author.mention} dmed me \"orange\"")
+                return
 
     @commands.command(name="say", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
     async def say(self, ctx, *, arg=None):

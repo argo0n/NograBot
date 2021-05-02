@@ -82,11 +82,9 @@ class Afk(commands.Cog):
                     afkmessage = afkdetails[i]['message']
                     guild = self.client.get_guild(guildid)
                     member = guild.get_member(userid)
-                    print(afktime, timenow)
                     if guild == message.guild and member.mentioned_in(message):
                         current_time = time.time()
                         afk_duration = int(round(current_time - afktime))
-                        afk_duration = str(datetime.timedelta(seconds=afk_duration))
                         afk_embed = discord.Embed(title="", color=0x00ff00)
                         afk_embed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=str(member.avatar_url))
                         afk_embed.add_field(name=f"{member.name} is AFK", value=afkmessage, inline=True)
@@ -122,7 +120,6 @@ class Afk(commands.Cog):
                     user[str(ctx.author.id)]['time'] = time_now+30
                     user[str(ctx.author.id)]['message'] = message
                     with open('resources/test.json', 'w', encoding='utf8') as f:
-                        print(type(user))
                         json.dump(user,f,sort_keys=True,indent=4,ensure_ascii=False)
                         await ctx.send(f"{member.mention} You are now AFK. message: {message}")
 

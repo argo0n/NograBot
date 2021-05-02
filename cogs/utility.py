@@ -62,6 +62,8 @@ class utility(commands.Cog):
 
     @commands.command(pass_context=True, brief="calculates", description="calculates your stupid math problems")
     async def calc(self, ctx, *, yourcalculation):
+        if "^" in yourcalculation:
+            yourcalculation = yourcalculation.replace("^", "**")
         result = eval(yourcalculation)
         await ctx.send(str(yourcalculation) + " = " + str(result))
 

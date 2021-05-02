@@ -38,27 +38,44 @@ class DankMemerHelp(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.client.user:
-            return
-        if message.author.id in [800184970298785802, 341994639395520526]:
-            return
-        if "yes" in message.content or "Yes" in message.content and message.author.id != 270904126974590976:
-            msg = await self.client.wait_for("message", check=lambda m: m.author.id == 270904126974590976 and m.channel.id == message.channel.id)
-            if ("Mate") in msg.content:
-                await message.channel.send("Just wait for the lottery to be done tbh")
+        def embedcheck(message):
+            for e in message.embeds:
+                return "You bought a lottery ticket" in e.title and message.author.id == 270904126974590976
+        #if message.author.id in [800184970298785802, 270904126974590976]:
+#            return
+        if message.content.startswith("pls lottery") or message.content.startswith("Pls lottery") and message.author.id not in [270904126974590976, 341994639395520526]:
+            try:
+                msg = await self.client.wait_for("message", check=embedcheck, timeout = 20.0)
+            except asyncio.TimeoutError:
+                await message.channel.send("I could not detect a message that was from Dank Memer.", delete_after = 5.0)
                 return
             else:
-                if message.author.id == 392127809939570688 or message.author.id == 650647680837484556:
-                    await message.channel.send("Will remind you in 1 hour via DMS")
+                emojis = ["<a:Tick:796984073603383296>", "⏲️"]
+                for emo in emojis:
+                    await message.add_reaction(emo)
+                try:
+                    await message.author.send("I will remind you in your DMs after an hour!", delete_after = 10.0)
+                    await message.add_reaction("<:dms:838255193266716742>")
                     await asyncio.sleep(3600)
-                    await message.author.send(
-                        f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
-                    print(f"I've sent a lottery message to {message.author.name}#{message.author.discriminator}")
-                else:
-                    await message.channel.send("Will remind you in 1 hour")
+                    messagelink = discord.Embed(color=0x00FFFF)
+                    messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+                    messagelink.add_field(name="\u200b", value=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})",
+                                      inline=False)
+                    await message.author.send(f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>", embed=messagelink)
+
+                except discord.errors.Forbidden:
+                    await message.channel.send("Since I can't DM you, I will ping you here after 1 hour.")
+                    await message.add_reaction("<:mention:838255192952274974>")
                     await asyncio.sleep(3600)
                     await message.channel.send(
                         f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                    return
+        if ("Mate") in message.content and message.author.id == 270904126974590976:
+            await message.channel.send("Just wait for the lottery to be done tbh")
+            return
+        if ("Alright") in message.content and message.author.id == 270904126974590976:
+            await message.channel.send("make up your mind LMAOOO")
+            return
 
 
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:

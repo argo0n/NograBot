@@ -13,6 +13,14 @@ import discord, datetime, time
 import pytz
 from pytz import timezone
 import asyncio
+import postbin, traceback
+
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 
 timeformat = "%Y-%m-%d %H:%M:%S"
@@ -45,7 +53,7 @@ class DankMemerHelp(commands.Cog):
 #            return
         if message.content.startswith("pls lottery") or message.content.startswith("Pls lottery") and message.author.id not in [270904126974590976, 341994639395520526]:
             try:
-                msg = await self.client.wait_for("message", check=embedcheck, timeout = 20.0)
+                msg = await self.client.wait_for("message", check=embedcheck, timeout = 7.0)
             except asyncio.TimeoutError:
                 await message.channel.send("I could not detect a message that was from Dank Memer.", delete_after = 5.0)
                 return

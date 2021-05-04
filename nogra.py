@@ -12,6 +12,14 @@ from datetime import date
 import nacl
 from pytz import timezone
 from discord.ext.buttons import Paginator
+import postbin, traceback
+
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 blacklist = {"560251854399733760"}
 intents = discord.Intents(messages=True, guilds=True)
@@ -82,36 +90,13 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_message(message):
-
+    if message.author == client.user:
+        return
     if message.channel.id == 821042728849768478:
         await message.add_reaction("<:nogranostar:821675503316238360>")
 
     if "<@800184970298785802>" in message.content:
-        embedVar = discord.Embed(title=f"{client.user.name}'s Help Page",
-                                 description="Just a pretty bad bot that stalks you lmfao <:kekcamera:814488911261859861>",
-                                 color=0x00ff00)
-        embedVar.add_field(name="Prefix", value="`a.`", inline=False)
-        embedVar.add_field(name="My commands so far", value="\u200b", inline=False)
-        embedVar.add_field(name="🏓️ ping", value="Tells you my latency", inline=True)
-        embedVar.add_field(name="🏓️ pogpong", value="Tells you my latency but you cheated.", inline=True)
-        embedVar.add_field(name="😃 emojis", value="Lists out **ALL** the emojis. Don't use it often as it *spams* for a while.", inline=True)
-        embedVar.add_field(name="📩 triggers", value="Tells you what will trigger me to respond.", inline=True)
-        embedVar.add_field(name="🎙️ say", value="repeats what you say.", inline=True)
-        embedVar.add_field(name="<a:nograunoreverse:803933217723252777> unoreverse", value="Here's your chance for you to 'no u' <:sneer:807786332923363369>", inline=True)
-        embedVar.add_field(name="<a:nograyeet:816253325707051059> yeet", value="Do this on someone you hate.", inline=True)
-        embedVar.add_field(name="<:nograshh:816255061788327958> secretping", value="Ping someone but you are not pinging them. ", inline=True)
-        embedVar.add_field(name="🔢 calc", value="Well... calculates??? <:stare:804160650376773652>", inline=True)
-        embedVar.add_field(name="😀 ei", value="Gives you the statistics of the emojis in your server.", inline=True)
-        embedVar.add_field(name="ℹ️ help", value="this page stoopid",inline=True)
-        embedVar.add_field(name="🗑️ clear `<num>`", value="Cleans messages in bulk.\n Needs:`Message Messages`", inline=True)
-        embedVar.add_field(name="<a:nograban:803868903196852245> ban `<user>` `<reason>`", value="Bans people, no shit\nNeeds: `Ban members`", inline=True)
-        embedVar.add_field(name="<a:nograban:803868903196852245> cban `<user>` `<time to ban (in minutes)>` `<reason>`", value="Also bans people, but waits for a given timing before banning.\nNeeds: `Ban members`", inline=True)
-        embedVar.add_field(name="💬 typefor", value="makes the bot type for specified seconds. <:nograpepeuhh:803857251072081991>\n Needs:`Bot Owner` if you are doing more then 1000 seconds", inline=True)
-        embedVar.add_field(name="📲 setstatus `[sta]` `[pre]` `[prectx]`", value="Changes the bot's status.\nNeeds: `Bot Owner`", inline=True)
-        embedVar.add_field(name="__All Dank Memer cooldown helpers have been removed.__", value="\u200b", inline=False)
-        embedVar.set_footer(text="Do ar.help <command> to know how to use a command!")
-
-        await message.channel.send(embed=embedVar)
+        MyNewHelp()
 
 
     # CHEONG MEET LINK
@@ -122,36 +107,8 @@ async def on_message(message):
         cheongembed.set_image(
             url="https://media.discordapp.net/attachments/764151467115544576/765918704142647346/IMG-20200925-WA0037.jpg")
         cheongembed.set_footer(
-            text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source: The Straits Times")
+            text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source:")
         await message.channel.send(embed=cheongembed)
-
-    # LEM CATFISH
- ##   if message.author.id == 781764427287756841:
- #       await message.channel.send('Bad and poor catfish <a:jensmh:801615739034402836>')
- #       await message.channel.send(
- #           'https://cdn.discordapp.com/attachments/608498967474601995/802790698192863302/unknown.png')
-
-
-    # BLOCK CHANNEL MESSAGE SENDING
-    '''if message.channel.id in [
-        803662591690932235,
-        813288124460826669,
-        802581920886030406,
-        804260533666578432,
-        810007696057040906,
-        810007702058565632,
-    ]:
-        await message.delete()
-        #await message.channel.send('you can\'t send messages in here idot <a:distorteddisgust:796382813279879218>',delete_after=3.0)
-        if message.guild.id == 789840820563476482:
-            channel = client.get_channel(804260533666578432)
-            await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
-        elif message.guild.id == 796727833048645692:
-            channel = client.get_channel(810007702058565632)
-            await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")'''
-
 
     await client.process_commands(message)
 
@@ -172,14 +129,24 @@ async def on_member_join(member):
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` loaded.")
+    cogload = discord.Embed(title=f"Cog Loaded",description=f"`cogs.{extension}`",color=0x00ff00)
+    cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    status = client.get_channel(839045672111308820)
+    await status.send(embed=cogload)
+    logchannel = client.get_channel(839016255733497917)
 
 @client.command(brief="Unloads cogs", description = "Unloads cogs")
 @commands.is_owner()
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` unloaded.")
+    cogunload = discord.Embed(title=f"Cog Unloaded",description=f"`cogs.{extension}`",color=0xff0000)
+    cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    status = client.get_channel(839045672111308820)
+    await status.send(embed=cogunload)
+    logchannel = client.get_channel(839016255733497917)
 
-@client.command(brief="Reboots a cog", description = "Reboots a cog", alias = "cr")
+@client.command(brief="Reboots a cog", description = "Reboots a cog", aliases= ["cr"])
 @commands.is_owner()
 async def cogreboot(ctx, extension):
     message = await ctx.send(f"<:nograred:830765450412425236> Rebooting `{extension}`:")
@@ -188,138 +155,65 @@ async def cogreboot(ctx, extension):
     await message.edit(content=f"<:nograyellow:830765423112880148> Restarting `{extension}`...")
     client.load_extension(f'cogs.{extension}')
     await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
+    await ctx.send(f"`{extension}` unloaded.")
+    rebootcog = discord.Embed(title=f"Cog Rebooted",description=f"`cogs.{extension}`",color=0xffff00)
+    rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    status = client.get_channel(839045672111308820)
+    await status.send(embed=rebootcog)
+    logchannel = client.get_channel(839016255733497917)
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+@load.error
+async def load_error(ctx, error):
+    if "not be loaded" in error:
+        await ctx.send(f"The cog is either already loaded or not found.")
+    else:
+        errorembed = discord.Embed(title=f"Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
+@unload.error
+async def unload(ctx, error):
+    if "not been loaded" in error:
+        await ctx.send(f"The cog is either already unloaded or not found.")
+    else:
+        errorembed = discord.Embed(title=f"Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
+@cogreboot.error
+async def cogreboot(ctx,error):
+    errorembed = discord.Embed(title=f"Oops!",
+                               description="This command just received an error. It has been sent to Argon.",
+                               color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+    await ctx.send(embed=errorembed)
+    logchannel = client.get_channel(839016255733497917)
+    await logchannel.send(
+        f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+    message = await logchannel.send("Uploading traceback to Hastebin...")
+    tracebacklink = await postbin.postAsync(gettraceback(error))
+    await message.edit(content=tracebacklink)
 
-'''@client.group(invoke_without_command=True)
-async def help(ctx):
-    embedVar = discord.Embed(title=f"{client.user.name}'s Help Page", description="Just a pretty useless bot tbh lmfao", color=0x00ff00)
-    embedVar.add_field(name="Prefix", value="`a.`", inline=False)
-    embedVar.add_field(name="My commands so far", value="\u200b", inline=False)
-    embedVar.add_field(name="🏓️ ping", value="Tells you my latency", inline=True)
-    embedVar.add_field(name="🏓️ pogpong", value="Tells you my latency but you cheated.", inline=True)
-    embedVar.add_field(name="😃 emojis", value="Lists out **ALL** the emojis. Don't use it often as it *spams* for a while.", inline=True)
-    embedVar.add_field(name="📩 triggers", value="Tells you what will trigger me to respond.", inline=True)
-    embedVar.add_field(name="🎙️ say", value="repeats what you say.", inline=True)
-    embedVar.add_field(name="<a:nograunoreverse:803933217723252777> unoreverse",
-                       value="Here's your chance for you to 'no u' <:sneer:807786332923363369>", inline=True)
-    embedVar.add_field(name="<a:nograyeet:816253325707051059> yeet", value="Do this on someone you hate.", inline=True)
-    embedVar.add_field(name="<:nograshh:816255061788327958> secretping",
-                       value="Ping someone but you are not pinging them. ", inline=True)
-    embedVar.add_field(name="🔢 calc", value="Well... calculates??? <:stare:804160650376773652>", inline=True)
-    embedVar.add_field(name="😀 ei", value="Gives you the statistics of the emojis in your server.", inline=True)
-    embedVar.add_field(name="ℹ️ help", value="this page stoopid", inline=True)
-    embedVar.add_field(name="🗑️ clear `<num>`", value="Cleans messages in bulk.\n Needs:`Message Messages`",
-                       inline=True)
-    embedVar.add_field(name="<a:nograban:803868903196852245> ban `<user>` `<reason>`",
-                       value="Bans people, no shit\nNeeds: `Ban members`", inline=True)
-    embedVar.add_field(name="<a:nograban:803868903196852245> cban `<user>` `<time to ban (in minutes)>` `<reason>`",
-                       value="Also bans people, but waits for a given timing before banning.\nNeeds: `Ban members`",
-                       inline=True)
-    embedVar.add_field(name="💬 typefor",
-                       value="makes the bot type for specified seconds. <:nograpepeuhh:803857251072081991>\n Needs:`Bot Owner` if you are doing more then 1000 seconds",
-                       inline=True)
-    embedVar.add_field(name="📲 setstatus `[sta]` `[pre]` `[prectx]`",
-                       value="Changes the bot's status.\nNeeds: `Bot Owner`", inline=True)
-    embedVar.add_field(name="__All Dank Memer cooldown helpers have been removed.__", value="\u200b", inline=False)
-    embedVar.set_footer(text="Do ar.help <command> to know how to use a command!")
-    await ctx.send(embed = embedVar)
-
-@help.command()
-async def ping(ctx):
-    ee = discord.Embed(title="Ping", description="Tells you my latency",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.ping`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def pogpong(ctx):
-    ee = discord.Embed(title="Sum good ping I see", description="",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.pogpong <New pinging latency>`", inline=False)
-    await ctx.send(embed = ee)
-@help.command()
-async def emojis(ctx):
-    ee = discord.Embed(title="Emojis", description="Lists out **ALL** the emojis. Don't use it often as it *spams* for a while.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.emojis`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def triggers(ctx):
-    ee = discord.Embed(title="Triggers", description="Tells you what will trigger me to respond.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.triggers`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def say(ctx):
-    ee = discord.Embed(title="Say", description="Impersonate as me I guess?",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.say <what you want me to say>`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def unoreverse(ctx):
-    ee = discord.Embed(title="Uno Reverse", description="'no u' card be like",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.unoreverse`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def yeet(ctx):
-    ee = discord.Embed(title="YEET", description="YEET SOMEONE YOU HATE YOOOO",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.yeet <member>`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def secretping(ctx):
-    ee = discord.Embed(title="Secret Ping", description="Ping someone but you're not actually pinging them.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.secretping <id of person to be pinged>`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def calc(ctx):
-    ee = discord.Embed(title="Calculate", description="Well... calculates??? <:stare:804160650376773652>",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.calc <stuff to calculate>`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def ei(ctx):
-    ee = discord.Embed(title="Emoji Statistics", description="Gives you the statistics of the emojis in your server.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.ei`", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def clear(ctx):
-    ee = discord.Embed(title="Clear", description="Cleans messages in bulk.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.clean <number of messages>`")
-    ee.add_field(name="__**Needs**__", value="`Manage messages` permission", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def ban(ctx):
-    ee = discord.Embed(title="Ban", description="Bans people, no shit",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.ban <member> <reason>`")
-    ee.add_field(name="__**Needs**__", value="`Ban Members` permission", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def cban(ctx):
-    ee = discord.Embed(title="Countdown Ban", description="Short for Countdown Ban, also bans people, but waits for a given timing before banning.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.cban <member> <duration in minutes> <reason>`")
-    ee.add_field(name="__**Needs**__", value="`Ban Members` permission", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def typefor(ctx):
-    ee = discord.Embed(title="Type for?", description="Makes the bot type for specified seconds. :nograpepeuhh:",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.typefor <duration in seconds>`")
-    ee.add_field(name="__**Needs**__", value="`Bot Owner` if you are tryping to make Nogra talk for more than 1000 seconds", inline=False)
-    await ctx.send(embed = ee)
-
-@help.command()
-async def setstatus(ctx):
-    ee = discord.Embed(title="Set my Status", description="Changes the bot's status.",color=0x00ff00)
-    ee.add_field(name="__**Usage**__", value="`ar.setstatus <online/idle/dnd> <game/stream/listen/watch> <what I am doing>`")
-    ee.add_field(name="__**Needs**__",value="`Bot Owner`", inline=False)
-    await ctx.send(embed = ee)'''
 client.run(os.environ['NOGRAtoken'])
 # betargon's ID was reset btw
 

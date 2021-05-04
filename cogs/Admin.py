@@ -26,6 +26,14 @@ import time
 import subprocess
 from typing import Union, Optional
 from discord.ext.buttons import Paginator
+import postbin, traceback
+
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 
 
@@ -121,13 +129,17 @@ class Admin(commands.Cog):
     @edit.error
     async def edit_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
@@ -173,13 +185,17 @@ class Admin(commands.Cog):
     @setstatus.error
     async def setstatus_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @commands.command(brief="Removes carl tags that targets argon", description="Removes carlbot tags that targets argon")
     async def rmtag(self, ctx, website):
@@ -217,13 +233,17 @@ class Admin(commands.Cog):
     @rmtag.error
     async def rmtag_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @commands.command()
     async def dmads(self, ctx, *, member: discord.User = None):
@@ -259,14 +279,22 @@ class Admin(commands.Cog):
 
     @dmads.error
     async def dmads_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
     @commands.is_owner()
@@ -280,33 +308,40 @@ class Admin(commands.Cog):
     @update.error
     async def update_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
     
     @commands.command()
     @commands.is_owner()
-    async def reboot(self, ctx):
+    async def shutdown(self, ctx):
         message = await ctx.send("<:nograred:830765450412425236> Logging off bot account and shutting down ")
         await asyncio.sleep(2)
-        await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline")
-        await ctx.bot.logout()
-        await ctx.bot.login(os.environ['DISCORD_TOKEN'], bot=True)
+        await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline, manually reboot it.")
+        await self.client.logout()
   
-    @reboot.error
+    @shutdown.error
     async def reboot_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

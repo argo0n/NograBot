@@ -19,6 +19,15 @@ import time
 import math
 import random
 import asyncio
+from discord.ext.buttons import Paginator
+import postbin, traceback
+
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 def secondstotiming(seconds):
     seconds = round(seconds)
@@ -98,14 +107,27 @@ class Fun(commands.Cog):
 
     @pogpong.error
     async def pogpong_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper **number**.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(name="bon", brief="Fake ban", description="Makes a fake ban message")
     async def bon(self, ctx, member: discord.Member = None, *, reason=None):
@@ -120,55 +142,88 @@ class Fun(commands.Cog):
             await ctx.send(
                 f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
-    @commands.command(name="spamping", brief="spam pings people", description="Spam pings people")
-    @commands.cooldown(1, 1800, commands.BucketType.user)
+    @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
+    @commands.cooldown(1, 1200, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
         if times is None:
             await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
         else:
+            List = open("resources/spampingrecord.txt").readlines()
+            if str(ctx.author.id) in List:
+                pass
+            else:
+                await ctx.send("The spammping command has been updated and it will now ping you for every time the target is pinged.\n **Do you want to proceed?** `(y/n)`")
+                msg = await self.client.wait_for("message", check= lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=20.0) #Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'
+                if "y" in msg.content or "Y" in msg.content:
+                    await ctx.send("Ok then...")
+                    with open('resources/spampingrecord.txt', 'a', encoding='utf8') as f:
+                        f.write(f"\n{str(ctx.author.id)}")
+                    pass
+                else:
+                    await ctx.send("Aight looks like we're not having fun today")
+                    return
             times = int(times)
-            times = min(times, 1000)
+            times = min(times, 500)
             currenttime = 0
+            await ctx.send(f"Are you sure you want to do this? You may be hated by {member.name} for the rest of your life. `(y/n)`")
+            msg = await self.client.wait_for("message",
+                                             check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                             timeout=20.0)  # Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'
+            if "y" in msg.content or "Y" in msg.content:
+                await ctx.send("<:oma:789840876922601483>")
+            else:
+                await ctx.send("Wise choice <:thumbsupthefuck:823214448579838012>")
+                return
             if "spam" not in ctx.channel.name:
                 await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
                 if message is None:
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times", delete_after=1)
+                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times", delete_after=1)
                     await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
                     return
                 else:
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
+                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
                     await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
             else:
                 if message is None:
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times")
+                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times")
                     await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
                     return
                 else:
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"{member.mention} ha get ponged {currenttime} times. {message}")
+                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}")
                     await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
 
     @spamping.error
     async def spamping_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(
-                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of times for me to ping someone.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
         else:
             errorembed = discord.Embed(title=f"Oops!",
-                                         description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                         description="This command just received an error. It has been sent to Argon.",
                                          color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
             await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
@@ -179,14 +234,29 @@ class Fun(commands.Cog):
 
     @blacklist.error
     async def blacklist_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper **number** of days for the user to be blacklisted.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(name="typefor", brief="types", description="Types for however you want, but must be below 1000 seconds")
     async def typefor(self, ctx, number=None):
@@ -210,14 +280,22 @@ class Fun(commands.Cog):
 
     @typefor.error
     async def typefor_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper **duration (in seconds)** for me to type.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(name="secretping", brief="Pings user secretly", description="Have Nogra help you ping someone, you just need that person's ID.")
     async def secretping(self, ctx, userid=None, *, message=None):
@@ -233,14 +311,22 @@ class Fun(commands.Cog):
 
     @secretping.error
     async def secretping_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(brief="YA YEET", description="Use this command to yeet anyone you hate or do it just for fun ;)")
     async def yeet(self, ctx, member=None):
@@ -266,14 +352,26 @@ class Fun(commands.Cog):
 
     @yeet.error
     async def yeet_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(aliases=['ur', 'reverse'])
     async def unoreverse(self, ctx, member=None):
@@ -295,14 +393,26 @@ class Fun(commands.Cog):
 
     @unoreverse.error
     async def unoreverse_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -331,7 +441,7 @@ class Fun(commands.Cog):
                 await channel.set_permissions(ctx.author, overwrite=overwrite)
                 embed = discord.Embed(colour=0xFF0000)
                 embed.add_field(name="**get rekt noob**",
-                                value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
+                                value=f"{ctx.author.mention} lost against {member.mention} and {ctx.author.mention} has been muted for {duration} seconds. <:fitethefuck:831879631119450112>",
                                 inline=True)
                 embed.set_footer(text=f"Exercise more tbh {ctx.author.name}")
                 await ctx.send(embed=embed)
@@ -341,17 +451,28 @@ class Fun(commands.Cog):
     @dumbfight.error
     async def dumbfight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            cooldown= error.retry_after
+            cooldown = error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
+                    return
         else:
             errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
             await ctx.send(embed=errorembed)
-            print(error)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(hidden=True)
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -384,17 +505,27 @@ class Fun(commands.Cog):
     async def hug_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(
-                f"Imagine not having patience smh, is it so hard to wait for another {round(cooldown, 1)} seconds?")
+            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            return
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
+                    return
         else:
             errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
             await ctx.send(embed=errorembed)
-            print(error)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
 def setup(client):
     client.add_cog(Fun(client))

@@ -11,7 +11,14 @@
 import discord
 from discord.ext import commands
 import asyncio
+import postbin, traceback
 
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 class RobloxServerOnly(commands.Cog):
 
@@ -40,13 +47,17 @@ class RobloxServerOnly(commands.Cog):
     @kicc.error
     async def kicc_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @commands.command(brief="Lets everyone into frenzy's sleeping channel", description = "Gives everyone read message perms in frenzy's sleeping channel")
     async def allow(self, ctx):
@@ -66,13 +77,17 @@ class RobloxServerOnly(commands.Cog):
     @allow.error
     async def allow_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @commands.command(brief="Better than cutie role", description = "Gives elevated admin role for a while")
     async def admon(self, ctx, member: discord.Member = None, durationinseconds=None):
@@ -125,14 +140,22 @@ class RobloxServerOnly(commands.Cog):
 
     @admon.error
     async def admon_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command()
     async def cutie(self, ctx):
@@ -166,24 +189,32 @@ class RobloxServerOnly(commands.Cog):
     @cutie.error
     async def cutie_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @uglie.error
     async def uglie_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
 def setup(client):
     client.add_cog(RobloxServerOnly(client))

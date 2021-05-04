@@ -13,7 +13,14 @@ import discord, datetime, time
 import pytz
 from pytz import timezone
 import asyncio
+import postbin, traceback
 
+def gettraceback(error):
+    etype = type(error)
+    trace = error.__traceback__
+    lines = traceback.format_exception(etype, error, trace)
+    traceback_text = ''.join(lines)
+    return traceback_text
 
 timeformat = "%Y-%m-%d %H:%M:%S"
 durationformat = "%-dd %-Hh %-Mm %-Ss"
@@ -123,38 +130,39 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
 
-    '''@clear.error
-    async def cog_command_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-            await ctx.send(embed=errorembed)
-            print(error)'''
-
     @uptime.error
     async def uptime_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        print(error)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @clear.error
     async def clear_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-        await ctx.send(embed=errorembed)
-        print(error)
+        if isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command(brief="ban hammer", description = "Bans members")
     @commands.has_permissions(ban_members=True)
@@ -168,17 +176,11 @@ class Moderation(commands.Cog):
             return
         if reason is None:
             reason = "No specified reason"
-            message = f"You have been banned from {ctx.guild.name} for: {reason}"
-            try:
-                await member.send(message)
-            except discord.errors.Forbidden:
-                pass
-        else:
-            message = f"You have been banned from {ctx.guild.name} for: {reason}"
-            try:
-                await member.send(message)
-            except discord.Forbidden:
-                pass
+        message = f"You have been banned from {ctx.guild.name} for: {reason}"
+        try:
+            await member.send(message)
+        except discord.errors.Forbidden:
+            pass
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: {reason}")
 
@@ -215,29 +217,49 @@ class Moderation(commands.Cog):
     async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            return
         else:
             errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
             await ctx.send(embed=errorembed)
-            print(error)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @cban.error
     async def cban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send('You don\'t have the permission to ban others.')
+            await ctx.send("wheeze you don't even have permissions to ban people")
+        elif isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            return
+        elif isinstance(error, commands.MemberNotFound):
+            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            return
         else:
             errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
             await ctx.send(embed=errorembed)
-            print(error)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
 
 

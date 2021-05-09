@@ -14,6 +14,7 @@ import pytz
 from pytz import timezone
 import asyncio
 import postbin, traceback
+import random
 
 def gettraceback(error):
     etype = type(error)
@@ -71,8 +72,7 @@ class DankMemerHelp(commands.Cog):
                                       inline=False)
                     await message.author.send(f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>", embed=messagelink)
 
-                except discord.errors.Forbidden:
-                    await message.channel.send("Since I can't DM you, I will ping you here after 1 hour.")
+                except discord.errors.Forbidden or message.author.id == 395020663116529674:
                     await message.add_reaction("<:mention:838255192952274974>")
                     await asyncio.sleep(3600)
                     await message.channel.send(
@@ -165,6 +165,21 @@ class DankMemerHelp(commands.Cog):
             and message.author.id == 805251248488054794
         ):
             await message.channel.send("<:nograblushsuit:831001647005564970> ty")
+
+        if message.content.startswith("pIs rob") or message.content.startswith("PIs rob"):
+            list = ["30,620,956","2,912,053","21,706,777","12,879,693","98,088,176","77,629,360","13,020,603","49,996,631","4,885,187","467,511","22,375,088","37,523,359","68,228,030","62,615,734","48,622,895","92,330,896","18,646,281","63,114,372","13,510,918","36,952,204"]
+            number = random.choice(list)
+            await message.channel.send(f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")
+            for m in message.guild.members:
+                if str(m.id) in message.content:
+                    targetmember = m
+            embed = discord.Embed(title="You have been stolen from!",
+                                  description=f"**{message.author.name}#{message.author.discriminator}** ({message.author.mention}) has stolen **⏣ {number}** from you in **{message.guild.name}**!",
+                                  colour=0xFF0000)
+            try:
+                await targetmember.send(embed=embed)
+            except discord.errors.Forbidden:
+                await message.channel.send("that guy blocked me or closed his dms, what a loser")
 
     @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
     async def manualremind(self, ctx, memberid, duration):

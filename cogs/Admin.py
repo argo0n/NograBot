@@ -244,6 +244,52 @@ class Admin(commands.Cog):
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
+    @commands.command()
+    async def minecraft(self, ctx, *, member: discord.User = None):
+        if member is None:
+            await ctx.send("Aren't you supposed to mention someone?")
+        else:
+            if ctx.author.id == 650647680837484556:
+                channel = self.client.get_channel(840073277715644419)
+                invitelink = await channel.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
+                    max_age=1800, max_uses=1, unique=True)
+                channel2 = self.client.get_channel(840076120463900716)
+                invitelink2 = await channel2.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
+                    max_age=1800, max_uses=1, unique=True)
+                channel3 = self.client.get_channel(840076340450558015)
+                invitelink3 = await channel3.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
+                    max_age=1800, max_uses=1, unique=True)
+                channel4 = self.client.get_channel(840076417077215245)
+                invitelink4 = await channel4.create_invite(
+                    reason=f"Temporary invite created for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}",
+                    max_age=1800, max_uses=1, unique=True)
+                messagetousers = f"**__MINECRAFT__**\n{invitelink}\n{invitelink2}\n{invitelink3}\n{invitelink4}\n\n All these invites will expire in 30 minutes, and is only for one use."
+                await member.send(messagetousers)
+                await ctx.message.add_reaction("<a:Tick:796984073603383296>")
+            else:
+                await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
+
+    @minecraft.error
+    async def minecraft_error(self, ctx, error):
+        if isinstance(error, commands.MemberNotFound):
+                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
     @commands.command()
     async def dmads(self, ctx, *, member: discord.User = None):

@@ -57,7 +57,11 @@ client.help_command = MyNewHelp()
 @client.event
 async def on_ready():
     print('Successfully connected to Discord as {0.user}'.format(client))
-    await client.get_channel(816249246129979392).send("<@650647680837484556> Nogra has come online/just rebooted.")
+    botready = discord.Embed(title=f"Bot is ready!", description=f"[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)", color=0x32CD32)
+    botready.set_author(name=f"{client.user.name}", icon_url=client.user.avatar_url,
+                         url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    status = client.get_channel(839045672111308820)
+    await status.send(embed=botready)
 
 
 @client.event
@@ -72,21 +76,20 @@ async def on_guild_join(guild):
     general = find(lambda x: 'general' in x.name,  guild.text_channels)
     print(f"general chat name: {general.name} | general chat mention: {general.mention}")
     if general and general.permissions_for(guild.me).send_messages:
-        joinembed = discord.Embed(title="Thanks for inviting me!",
-                                 description="This is a Python bot, expect bugs to occur when using me.",
+        joinembed = discord.Embed(title="Thanks for using Nogra!",
+                                 description="Nogra is a Discord bot with many different functions for your convenience and entertainment.",
                                  color=0x00ff00)
         joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
-        joinembed.add_field(name="**__Pre-use Configuration__**", value="\u200b", inline=False)
-        joinembed.add_field(name="__Admin role commands__", value=f"{client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.",inline=False)
-        joinembed.add_field(name="__Emoji Utilities__", value=f"Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.", inline=True)
-        joinembed.add_field(name=f"__{client.user.name}'s permissions__", value=f"If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.", inline=True)
-        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.")
+        joinembed.add_field(name="**__Not sure where to start?__**", value="\u200b", inline=False)
+        joinembed.add_field(name="__Fun commands!__", value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `a.help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",inline=False)
+        joinembed.add_field(name="__Moderation__", value=f"Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>", inline=True)
+        joinembed.add_field(name=f"__Dank Memer Help__", value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>", inline=True)
+        joinembed.add_field(name=f"\u200b",
+                            value=f"By using Nogra, you agree to Nogra's []() and []().",
+                            inline=False)
+        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly: ")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
-        try:
-            await general.send(embed=joinembed)
-        except discord.HTTPException:
-            message = f"Thanks for inviting me!\nThis is a Python bot, expect bugs to occur when using me.\n\n**__Pre-use Configuration__**\n\n__Admin role commands__\n    • {client.user.name} has a command which can be used to add the Admin role to users easily. To use that in this guild, make sure the role is named \"admin\" and that it is below Nogra's highest role.\n__Emoji Utilities\n    • Give {client.user.name} the permission to see and manage emojis so that {client.user.name} can show them in its respective emoji commands.\n__{client.user.name}'s permissions__\n    • If you invited Nogra with the necessary permissions link, you will not need to worry if {client.user.name} ever gets exploited.\n\nDo a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002.\n\n- Nogra"
-            await general.send(message)
+        await general.send(embed=joinembed)
 
 @client.event
 async def on_message(message):
@@ -155,7 +158,6 @@ async def cogreboot(ctx, extension):
     await message.edit(content=f"<:nograyellow:830765423112880148> Restarting `{extension}`...")
     client.load_extension(f'cogs.{extension}')
     await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
-    await ctx.send(f"`{extension}` unloaded.")
     rebootcog = discord.Embed(title=f"Cog Rebooted",description=f"`cogs.{extension}`",color=0xffff00)
     rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)

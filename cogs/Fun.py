@@ -147,21 +147,13 @@ class Fun(commands.Cog):
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
         if times is None:
             await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
+            return
+        if member == self.client.user:
+            await ctx.send("ayo i'm not going to torture myself")
+            return
         else:
-            List = open("resources/spampingrecord.txt").readlines()
-            if str(ctx.author.id) in List:
-                pass
-            else:
-                await ctx.send("The spammping command has been updated and it will now ping you for every time the target is pinged.\n **Do you want to proceed?** `(y/n)`")
-                msg = await self.client.wait_for("message", check= lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=20.0) #Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'
-                if "y" in msg.content or "Y" in msg.content:
-                    await ctx.send("Ok then...")
-                    with open('resources/spampingrecord.txt', 'a', encoding='utf8') as f:
-                        f.write(f"\n{str(ctx.author.id)}")
-                    pass
-                else:
-                    await ctx.send("Aight looks like we're not having fun today")
-                    return
+            if member is None:
+                member = ctx.author
             times = int(times)
             times = min(times, 500)
             currenttime = 0
@@ -174,31 +166,48 @@ class Fun(commands.Cog):
             else:
                 await ctx.send("Wise choice <:thumbsupthefuck:823214448579838012>")
                 return
-            if "spam" not in ctx.channel.name:
-                await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
-                if message is None:
-                    while currenttime < times:
-                        currenttime += 1
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times", delete_after=1)
-                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
-                    return
-                else:
-                    while currenttime < times:
-                        currenttime += 1
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
-                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+            with open('resources/spblacklist.txt', 'r', encoding='utf8') as f:
+                content = f.read()
+                bllist = content.split(",")
+            if str(ctx.author.id) in bllist:
+                await ctx.send("You can't use this command as you have been blacklisted from using this command for the reason: Blocking me while pinging you")
+                return
+            try:
+                await ctx.author.send("This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.", delete_after = 5.0)
+            except discord.errors.Forbidden:
+                await ctx.send(f"{ctx.author.mention} I cannot procced since you have blocked me / you have your DMs closed.")
+                return
             else:
-                if message is None:
+                if "spam" not in ctx.channel.name:
+                    await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times")
-                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
-                    return
+                        if message is None:
+                            await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times", delete_after=1)
+                        else:
+                            await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
                 else:
                     while currenttime < times:
                         currenttime += 1
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}")
-                    await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+                        if message is None:
+                            await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times")
+                        else:
+                            await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}")
+                await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
+                try:
+                    await member.send("Sorry for that *torture*... have a cookie <a:nogracookie:839049721220825130> <a:nyakiss:832467845417009162>")
+                except discord.errors.Forbidden:
+                    pass
+                try:
+                    await ctx.author.send("This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.",delete_after=5.0)
+                except discord.errors.Forbidden:
+                    await ctx.send(
+                        f"{ctx.author.mention} You have been blacklisted from using this command due to your unfair practices: blocking me while I am pinging you. ")
+                    with open('resources/spblacklist.txt', 'a', encoding='utf8') as f:
+                        f.write(f"\n{str(ctx.author.id)}")
+                    return
+
+
 
     @spamping.error
     async def spamping_error(self, ctx, error):
@@ -226,11 +235,17 @@ class Fun(commands.Cog):
             await message.edit(content=tracebacklink)
 
     @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
-    async def blacklist(self, ctx, member: discord.Member = None, duration=None, *, reason=None):
-        messagetousers = f"You have been temporarily blacklisted for {duration} days by a Bot Moderator for {reason}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
+    @commands.cooldown(1, 3600, commands.BucketType.user)
+    async def blacklist(self, ctx, member: discord.Member = None):
+        await ctx.send("For what reason?")
+        msg = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author,timeout=20.0)
+        await ctx.send("For how many days?")
+        secondmsg = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                         timeout=20.0)
+        messagetousers = f"You have been temporarily blacklisted for {secondmsg.content} days by a Bot Moderator for {msg.content}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
         await member.send(messagetousers)
         await ctx.message.add_reaction("<a:Tick:796984073603383296>")
-        await ctx.send(f"{member.name}#{member.discriminator} blacklisted for {duration} days")
+        await ctx.send(f"user blacklisted for {secondmsg.content} days")
 
     @blacklist.error
     async def blacklist_error(self, ctx, error):

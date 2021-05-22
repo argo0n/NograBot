@@ -85,9 +85,9 @@ async def on_guild_join(guild):
         joinembed.add_field(name="__Moderation__", value=f"Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>", inline=True)
         joinembed.add_field(name=f"__Dank Memer Help__", value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>", inline=True)
         joinembed.add_field(name=f"\u200b",
-                            value=f"By using Nogra, you agree to Nogra's []() and []().",
+                            value=f"By using Nogra, you agree to Nogra's [Terms of Service](http://nogra.infinityfreeapp.com/nogra-tos/) and [Privacy Policy](http://nogra.infinityfreeapp.com/nogras-privacy-policy/).",
                             inline=False)
-        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly: ")
+        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
         await general.send(embed=joinembed)
 

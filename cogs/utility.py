@@ -98,7 +98,7 @@ class utility(commands.Cog):
         if channel == None:
             channel = ctx.channel
         with ctx.typing():
-            messagelist = await channel.history(limit=200).flatten()
+            messagelist = await channel.history(limit=1000).flatten()
             messageno = len(messagelist)
             for message in messagelist:
                 authorid = message.author.id

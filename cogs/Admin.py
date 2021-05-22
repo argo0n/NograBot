@@ -128,6 +128,9 @@ class Admin(commands.Cog):
 
     @edit.error
     async def edit_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.ChannelNotFound):
+            await ctx.send(error)
+            return
         errorembed = discord.Embed(title=f"Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
                                        color=0x00ff00)
@@ -184,6 +187,9 @@ class Admin(commands.Cog):
 
     @setstatus.error
     async def setstatus_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.CheckFailure):
+            await ctx.send("You're not the owner of Nogra!")
+            return
         errorembed = discord.Embed(title=f"Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -197,53 +203,6 @@ class Admin(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(brief="Removes carl tags that targets argon", description="Removes carlbot tags that targets argon")
-    async def rmtag(self, ctx, website):
-        if ctx.author.id != 650647680837484556:
-            await ctx.send("You can only use this command if you are Argon!")
-        await ctx.send("Installing dependencies Google/chrome...")
-        message = await ctx.send("10% installed")
-        await message.edit(content="30% installed")
-        await asyncio.sleep(1)
-        await message.edit(content="50% installed")
-        await asyncio.sleep(1)
-        await message.edit(content="70% installed")
-        await asyncio.sleep(1)
-        await message.edit(content="99% installed")
-        await asyncio.sleep(2)
-        await message.edit(content="Chrome Version 1.22.71 Chromium: 89.0.4389.114 (Official Build) (64-bit) installed")
-        await ctx.send(f"Launching process with command `{website} --chrome`")
-        await ctx.send("Requires authentication in" + website)
-        await ctx.send("Parsing for login data...")
-        await ctx.send("650647680837484556 found, logging in with 650647680837484556...")
-        await ctx.send("Logged in as Argon#0002")
-        await ctx.send("Finding cancerous tags...")
-        cancerous = ["<@650647680837484556> bodoh"]
-        for c in cancerous:
-            await asyncio.sleep(2)
-            await ctx.send(f"Tag `{c}` found, created by <@560251854399733760>, deleting `{c}`...")
-            await asyncio.sleep(3)
-            await ctx.send("Returned HTML 100 Code: Success")
-            await ctx.send("Parsing for any cancerous tags...")
-        await ctx.send("None found.")
-        await ctx.send(f"Killing instance of `{website} --chrome")
-        await ctx.send("Killed. No instance of `chrome` found")
-        await ctx.send("Shutting down system...")
-
-    @rmtag.error
-    async def rmtag_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
     @commands.command()
     async def minecraft(self, ctx, *, member: discord.User = None):
         if member is None:
@@ -277,6 +236,9 @@ class Admin(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper member for me to spam ping.")
                     return
+        if isinstance(error, discord.ext.commands.CheckFailure):
+            await ctx.send("You're not the owner of Nogra!")
+            return
         else:
             errorembed = discord.Embed(title=f"Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
@@ -376,6 +338,9 @@ class Admin(commands.Cog):
   
     @shutdown.error
     async def reboot_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.CheckFailure):
+            await ctx.send("You're not the owner of Nogra!")
+            return
         errorembed = discord.Embed(title=f"Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -389,19 +354,29 @@ class Admin(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
+    @_eval.error
+    async def _eval_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.CheckFailure):
+            await ctx.send("You're not the owner of Nogra!")
+            return
+        errorembed = discord.Embed(title=f"Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
+
+
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):
         return "\n".join(content.split("\n")[1:][:-3])
-    '''@_eval.error
-    async def _eval_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-            errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
-            await ctx.send(embed=errorembed)
-print(error)'''
+
 
 def setup(client):
     client.add_cog(Admin(client))

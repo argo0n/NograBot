@@ -145,6 +145,8 @@ class Fun(commands.Cog):
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
     @commands.cooldown(1, 1200, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
+        if member is None:
+            member = ctx.author
         if times is None:
             await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
             return
@@ -152,8 +154,6 @@ class Fun(commands.Cog):
             await ctx.send("ayo i'm not going to torture myself")
             return
         else:
-            if member is None:
-                member = ctx.author
             times = int(times)
             times = min(times, 500)
             currenttime = 0

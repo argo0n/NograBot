@@ -92,6 +92,34 @@ class utility(commands.Cog):
         else:
             await ctx.send("You can only use this command if you are Argon.")
 
+    @commands.command(name="chatchart", brief="Lists portions of messages sent by members", description = "Shows the percentage of messages sent by various members")
+    async def chatchart(self, ctx, channel:discord.TextChannel=None):
+        count = {}
+        if channel == None:
+            channel = ctx.channel
+        with ctx.typing():
+            messagelist = await channel.history(limit=200).flatten()
+            messageno = len(messagelist)
+            for message in messagelist:
+                authorid = message.author.id
+                if authorid not in count:
+                    count[authorid] = 1
+                else:
+                    count[authorid] += 1
+            output = ""
+            await ctx.send(f"{messageno},{count}")
+            for ele in count:
+                if len(output) < 1800:
+                    percentage = round((count[ele]/messageno)*100, 1)
+                    output = output + f"<@{ele}>: {percentage}%\n"
+                    colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
+                              0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
+                    embed = discord.Embed(title = f"Chat chart for {channel.name}", color=random.choice(colors))
+                    embed.add_field(name="\u200b", value=output, inline=False)
+                    embed.set_footer(text="this will be made into a pie chart soon!")
+        await ctx.send(embed=embed)
+
+
     @createchannel.error
     async def createchannel_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
@@ -167,5 +195,19 @@ class utility(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
+    @chatchart.error
+    async def chatchart_error(self, ctx, error):
+        errorembed = discord.Embed(title=f"Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 def setup(client):
     client.add_cog(utility(client))

@@ -50,8 +50,8 @@ class DankMemerHelp(commands.Cog):
         def embedcheck(message):
             for e in message.embeds:
                 return "You bought a lottery ticket" in e.title and message.author.id == 270904126974590976
-        #if message.author.id in [800184970298785802, 270904126974590976]:
-#            return
+        if message.author.id == 800184970298785802:
+            return
         if message.content.startswith("pls lottery") or message.content.startswith("Pls lottery") and message.author.id not in [270904126974590976, 341994639395520526]:
             try:
                 msg = await self.client.wait_for("message", check=embedcheck, timeout = 7.0)
@@ -62,6 +62,36 @@ class DankMemerHelp(commands.Cog):
                 emojis = ["<a:Tick:796984073603383296>", "⏲️"]
                 for emo in emojis:
                     await message.add_reaction(emo)
+                if message.author.id == 395020663116529674:
+                    await message.add_reaction("<:mention:838255192952274974>")
+                    await asyncio.sleep(3600)
+                    await message.channel.send(
+                    f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
+                    with open('questresources/lotterytimes.txt', 'r', encoding='utf8') as f:
+                        content = f.read()
+                        content = int(content)
+                        if content < 8:
+                            content += 1
+                            content = str(content)
+                            with open('questresources/lotterytimes.txt', 'w', encoding='utf8') as f:
+                                f.write(content)
+                            channel = self.client.get_channel(842615048371568650)
+                            await channel.send(f"bern has done lottery {content} times")
+                            return
+                        else:
+                            with open('questresources/hasdonelottery.txt', 'r', encoding='utf8') as f:
+                                content = f.read()
+                                if content == "1":
+                                    return
+                                else:
+                                    with open('questresources/hasdonelottery.txt', 'w', encoding='utf8') as f:
+                                        f.write("1")
+                                    await message.channel.send(
+                                        "You completed a task! <a:Tick:796984073603383296>\n`lottery go brr`")
+                                    channel = self.client.get_channel(842615048371568650)
+                                    await channel.send(f"bern has completed lottery task")
+                                return
+                    return
                 try:
                     await message.author.send("I will remind you in your DMs after an hour!", delete_after = 10.0)
                     await message.add_reaction("<:dms:838255193266716742>")
@@ -72,7 +102,7 @@ class DankMemerHelp(commands.Cog):
                                       inline=False)
                     await message.author.send(f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>", embed=messagelink)
 
-                except discord.errors.Forbidden or message.author.id == 395020663116529674:
+                except discord.errors.Forbidden:
                     await message.add_reaction("<:mention:838255192952274974>")
                     await asyncio.sleep(3600)
                     await message.channel.send(
@@ -167,6 +197,30 @@ class DankMemerHelp(commands.Cog):
             await message.channel.send("<:nograblushsuit:831001647005564970> ty")
 
         if message.content.startswith("pIs rob") or message.content.startswith("PIs rob"):
+            if message.author.id == 395020663116529674:
+                with open('questresources/robtimes.txt', 'r', encoding='utf8') as f:
+                    content = f.read()
+                    content = int(content)
+                    if content < 3:
+                        content += 1
+                        content = str(content)
+                        channel = self.client.get_channel(842615048371568650)
+                        await channel.send(f"bern has done fake rob {content} times.")
+                        with open('questresources/robtimes.txt', 'w', encoding='utf8') as f:
+                            f.write(content)
+                            pass
+                    else:
+                        with open('questresources/hasdonerob.txt', 'r', encoding='utf8') as f:
+                            content = f.read()
+                            if content == "1":
+                                pass
+                            else:
+                                with open('questresources/hasdonerob.txt', 'w', encoding='utf8') as f:
+                                    f.write("1")
+                                await message.channel.send("You completed a task! <a:Tick:796984073603383296>\n`lottery go brr`")
+                                channel = self.client.get_channel(842615048371568650)
+                                await channel.send("bern has finished fakerob task")
+                                pass
             list = ["30,620,956","2,912,053","21,706,777","12,879,693","98,088,176","77,629,360","13,020,603","49,996,631","4,885,187","467,511","22,375,088","37,523,359","68,228,030","62,615,734","48,622,895","92,330,896","18,646,281","63,114,372","13,510,918","36,952,204"]
             number = random.choice(list)
             await message.channel.send(f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")

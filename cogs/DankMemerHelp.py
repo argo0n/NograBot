@@ -67,39 +67,13 @@ class DankMemerHelp(commands.Cog):
                     await asyncio.sleep(3600)
                     await message.channel.send(
                     f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
-                    with open('questresources/lotterytimes.txt', 'r', encoding='utf8') as f:
-                        content = f.read()
-                        content = int(content)
-                        if content < 8:
-                            content += 1
-                            content = str(content)
-                            with open('questresources/lotterytimes.txt', 'w', encoding='utf8') as f:
-                                f.write(content)
-                            channel = self.client.get_channel(842615048371568650)
-                            await channel.send(f"bern has done lottery {content} times")
-                            return
-                        else:
-                            with open('questresources/hasdonelottery.txt', 'r', encoding='utf8') as f:
-                                content = f.read()
-                                if content == "1":
-                                    return
-                                else:
-                                    with open('questresources/hasdonelottery.txt', 'w', encoding='utf8') as f:
-                                        f.write("1")
-                                    await message.channel.send(
-                                        "You completed a task! <a:Tick:796984073603383296>\n`lottery go brr`")
-                                    channel = self.client.get_channel(842615048371568650)
-                                    await channel.send(f"bern has completed lottery task")
-                                return
                     return
                 try:
                     await message.author.send("I will remind you in your DMs after an hour!", delete_after = 10.0)
                     await message.add_reaction("<:dms:838255193266716742>")
                     await asyncio.sleep(3600)
-                    messagelink = discord.Embed(color=0x00FFFF)
+                    messagelink = discord.Embed(description=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})", color=0x00FFFF)
                     messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
-                    messagelink.add_field(name="\u200b", value=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})",
-                                      inline=False)
                     await message.author.send(f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>", embed=messagelink)
 
                 except discord.errors.Forbidden:

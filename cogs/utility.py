@@ -107,7 +107,6 @@ class utility(commands.Cog):
                 else:
                     count[authorid] += 1
             output = ""
-            await ctx.send(f"{messageno},{count}")
             for ele in count:
                 if len(output) < 1800:
                     percentage = round((count[ele]/messageno)*100, 1)

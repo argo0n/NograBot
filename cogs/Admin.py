@@ -308,7 +308,7 @@ class Admin(commands.Cog):
     @commands.is_owner()
     async def update(self, ctx, *, message):
         await ctx.message.delete()
-        channelids = [789840820563476485, 822112906014490634, 818436261891014660]
+        channelids = [832081865749430285, 789840820563476485, 822112906014490634, 818436261891014660]
         for i in channelids:
             channel = self.client.get_channel(i)
             await channel.send(message)

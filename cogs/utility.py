@@ -41,7 +41,7 @@ class utility(commands.Cog):
         print("Cogs \"Utility\" has loaded")
 
     @commands.command(brief="gives emojis info in guild", description="Gives info about emojis in guild")
-    async def ei(self, ctx):
+    async def emojiinfo(self, ctx):
         emojino = len(ctx.guild.emojis)
         limit = ctx.guild.emoji_limit + 50
         remaining = limit - emojino
@@ -134,8 +134,8 @@ class utility(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @ei.error
-    async def ei_error(self, ctx, error):
+    @emojiinfo.error
+    async def emojiinfo_error(self, ctx, error):
         errorembed = discord.Embed(title=f"Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)

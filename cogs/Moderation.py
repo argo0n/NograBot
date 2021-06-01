@@ -14,13 +14,14 @@ import pytz
 from pytz import timezone
 import asyncio
 import postbin, traceback
+import json
+import random
 
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 timeformat = "%Y-%m-%d %H:%M:%S"
 durationformat = "%-dd %-Hh %-Mm %-Ss"
@@ -45,33 +46,142 @@ class Moderation(commands.Cog):
     async def on_message(self, message):
         if message.author.id == 800184970298785802:
             return
-        if message.channel.id in [
-        803662591690932235,
-        813288124460826669,
-        802581920886030406,
-        804260533666578432,
-        810007696057040906,
-        810007702058565632,
-        ]:
-            await message.delete()
-            if message.guild.id == 789840820563476482:
-                channel = self.client.get_channel(804260533666578432)
-                await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                    message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
-            elif message.guild.id == 796727833048645692:
-                channel = self.client.get_channel(810007702058565632)
-                await channel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
-                    message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+        with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+            channeldetails = json.load(f)
 
-        if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
-            await message.delete()
-            await message.channel.send(
-                f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
-                delete_after=3.0)
+        if str(message.guild.id) not in channeldetails:
+            channeldetails[str(message.guild.id)] = {
+                'blacklist_channels': [],
+                'logging_channels': [],
+            }
 
-    @commands.command(pass_context=True, name="clear", brief="Purges messages", description="purges messages")
+            with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+                json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+            await message.channel.send("The shut-up feature is now online for Nogra. You can prevent people from talking in a channel while keeping their perms to send messages.\nUse `a.shutup add/remove [channel]` to make a channel shut up and `a.idot add/remove [channel]` if you want people to get pinged for why they cannot talk.")
+        else:
+            blacklisted_channels = channeldetails[str(message.guild.id)]['blacklist_channels']
+            if len(blacklisted_channels) != 0:
+                if message.channel.id in blacklisted_channels:
+                    await message.delete()
+                    idotchannels = channeldetails[str(message.guild.id)]['logging_channels']
+                    if idotchannels != None:
+                        idotchannel = self.client.get_channel(idotchannels)
+                        await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+
+    @commands.command(pass_context=True, name="shutup", brief="Sets blacklisted channels for talking", description="Sets channels where people can talk but will have their messages deleted.")
     @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, number=None):
+    async def shutup(self, ctx, addremoveview=None, channel: discord.TextChannel = None):
+        if addremoveview is None:
+            await ctx.send("```\n[p]shutup [add/remove/view] [channel]\n          ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
+            return
+        addremoveview = addremoveview.lower()
+        with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+            channeldetails = json.load(f)
+        blacklisted_channels = channeldetails[str(ctx.guild.id)]['blacklist_channels']
+        if addremoveview == "view":
+            if len(blacklisted_channels) == 0:
+                output = "You have not added any channels yet. Use `a.shutup add [channel]` to do so!"
+            else:
+                output = ""
+                for i in blacklisted_channels:
+                    if len(output) < 1024:
+                        output += f"<#{i}>\n"
+            colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
+                      0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
+            embed = discord.Embed(title=f"Blacklisted channels in {ctx.guild.name}", color=random.choice(colors))
+            embed.add_field(name="\u200b", value=output, inline=False)
+            await ctx.send(embed=embed)
+        elif addremoveview == "add":
+            if channel is None:
+                await ctx.send(
+                    "```\n[p]idot [set/remove/view] [channel]\n                          ^^^^^^^^^\nYou missed out [channel]!```")
+                return
+            with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+                channeldetails = json.load(f)
+            blacklisted_channels = channeldetails[str(ctx.guild.id)]['blacklist_channels']
+            if channel.id in blacklisted_channels:
+                await ctx.send(f"{channel.name} is already blacklisted!")
+                return
+            blacklisted_channels.append(channel.id)
+            channeldetails[str(ctx.guild.id)]['blacklist_channels'] = blacklisted_channels
+            with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+                json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+            await ctx.send(f"<a:Tick:796984073603383296> {channel.mention} successfully added to blacklist list.\nMessages sent in **{channel.name}** will be deleted from now onwards.")
+            return
+        elif addremoveview == "remove":
+            if channel is None:
+                await ctx.send(
+                    "```\n[p]idot [set/remove/view] [channel]\n                          ^^^^^^^^^\nYou missed out [channel]!```")
+                return
+            with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+                channeldetails = json.load(f)
+            blacklisted_channels = channeldetails[str(ctx.guild.id)]['blacklist_channels']
+            if channel.id not in blacklisted_channels:
+                await ctx.send(f"{channel.name} was never blacklisted.")
+                return
+            blacklisted_channels.remove(channel.id)
+            channeldetails[str(ctx.guild.id)]['blacklist_channels'] = blacklisted_channels
+            with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+                json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+            await ctx.send(f"<a:Tick:796984073603383296> {channel.mention} removed from blacklist list.\nMessages sent in **{channel.name}** will no longer be deleted.")
+            return
+        else:
+            await ctx.send("Your first option needs to be a `add`/`remove`/`view` so that I will know whether to add, remove or view channels.")
+
+
+    @commands.command(pass_context=True, name="idot", brief="Sets logging channel", description="If people talk in blacklisted channels, use this command to log their talking here.")
+    @commands.has_permissions(manage_channels=True)
+    async def idot(self, ctx, setremoveview=None, channel: discord.TextChannel = None):
+        if setremoveview is None:
+            await ctx.send("```\n[p]idot [add/remove/view] [channel]\n        ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
+            return
+        setremoveview = setremoveview.lower()
+        with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+            channeldetails = json.load(f)
+        logging_channels = channeldetails[str(ctx.guild.id)]['logging_channels']
+        if setremoveview == "view":
+            if logging_channels == None:
+                output = "You have not added any channels yet. Use `a.idot add [channel` to do so!"
+            else:
+                output = f"<#{logging_channels}>"
+            colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
+                      0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
+            embed = discord.Embed(title=f"Logging channels in {ctx.guild.name}", color=random.choice(colors))
+            embed.add_field(name="\u200b", value=output, inline=False)
+            await ctx.send(embed=embed)
+        elif setremoveview == "remove":
+            with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+                channeldetails = json.load(f)
+            logging_channels = channeldetails[str(ctx.guild.id)]['logging_channels']
+            if logging_channels is None:
+                await ctx.send("You have not set a logging channel.")
+                return
+            channeldetails[str(ctx.guild.id)]['logging_channels'] = None
+            with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+                json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+            await ctx.send(
+                f"<a:Tick:796984073603383296> Removed the logging channel.")
+        elif setremoveview == "set":
+            if channel is None:
+                await ctx.send("```\n[p]idot [set/remove/view] [channel]\n                          ^^^^^^^^^\nYou missed out [channel]!\n```")
+                return
+            with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+                channeldetails = json.load(f)
+            logging_channels = channeldetails[str(ctx.guild.id)]['logging_channels']
+            if logging_channels is not None and logging_channels == channel.id:
+                await ctx.send(f"{channel.name} is already set as the logging channel!.")
+                return
+            channeldetails[str(ctx.guild.id)]['logging_channels'] = channel.id
+            with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+                json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+            await ctx.send(f"<a:Tick:796984073603383296> Successfully set {channel.mention} as the logging channel.\nWhen a message is sent in blacklisted channels, it will be logged here.")
+        else:
+            await ctx.send("Your first option needs to be a `set`/`remove`/`view` so that I will know whether to set, remove or add channels.")
+
+
+    @commands.command(pass_context=True, name="purge", brief="Purges messages", description="purges messages")
+    @commands.has_permissions(manage_channels=True)
+    async def purge(self, ctx, number=None):
         if number is None:
             await ctx.send("Try again, but do tell me how many messages do you want to clear.")
         else:
@@ -145,25 +255,6 @@ class Moderation(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @clear.error
-    async def clear_error(self, ctx, error):
-        if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
-            return
-        else:
-            errorembed = discord.Embed(title=f"Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-            message = await logchannel.send("Uploading traceback to Hastebin...")
-            tracebacklink = await postbin.postAsync(gettraceback(error))
-            await message.edit(content=tracebacklink)
-
     @commands.command(brief="ban hammer", description = "Bans members")
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member = None, *, reason=None):
@@ -177,10 +268,11 @@ class Moderation(commands.Cog):
         if reason is None:
             reason = "No specified reason"
         message = f"You have been banned from {ctx.guild.name} for: {reason}"
-        try:
-            await member.send(message)
-        except discord.errors.Forbidden:
-            pass
+        if not member.bot:
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: {reason}")
 
@@ -205,10 +297,11 @@ class Moderation(commands.Cog):
         if reason is None:
             reason = "no specified reason"
         message = f"You have been banned from {ctx.guild.name} for: {reason}"
-        try:
-            await member.send(message)
-        except discord.errors.Forbidden:
-            pass
+        if not member.bot:
+            try:
+                await member.send(message)
+            except discord.errors.Forbidden:
+                pass
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: {reason}")
 
@@ -217,11 +310,8 @@ class Moderation(commands.Cog):
     async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
-        elif isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
-            return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
             return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -242,10 +332,10 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
         elif isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            await ctx.send(f"You did not provide a proper countdown number.")
             return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
             return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -261,6 +351,68 @@ class Moderation(commands.Cog):
             tracebacklink = await postbin.postAsync(gettraceback(error))
             await message.edit(content=tracebacklink)
 
+    @purge.error
+    async def purge_error(self, ctx, error):
+        if isinstance(error, ValueError):
+            await ctx.send(f"You did not provide a proper number of messages to be blacklisted.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
+
+    @shutup.error
+    async def shutup_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You need `Manage Channels` to use this command.")
+            return
+        elif isinstance(error, commands.ChannelNotFound):
+            await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
+
+    @idot.error
+    async def idot_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You need `Manage Channels` to use this command.")
+            return
+        elif isinstance(error, commands.ChannelNotFound):
+            await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
+            return
+        else:
+            errorembed = discord.Embed(title=f"Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+            message = await logchannel.send("Uploading traceback to Hastebin...")
+            tracebacklink = await postbin.postAsync(gettraceback(error))
+            await message.edit(content=tracebacklink)
 
 
 

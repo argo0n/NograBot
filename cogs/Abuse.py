@@ -76,7 +76,7 @@ class Abuse(commands.Cog):
             await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
             return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member.")
+            await ctx.send(f"You did not provide a proper member to allow abusing.")
             return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -117,7 +117,7 @@ class Abuse(commands.Cog):
             await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
             return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member.")
+            await ctx.send(f"You did not provide a proper member to stop him from abusing.")
             return
         else:
             errorembed = discord.Embed(title=f"Oops!",

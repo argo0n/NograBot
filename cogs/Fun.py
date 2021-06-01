@@ -219,7 +219,7 @@ class Fun(commands.Cog):
             await ctx.send(f"You did not provide a proper number of times for me to ping someone.")
             return
         elif isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -238,10 +238,16 @@ class Fun(commands.Cog):
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def blacklist(self, ctx, member: discord.Member = None):
         await ctx.send("For what reason?")
-        msg = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author,timeout=20.0)
+        try:
+            msg = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author,timeout=20.0)
+        except asyncio.TimeoutError:
+            await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
         await ctx.send("For how many days?")
-        secondmsg = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                                         timeout=20.0)
+        try:
+            secondmsg = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                         timeout=30.0)
+        except asyncio.TimeoutError:
+            await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
         messagetousers = f"You have been temporarily blacklisted for {secondmsg.content} days by a Bot Moderator for {msg.content}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
         await member.send(messagetousers)
         await ctx.message.add_reaction("<a:Tick:796984073603383296>")
@@ -257,7 +263,7 @@ class Fun(commands.Cog):
             await ctx.send(f"You did not provide a proper **number** of days for the user to be blacklisted.")
             return
         elif isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -327,7 +333,7 @@ class Fun(commands.Cog):
     @secretping.error
     async def secretping_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
         else:
             errorembed = discord.Embed(title=f"Oops!",
@@ -413,7 +419,7 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         elif isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member for me to spam ping.")
+                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
         else:
             errorembed = discord.Embed(title=f"Oops!",

@@ -141,7 +141,7 @@ class RobloxServerOnly(commands.Cog):
     @admon.error
     async def admon_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member for me to spam ping.")
+            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
             return
         else:
             errorembed = discord.Embed(title=f"Oops!",

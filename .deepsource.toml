@@ -1,0 +1,15 @@
+version = 1
+
+exclude_patterns = [
+    "resources/**",
+    "questresources/**",
+    ".idea/**",
+    "cogs/__pycache__/**"
+]
+
+[[analyzers]]
+name = "python"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "3.x.x"

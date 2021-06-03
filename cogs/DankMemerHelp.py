@@ -182,7 +182,6 @@ class DankMemerHelp(commands.Cog):
                         await channel.send(f"bern has done fake rob {content} times.")
                         with open('questresources/robtimes.txt', 'w', encoding='utf8') as f:
                             f.write(content)
-                            pass
                     else:
                         with open('questresources/hasdonerob.txt', 'r', encoding='utf8') as f:
                             content = f.read()
@@ -194,7 +193,6 @@ class DankMemerHelp(commands.Cog):
                                 await message.channel.send("You completed a task! <a:Tick:796984073603383296>\n`lottery go brr`")
                                 channel = self.client.get_channel(842615048371568650)
                                 await channel.send("bern has finished fakerob task")
-                                pass
             list = ["30,620,956","2,912,053","21,706,777","12,879,693","98,088,176","77,629,360","13,020,603","49,996,631","4,885,187","467,511","22,375,088","37,523,359","68,228,030","62,615,734","48,622,895","92,330,896","18,646,281","63,114,372","13,510,918","36,952,204"]
             number = random.choice(list)
             await message.channel.send(f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")

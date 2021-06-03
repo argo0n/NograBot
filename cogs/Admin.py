@@ -266,9 +266,10 @@ class Admin(commands.Cog):
             try:
                 msg = await self.client.wait_for("message",
                                                  check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                                                 timeout=3.0)
+                                                 timeout=120.0)
             except asyncio.TimeoutError:
                 await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
+                return
             colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
                       0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
             dmembed = discord.Embed(title="You received a message from the developer!", description=msg.content,

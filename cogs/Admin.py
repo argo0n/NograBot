@@ -54,7 +54,8 @@ class Admin(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    def cleanup_code(self, content):
+    @staticmethod
+    def cleanup_code(content):
         """Automatically removes code blocks from the code."""
         # remove ```py\n```
         if content.startswith('```') and content.endswith('```'):

@@ -132,7 +132,7 @@ async def on_member_join(member):
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` loaded.")
-    cogload = discord.Embed(title="Cog Loaded",description=f"`cogs.{extension}`",color=0x00ff00)
+    cogload = discord.Embed(title="Cog Loaded", description=f"`cogs.{extension}`", color=0x00ff00)
     cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogload)
@@ -142,7 +142,7 @@ async def load(ctx, extension):
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` unloaded.")
-    cogunload = discord.Embed(title="Cog Unloaded",description=f"`cogs.{extension}`",color=0xff0000)
+    cogunload = discord.Embed(title="Cog Unloaded", description=f"`cogs.{extension}`", color=0xff0000)
     cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogunload)
@@ -156,7 +156,7 @@ async def cogreboot(ctx, extension):
     await message.edit(content=f"<:nograyellow:830765423112880148> Restarting `{extension}`...")
     client.load_extension(f'cogs.{extension}')
     await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
-    rebootcog = discord.Embed(title="Cog Rebooted",description=f"`cogs.{extension}`",color=0xffff00)
+    rebootcog = discord.Embed(title="Cog Rebooted", description=f"`cogs.{extension}`", color=0xffff00)
     rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)

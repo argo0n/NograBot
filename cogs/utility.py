@@ -97,7 +97,7 @@ class utility(commands.Cog):
     @commands.command(name="chatchart", brief="Lists portions of messages sent by members", description = "Shows the percentage of messages sent by various members")
     async def chatchart(self, ctx, channel:discord.TextChannel=None):
         count = {}
-        if channel == None:
+        if channel is None:
             channel = ctx.channel
         with ctx.typing():
             messagelist = await channel.history(limit=1000).flatten()

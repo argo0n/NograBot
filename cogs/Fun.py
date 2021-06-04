@@ -33,7 +33,7 @@ def secondstotiming(seconds):
     seconds = round(seconds)
     if seconds < 60:
         secdisplay = "s" if seconds != 1 else ""
-        return (f"{seconds} second{secdisplay}")
+        return f"{seconds} second{secdisplay}"
     else:
         minutes = math.trunc(seconds/60)
         if minutes < 60:
@@ -43,7 +43,7 @@ def secondstotiming(seconds):
                 secdisplay = "s"
             else:
                 secisplay = ""
-            return (f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}")
+            return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
         else:
             hours = math.trunc(minutes/60)
             minutes = minutes - hours*60
@@ -54,7 +54,7 @@ def secondstotiming(seconds):
                 secdisplay = "s"
             else:
                 secisplay = ""
-            return (f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}")
+            return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
 
 
 

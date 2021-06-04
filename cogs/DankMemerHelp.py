@@ -126,8 +126,8 @@ class DankMemerHelp(commands.Cog):
                 if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
                     return
-            else:
-                await message.channel.send("No proper mention was found.")
+                
+            await message.channel.send("No proper mention was found.")
 
         if ("BASICALLY EVERYTHING") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("nice i'm proud of you <:nograblushsuit:831001647005564970>")
@@ -164,8 +164,8 @@ class DankMemerHelp(commands.Cog):
                 if str(m.id) in message.content:
                     await message.channel.send(f"{m.mention} rob now!")
                     return
-            else:
-                await message.channel.send("No proper mention was found.")
+                
+            await message.channel.send("No proper mention was found.")
 
         if (
             message.content.startswith("Nice I'm proud of you")

@@ -119,7 +119,7 @@ async def on_message(message):
 async def on_member_join(member):
     if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
-        server = member.guild
+
         await member.send("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         await client.get_channel(789840820563476485).send(f"{member.mention} AAAAAA")
         print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")

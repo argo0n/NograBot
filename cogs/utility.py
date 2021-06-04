@@ -121,7 +121,7 @@ class utility(commands.Cog):
 
     @createchannel.error
     async def createchannel_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -136,7 +136,7 @@ class utility(commands.Cog):
 
     @emojiinfo.error
     async def emojiinfo_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -151,7 +151,7 @@ class utility(commands.Cog):
 
     @hmmm.error
     async def hmmm_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -166,7 +166,7 @@ class utility(commands.Cog):
 
     @ping.error
     async def ping_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -181,7 +181,7 @@ class utility(commands.Cog):
 
     @calc.error
     async def calc_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -196,7 +196,7 @@ class utility(commands.Cog):
 
     @chatchart.error
     async def chatchart_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

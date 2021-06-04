@@ -57,7 +57,7 @@ client.help_command = MyNewHelp()
 @client.event
 async def on_ready():
     print('Successfully connected to Discord as {0.user}'.format(client))
-    botready = discord.Embed(title=f"Bot is ready!", description=f"[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)", color=0x32CD32)
+    botready = discord.Embed(title="Bot is ready!", description="[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)", color=0x32CD32)
     botready.set_author(name=f"{client.user.name}", icon_url=client.user.avatar_url,
                          url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
@@ -82,10 +82,10 @@ async def on_guild_join(guild):
         joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
         joinembed.add_field(name="**__Not sure where to start?__**", value="\u200b", inline=False)
         joinembed.add_field(name="__Fun commands!__", value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `a.help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",inline=False)
-        joinembed.add_field(name="__Moderation__", value=f"Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>", inline=True)
-        joinembed.add_field(name=f"__Dank Memer Help__", value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>", inline=True)
-        joinembed.add_field(name=f"\u200b",
-                            value=f"By using Nogra, you agree to Nogra's [Terms of Service](http://nogra.infinityfreeapp.com/nogra-tos/) and [Privacy Policy](http://nogra.infinityfreeapp.com/nogras-privacy-policy/).",
+        joinembed.add_field(name="__Moderation__", value="Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>", inline=True)
+        joinembed.add_field(name="__Dank Memer Help__", value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>", inline=True)
+        joinembed.add_field(name="\u200b",
+                            value="By using Nogra, you agree to Nogra's [Terms of Service](http://nogra.infinityfreeapp.com/nogra-tos/) and [Privacy Policy](http://nogra.infinityfreeapp.com/nogras-privacy-policy/).",
                             inline=False)
         joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
@@ -132,7 +132,7 @@ async def on_member_join(member):
 async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` loaded.")
-    cogload = discord.Embed(title=f"Cog Loaded",description=f"`cogs.{extension}`",color=0x00ff00)
+    cogload = discord.Embed(title="Cog Loaded", description=f"`cogs.{extension}`", color=0x00ff00)
     cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogload)
@@ -142,7 +142,7 @@ async def load(ctx, extension):
 async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` unloaded.")
-    cogunload = discord.Embed(title=f"Cog Unloaded",description=f"`cogs.{extension}`",color=0xff0000)
+    cogunload = discord.Embed(title="Cog Unloaded", description=f"`cogs.{extension}`", color=0xff0000)
     cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogunload)
@@ -156,7 +156,7 @@ async def cogreboot(ctx, extension):
     await message.edit(content=f"<:nograyellow:830765423112880148> Restarting `{extension}`...")
     client.load_extension(f'cogs.{extension}')
     await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
-    rebootcog = discord.Embed(title=f"Cog Rebooted",description=f"`cogs.{extension}`",color=0xffff00)
+    rebootcog = discord.Embed(title="Cog Rebooted", description=f"`cogs.{extension}`", color=0xffff00)
     rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)
@@ -167,9 +167,9 @@ for filename in os.listdir('./cogs'):
 @load.error
 async def load_error(ctx, error):
     if "not be loaded" in error:
-        await ctx.send(f"The cog is either already loaded or not found.")
+        await ctx.send("The cog is either already loaded or not found.")
     else:
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -184,9 +184,9 @@ async def load_error(ctx, error):
 @unload.error
 async def unload(ctx, error):
     if "not been loaded" in error:
-        await ctx.send(f"The cog is either already unloaded or not found.")
+        await ctx.send("The cog is either already unloaded or not found.")
     else:
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -200,7 +200,7 @@ async def unload(ctx, error):
         await message.edit(content=tracebacklink)
 @cogreboot.error
 async def cogreboot(ctx,error):
-    errorembed = discord.Embed(title=f"Oops!",
+    errorembed = discord.Embed(title="Oops!",
                                description="This command just received an error. It has been sent to Argon.",
                                color=0x00ff00)
     errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

@@ -73,10 +73,10 @@ class Abuse(commands.Cog):
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member to allow abusing.")
+            await ctx.send("You did not provide a proper member to allow abusing.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -113,13 +113,13 @@ class Abuse(commands.Cog):
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         elif isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper member to stop him from abusing.")
+            await ctx.send("You did not provide a proper member to stop him from abusing.")
             return
         else:
-            errorembed = discord.Embed(title=f"Oops!",
+            errorembed = discord.Embed(title="Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
                                        color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

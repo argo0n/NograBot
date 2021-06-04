@@ -46,7 +46,7 @@ class RobloxServerOnly(commands.Cog):
 
     @kicc.error
     async def kicc_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -76,7 +76,7 @@ class RobloxServerOnly(commands.Cog):
 
     @allow.error
     async def allow_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -141,7 +141,7 @@ class RobloxServerOnly(commands.Cog):
     @admon.error
     async def admon_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -187,7 +187,7 @@ class RobloxServerOnly(commands.Cog):
 
     @cutie.error
     async def cutie_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -202,7 +202,7 @@ class RobloxServerOnly(commands.Cog):
 
     @uglie.error
     async def uglie_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

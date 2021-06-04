@@ -329,7 +329,7 @@ class Fun(commands.Cog):
     async def secretping(self, ctx, userid=None, *, message=None):
         if id is None:
             await ctx.send(
-                "Imagine trying to ask me to ping someone but not giving me the ID of that person. ¯\_(ツ)_/¯")
+                r"Imagine trying to ask me to ping someone but not giving me the ID of that person. ¯\_(ツ)_/¯")
         elif message is None:
             await ctx.message.delete()
             await ctx.send("<@" + userid + ">")

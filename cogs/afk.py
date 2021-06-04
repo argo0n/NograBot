@@ -35,22 +35,40 @@ def secondstotiming(seconds):
         if minutes < 60:
             seconds = seconds - minutes*60
             mindisplay = "s" if minutes != 1 else ""
-            if seconds != 1:
-                secdisplay = "s"
-            else:
-                secisplay = ""
+            secdisplay = "s" if seconds != 1 else ""
             return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
         else:
             hours = math.trunc(minutes/60)
-            minutes = minutes - hours*60
-            seconds = seconds - minutes*60 - hours*60*60
-            hdisplay = "s" if hours != 1 else ""
-            mindisplay = "s" if minutes != 1 else ""
-            if seconds != 1:
-                secdisplay = "s"
+            if hours < 24:
+                minutes = minutes - hours*60
+                seconds = seconds - minutes*60 - hours*60*60
+                hdisplay = "s" if hours != 1 else ""
+                mindisplay = "s" if minutes != 1 else ""
+                secdisplay = "s" if seconds != 1 else ""
+                return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
             else:
-                secisplay = ""
-            return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+                days = math.trunc(hours/24)
+                if days < 7:
+                    hours = hours - days*24
+                    minutes = minutes - hours * 60
+                    seconds = seconds - minutes * 60 - hours * 60 * 60
+                    ddisplay = "s" if days != 1 else ""
+                    hdisplay = "s" if hours != 1 else ""
+                    mindisplay = "s" if minutes != 1 else ""
+                    secdisplay = "s" if seconds != 1 else ""
+                    return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+                else:
+                    weeks = math.trunc(days/7)
+                    days = days - weeks*7
+                    hours = hours - days * 24
+                    minutes = minutes - hours * 60
+                    seconds = seconds - minutes * 60 - hours * 60 * 60
+                    wdisplay = "s" if weeks != 1 else ""
+                    ddisplay = "s" if days != 1 else ""
+                    hdisplay = "s" if hours != 1 else ""
+                    mindisplay = "s" if minutes != 1 else ""
+                    secdisplay = "s" if seconds != 1 else ""
+                    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
 
 class Afk(commands.Cog):
 

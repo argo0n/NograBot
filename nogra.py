@@ -160,7 +160,6 @@ async def cogreboot(ctx, extension):
     rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)
-    logchannel = client.get_channel(839016255733497917)
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):

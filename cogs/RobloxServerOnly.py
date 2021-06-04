@@ -11,7 +11,8 @@
 import discord
 from discord.ext import commands
 import asyncio
-import postbin, traceback
+import postbin
+import traceback
 
 def gettraceback(error):
     etype = type(error)

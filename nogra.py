@@ -6,13 +6,15 @@ import logging
 from discord.ext import commands
 import json
 import os
-import datetime, time
+import datetime
+import time
 from datetime import datetime as dt
 from datetime import date
 import nacl
 from pytz import timezone
 from discord.ext.buttons import Paginator
-import postbin, traceback
+import postbin
+import traceback
 
 def gettraceback(error):
     etype = type(error)

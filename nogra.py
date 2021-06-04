@@ -136,7 +136,6 @@ async def load(ctx, extension):
     cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogload)
-    logchannel = client.get_channel(839016255733497917)
 
 @client.command(brief="Unloads cogs", description = "Unloads cogs")
 @commands.is_owner()
@@ -147,7 +146,6 @@ async def unload(ctx, extension):
     cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogunload)
-    logchannel = client.get_channel(839016255733497917)
 
 @client.command(brief="Reboots a cog", description = "Reboots a cog", aliases= ["cr"])
 @commands.is_owner()

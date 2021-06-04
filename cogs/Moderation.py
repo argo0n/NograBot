@@ -356,63 +356,60 @@ class Moderation(commands.Cog):
         if isinstance(error, ValueError):
             await ctx.send(f"You did not provide a proper number of messages to be blacklisted.")
             return
-        else:
-            errorembed = discord.Embed(title=f"Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-            message = await logchannel.send("Uploading traceback to Hastebin...")
-            tracebacklink = await postbin.postAsync(gettraceback(error))
-            await message.edit(content=tracebacklink)
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @shutup.error
     async def shutup_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("You need `Manage Channels` to use this command.")
             return
-        elif isinstance(error, commands.ChannelNotFound):
+        if isinstance(error, commands.ChannelNotFound):
             await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
             return
-        else:
-            errorembed = discord.Embed(title=f"Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-            message = await logchannel.send("Uploading traceback to Hastebin...")
-            tracebacklink = await postbin.postAsync(gettraceback(error))
-            await message.edit(content=tracebacklink)
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
     @idot.error
     async def idot_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("You need `Manage Channels` to use this command.")
             return
-        elif isinstance(error, commands.ChannelNotFound):
+        if isinstance(error, commands.ChannelNotFound):
             await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
             return
-        else:
-            errorembed = discord.Embed(title=f"Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-            message = await logchannel.send("Uploading traceback to Hastebin...")
-            tracebacklink = await postbin.postAsync(gettraceback(error))
-            await message.edit(content=tracebacklink)
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
 
 

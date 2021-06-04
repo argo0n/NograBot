@@ -30,45 +30,41 @@ def secondstotiming(seconds):
     if seconds < 60:
         secdisplay = "s" if seconds != 1 else ""
         return f"{seconds} second{secdisplay}"
-    else:
-        minutes = math.trunc(seconds/60)
-        if minutes < 60:
-            seconds = seconds - minutes*60
-            mindisplay = "s" if minutes != 1 else ""
-            secdisplay = "s" if seconds != 1 else ""
-            return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-        else:
-            hours = math.trunc(minutes/60)
-            if hours < 24:
-                minutes = minutes - hours*60
-                seconds = seconds - minutes*60 - hours*60*60
-                hdisplay = "s" if hours != 1 else ""
-                mindisplay = "s" if minutes != 1 else ""
-                secdisplay = "s" if seconds != 1 else ""
-                return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-            else:
-                days = math.trunc(hours/24)
-                if days < 7:
-                    hours = hours - days*24
-                    minutes = minutes - hours * 60
-                    seconds = seconds - minutes * 60 - hours * 60 * 60
-                    ddisplay = "s" if days != 1 else ""
-                    hdisplay = "s" if hours != 1 else ""
-                    mindisplay = "s" if minutes != 1 else ""
-                    secdisplay = "s" if seconds != 1 else ""
-                    return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-                else:
-                    weeks = math.trunc(days/7)
-                    days = days - weeks*7
-                    hours = hours - days * 24
-                    minutes = minutes - hours * 60
-                    seconds = seconds - minutes * 60 - hours * 60 * 60
-                    wdisplay = "s" if weeks != 1 else ""
-                    ddisplay = "s" if days != 1 else ""
-                    hdisplay = "s" if hours != 1 else ""
-                    mindisplay = "s" if minutes != 1 else ""
-                    secdisplay = "s" if seconds != 1 else ""
-                    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    minutes = math.trunc(seconds/60)
+    if minutes < 60:
+        seconds = seconds - minutes*60
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    hours = math.trunc(minutes/60)
+    if hours < 24:
+        minutes = minutes - hours*60
+        seconds = seconds - minutes*60 - hours*60*60
+        hdisplay = "s" if hours != 1 else ""
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    days = math.trunc(hours/24)
+    if days < 7:
+        hours = hours - days*24
+        minutes = minutes - hours * 60
+        seconds = seconds - minutes * 60 - hours * 60 * 60
+        ddisplay = "s" if days != 1 else ""
+        hdisplay = "s" if hours != 1 else ""
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    weeks = math.trunc(days/7)
+    days = days - weeks*7
+    hours = hours - days * 24
+    minutes = minutes - hours * 60
+    seconds = seconds - minutes * 60 - hours * 60 * 60
+    wdisplay = "s" if weeks != 1 else ""
+    ddisplay = "s" if days != 1 else ""
+    hdisplay = "s" if hours != 1 else ""
+    mindisplay = "s" if minutes != 1 else ""
+    secdisplay = "s" if seconds != 1 else ""
+    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
 
 class Afk(commands.Cog):
 
@@ -92,14 +88,13 @@ class Afk(commands.Cog):
                 if timenow < afktime:
                     await message.channel.send(f"You still have {round(afktime - timenow)} more seconds to talk. ")
                     return
-                else:
-                    if "[AFK] " in message.author.display_name:
-                        newname = message.author.display_name.replace("[AFK]", "")
-                        await message.author.edit(nick=newname)
-                    del afkdetails[str(message.author.id)]
-                    with open('resources/test.json', 'w', encoding='utf8') as f:
-                        json.dump(afkdetails, f, sort_keys=True, indent=4, ensure_ascii=False)
-                        await message.channel.send(f"Welcome back {message.author.name}! I have removed your AFK status.")
+                if "[AFK] " in message.author.display_name:
+                    newname = message.author.display_name.replace("[AFK]", "")
+                    await message.author.edit(nick=newname)
+                del afkdetails[str(message.author.id)]
+                with open('resources/test.json', 'w', encoding='utf8') as f:
+                    json.dump(afkdetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+                    await message.channel.send(f"Welcome back {message.author.name}! I have removed your AFK status.")
             else:
                 for i in k:
                     userid = int(i)
@@ -140,14 +135,13 @@ class Afk(commands.Cog):
                 if str(ctx.author.id) in k:
                     await ctx.send("You have already set an AFK status, wait until your AFK status is removed (30 seconds) to set a new AFK status.")
                     return
-                else:
-                    user[str(ctx.author.id)] = {}
-                    user[str(ctx.author.id)]['guild_id'] = ctx.guild.id
-                    user[str(ctx.author.id)]['time'] = time_now+30
-                    user[str(ctx.author.id)]['message'] = message
-                    with open('resources/test.json', 'w', encoding='utf8') as f:
-                        json.dump(user,f,sort_keys=True,indent=4,ensure_ascii=False)
-                        await ctx.send(f"{member.mention} You are now AFK. message: {message}")
+                user[str(ctx.author.id)] = {}
+                user[str(ctx.author.id)]['guild_id'] = ctx.guild.id
+                user[str(ctx.author.id)]['time'] = time_now+30
+                user[str(ctx.author.id)]['message'] = message
+                with open('resources/test.json', 'w', encoding='utf8') as f:
+                    json.dump(user,f,sort_keys=True,indent=4,ensure_ascii=False)
+                    await ctx.send(f"{member.mention} You are now AFK. message: {message}")
 
     @afk.error
     async def afk_error(self, ctx, error):

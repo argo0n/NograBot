@@ -128,7 +128,7 @@ class Fun(commands.Cog):
         if isinstance(error, ValueError):
             await ctx.send(f"You did not provide a proper **number**.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -232,7 +232,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                      description="This command just received an error. It has been sent to Argon.",
                                      color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -275,7 +275,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -312,7 +312,7 @@ class Fun(commands.Cog):
         if isinstance(error, ValueError):
             await ctx.send(f"You did not provide a proper **duration (in seconds)** for me to type.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -342,7 +342,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -386,7 +386,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper member.")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -426,7 +426,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -485,7 +485,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -537,7 +537,7 @@ class Fun(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send(f"You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
                     return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

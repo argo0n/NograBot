@@ -356,7 +356,7 @@ class Moderation(commands.Cog):
         if isinstance(error, ValueError):
             await ctx.send(f"You did not provide a proper number of messages to be blacklisted.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -377,7 +377,7 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.ChannelNotFound):
             await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -398,7 +398,7 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.ChannelNotFound):
             await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

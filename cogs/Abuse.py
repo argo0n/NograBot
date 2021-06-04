@@ -78,7 +78,7 @@ class Abuse(commands.Cog):
         if isinstance(error, commands.MemberNotFound):
             await ctx.send(f"You did not provide a proper member to allow abusing.")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

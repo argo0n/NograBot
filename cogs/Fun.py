@@ -14,7 +14,6 @@ import discord
 import datetime
 from datetime import datetime as dt
 from datetime import date
-from datetime import datetime
 import time
 import math
 import random

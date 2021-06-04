@@ -26,7 +26,7 @@ import time
 import subprocess
 from typing import Union, Optional
 from discord.ext.buttons import Paginator
-import postbin, traceback
+import postbin
 import random
 import json
 

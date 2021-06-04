@@ -67,7 +67,7 @@ class Moderation(commands.Cog):
                 if message.channel.id in blacklisted_channels:
                     await message.delete()
                     idotchannels = channeldetails[str(message.guild.id)]['logging_channels']
-                    if idotchannels != None:
+                    if idotchannels is not None:
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
@@ -143,7 +143,7 @@ class Moderation(commands.Cog):
             channeldetails = json.load(f)
         logging_channels = channeldetails[str(ctx.guild.id)]['logging_channels']
         if setremoveview == "view":
-            if logging_channels == None:
+            if logging_channels is None:
                 output = "You have not added any channels yet. Use `a.idot add [channel` to do so!"
             else:
                 output = f"<#{logging_channels}>"

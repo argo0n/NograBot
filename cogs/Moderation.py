@@ -9,11 +9,14 @@
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
 from discord.ext import commands
-import discord, datetime, time
+import discord
+import datetime
+import time
 import pytz
 from pytz import timezone
 import asyncio
-import postbin, traceback
+import postbin
+import traceback
 import json
 import random
 

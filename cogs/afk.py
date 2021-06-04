@@ -9,13 +9,16 @@
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
 from discord.ext import commands
-import discord, datetime, time
+import discord
+import datetime
+import time
 import pytz
 from pytz import timezone
 import asyncio
 import json
 import math
-import postbin, traceback
+import postbin
+import traceback
 
 def gettraceback(error):
     etype = type(error)

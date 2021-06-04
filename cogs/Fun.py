@@ -19,7 +19,8 @@ import math
 import random
 import asyncio
 from discord.ext.buttons import Paginator
-import postbin, traceback
+import postbin
+import traceback
 
 def gettraceback(error):
     etype = type(error)

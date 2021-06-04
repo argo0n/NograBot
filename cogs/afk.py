@@ -145,7 +145,7 @@ class Afk(commands.Cog):
 
     @afk.error
     async def afk_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

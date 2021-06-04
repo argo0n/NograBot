@@ -160,7 +160,7 @@ class Moderation(commands.Cog):
             with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
                 json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
             await ctx.send(
-                f"<a:Tick:796984073603383296> Removed the logging channel.")
+                "<a:Tick:796984073603383296> Removed the logging channel.")
         elif setremoveview == "set":
             if channel is None:
                 await ctx.send("```\n[p]idot [set/remove/view] [channel]\n                          ^^^^^^^^^\nYou missed out [channel]!\n```")
@@ -242,7 +242,7 @@ class Moderation(commands.Cog):
 
     @uptime.error
     async def uptime_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -311,10 +311,10 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
             return
         else:
-            errorembed = discord.Embed(title=f"Oops!",
+            errorembed = discord.Embed(title="Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
                                        color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -332,13 +332,13 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
         elif isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper countdown number.")
+            await ctx.send("You did not provide a proper countdown number.")
             return
         elif isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
             return
         else:
-            errorembed = discord.Embed(title=f"Oops!",
+            errorembed = discord.Embed(title="Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
                                        color=0x00ff00)
             errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -354,7 +354,7 @@ class Moderation(commands.Cog):
     @purge.error
     async def purge_error(self, ctx, error):
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of messages to be blacklisted.")
+            await ctx.send("You did not provide a proper number of messages to be blacklisted.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -375,7 +375,7 @@ class Moderation(commands.Cog):
             await ctx.send("You need `Manage Channels` to use this command.")
             return
         if isinstance(error, commands.ChannelNotFound):
-            await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
+            await ctx.send("You did not provide a proper channel. It has to be a mention or ID.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -396,7 +396,7 @@ class Moderation(commands.Cog):
             await ctx.send("You need `Manage Channels` to use this command.")
             return
         if isinstance(error, commands.ChannelNotFound):
-            await ctx.send(f"You did not provide a proper channel. It has to be a mention or ID.")
+            await ctx.send("You did not provide a proper channel. It has to be a mention or ID.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",

@@ -105,7 +105,7 @@ class Fun(commands.Cog):
 
     @say.error
     async def say_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                      description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
                                      color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -126,7 +126,7 @@ class Fun(commands.Cog):
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper **number**.")
+            await ctx.send("You did not provide a proper **number**.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -227,10 +227,10 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of times for me to ping someone.")
+            await ctx.send("You did not provide a proper number of times for me to ping someone.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                      description="This command just received an error. It has been sent to Argon.",
@@ -270,10 +270,10 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper **number** of days for the user to be blacklisted.")
+            await ctx.send("You did not provide a proper **number** of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -310,7 +310,7 @@ class Fun(commands.Cog):
     @typefor.error
     async def typefor_error(self, ctx, error):
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper **duration (in seconds)** for me to type.")
+            await ctx.send("You did not provide a proper **duration (in seconds)** for me to type.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -340,7 +340,7 @@ class Fun(commands.Cog):
     @secretping.error
     async def secretping_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -384,7 +384,7 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member.")
+                    await ctx.send("You did not provide a proper member.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -424,7 +424,7 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -480,10 +480,10 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
+                    await ctx.send("You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -510,7 +510,7 @@ class Fun(commands.Cog):
         else:
             hug1, hug2 = (ctx.author, target1) if target2 is None else (target1, target2)
             hugembed = discord.Embed(title="", color=0x8B95C9)
-            hugembed.add_field(name=f"owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
+            hugembed.add_field(name="owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
             huggif = ['https://i.imgur.com/r9aU2xv.gif',
                       'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
                       'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
@@ -532,10 +532,10 @@ class Fun(commands.Cog):
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
-            await ctx.send(f"You did not provide a proper number of days for the user to be blacklisted.")
+            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
+                    await ctx.send("You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",

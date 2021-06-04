@@ -134,7 +134,7 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.ChannelNotFound):
             await ctx.send(error)
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                        description="This command just received an error. It has been sent to Argon.",
                                        color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -193,7 +193,7 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.CheckFailure):
             await ctx.send("You're not the owner of Nogra!")
             return
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -237,7 +237,7 @@ class Admin(commands.Cog):
     @minecraft.error
     async def minecraft_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send(f"You did not provide a proper user. It has to be a mention or user ID.")
+                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
                     return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -314,7 +314,7 @@ class Admin(commands.Cog):
 
     @dmads.error
     async def dmads_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -338,7 +338,7 @@ class Admin(commands.Cog):
 
     @update.error
     async def update_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -361,7 +361,7 @@ class Admin(commands.Cog):
   
     @shutdown.error
     async def shutdown_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
@@ -376,7 +376,7 @@ class Admin(commands.Cog):
 
     @message.error
     async def message_error(self, ctx, error):
-        errorembed = discord.Embed(title=f"Oops!",
+        errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)

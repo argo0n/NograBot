@@ -201,8 +201,9 @@ class Moderation(commands.Cog):
             if ctx.guild.id == 789840820563476482:
                 channel = self.client.get_channel(802786241799651330)
             if ctx.guild.id == 818436261873844224:
-                channel = self.client_get_channel(821042412624412733)
-            # embed to be posted in modlogs
+                channel = self.client.get_channel(821042412624412733)
+            else:
+                channel = self.client.get_channel(818436261891014663)
             timestamp = ctx.message.created_at
             clearembed = discord.Embed(title="`Clear` action done with Nogra", color=0xff0000)
             clearembed.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator),

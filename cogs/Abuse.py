@@ -115,9 +115,6 @@ class Abuse(commands.Cog):
             await ctx.send(
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
-        if isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
-            return
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("You did not provide a proper member to allow abusing.")
             return
@@ -154,9 +151,6 @@ class Abuse(commands.Cog):
             cooldown = error.retry_after
             await ctx.send(
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
-            return
-        elif isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         elif isinstance(error, commands.MemberNotFound):
             await ctx.send("You did not provide a proper member to stop him from abusing.")

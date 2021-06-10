@@ -332,6 +332,8 @@ class Moderation(commands.Cog):
 
     @cban.error
     async def cban_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("wheeze you don't even have permissions to ban people")
         elif isinstance(error, ValueError):

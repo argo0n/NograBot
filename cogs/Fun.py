@@ -125,9 +125,6 @@ class Fun(commands.Cog):
             await ctx.send(
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
-        if isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper **number**.")
-            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -163,7 +160,7 @@ class Fun(commands.Cog):
             await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
             return
         if member == self.client.user:
-            await ctx.send("ayo i'm not going to torture myself")
+            await ctx.send("https://i.imgflip.com/2yvmo3.jpg")
             return
         times = int(times)
         times = min(times, 500)
@@ -218,20 +215,21 @@ class Fun(commands.Cog):
                     f.write(f"\n{str(ctx.author.id)}")
                 return
 
-
-
     @spamping.error
     async def spamping_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper number of times for me to ping someone.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-                    return
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                      description="This command just received an error. It has been sent to Argon.",
                                      color=0x00ff00)
@@ -265,16 +263,19 @@ class Fun(commands.Cog):
 
     @blacklist.error
     async def blacklist_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper **number** of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-                    return
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -309,6 +310,8 @@ class Fun(commands.Cog):
 
     @typefor.error
     async def typefor_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper **duration (in seconds)** for me to type.")
             return
@@ -479,9 +482,6 @@ class Fun(commands.Cog):
             cooldown = error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
-        if isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
-            return
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send("You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
                     return
@@ -530,9 +530,6 @@ class Fun(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
             await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
-            return
-        if isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper number of days for the user to be blacklisted.")
             return
         if isinstance(error, commands.MemberNotFound):
                     await ctx.send("You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")

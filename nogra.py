@@ -32,8 +32,19 @@ statuses = ["a.help is a good start", "almond stanky", "before asking use the he
 
 newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
-                                  activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
-                                  intents=intents)
+                      activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
+                      intents=intents)
+INITIAL_EXTENSIONS = [
+    'cogs.admin',
+    'cogs.abuse',
+    'cogs.afk',
+    'cogs.apis',
+    'cogs.dankmemer',
+    'cogs.fun',
+    'cogs.moderation',
+    'cogs.rso',
+    'cogs.utility'
+]
 
 class MyNewHelp(commands.MinimalHelpCommand):
     async def send_pages(self):

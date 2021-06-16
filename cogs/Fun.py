@@ -226,9 +226,11 @@ class Fun(commands.Cog):
             return
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper number of times for me to ping someone.")
+            ctx.command.reset_cooldown(ctx)
             return
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            ctx.command.reset_cooldown(ctx)
             return
         errorembed = discord.Embed(title="Oops!",
                                      description="This command just received an error. It has been sent to Argon.",

@@ -134,9 +134,12 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.ChannelNotFound):
             await ctx.send(error)
             return
+        if isinstance(error, discord.ext.commands.CheckFailure):
+            await ctx.send("You're not the owner of Nogra!")
+            return
         errorembed = discord.Embed(title="Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)

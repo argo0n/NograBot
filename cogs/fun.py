@@ -21,6 +21,8 @@ import asyncio
 from discord.ext.buttons import Paginator
 import postbin
 import traceback
+import secondstotiming
+
 
 def gettraceback(error):
     etype = type(error)
@@ -29,50 +31,10 @@ def gettraceback(error):
     traceback_text = ''.join(lines)
     return traceback_text
 
-def secondstotiming(seconds):
-    seconds = round(seconds)
-    if seconds < 60:
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{seconds} second{secdisplay}"
-    minutes = math.trunc(seconds/60)
-    if minutes < 60:
-        seconds = seconds - minutes*60
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    hours = math.trunc(minutes/60)
-    if hours < 24:
-        minutes = minutes - hours*60
-        seconds = seconds - minutes*60 - hours*60*60
-        hdisplay = "s" if hours != 1 else ""
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    days = math.trunc(hours/24)
-    if days < 7:
-        hours = hours - days*24
-        minutes = minutes - hours * 60
-        seconds = seconds - minutes * 60 - hours * 60 * 60
-        ddisplay = "s" if days != 1 else ""
-        hdisplay = "s" if hours != 1 else ""
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    weeks = math.trunc(days/7)
-    days = days - weeks*7
-    hours = hours - days * 24
-    minutes = minutes - hours * 60
-    seconds = seconds - minutes * 60 - hours * 60 * 60
-    wdisplay = "s" if weeks != 1 else ""
-    ddisplay = "s" if days != 1 else ""
-    hdisplay = "s" if hours != 1 else ""
-    mindisplay = "s" if minutes != 1 else ""
-    secdisplay = "s" if seconds != 1 else ""
-    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-
-
 
 start_time = time.time()
+
+
 class Fun(commands.Cog):
 
     def __init__(self, client):
@@ -87,7 +49,8 @@ class Fun(commands.Cog):
         if message.author.id == 800184970298785802:
             return
 
-    @commands.command(name="say", brief="Says whatever user wants Nogra to say", description="Says whatever user wants Nogra to say")
+    @commands.command(name="say", brief="Says whatever user wants Nogra to say",
+                      description="Says whatever user wants Nogra to say")
     async def say(self, ctx, *, arg=None):
         if ctx.author.id == 560251854399733760:
             return
@@ -101,8 +64,8 @@ class Fun(commands.Cog):
     @say.error
     async def say_error(self, ctx, error):
         errorembed = discord.Embed(title="Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
         errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
@@ -152,7 +115,8 @@ class Fun(commands.Cog):
         if member is None:
             member = ctx.author
         if times is None:
-            await ctx.send(f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
+            await ctx.send(
+                f"Since you didn't tell me how many times you wanted me to ping, I will ping {member.mention} once.")
             return
         if member == self.client.user:
             await ctx.send("https://i.imgflip.com/2yvmo3.jpg")
@@ -160,7 +124,8 @@ class Fun(commands.Cog):
         times = int(times)
         times = min(times, 500)
         currenttime = 0
-        await ctx.send(f"Are you sure you want to do this? You may be hated by {member.name} for the rest of your life. `(y/n)`")
+        await ctx.send(
+            f"Are you sure you want to do this? You may be hated by {member.name} for the rest of your life. `(y/n)`")
         msg = await self.client.wait_for("message",
                                          check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
                                          timeout=20.0)  # Command raised an exception: AttributeError: 'NoneType' object has no attribute 'author'
@@ -173,36 +138,50 @@ class Fun(commands.Cog):
             content = f.read()
             bllist = content.split(",")
         if str(ctx.author.id) in bllist:
-            await ctx.send("You can't use this command as you have been blacklisted from using this command for the reason: Blocking me while pinging you")
+            await ctx.send(
+                "You can't use this command as you have been blacklisted from using this command for the reason: Blocking me while pinging you")
             return
         try:
-            await ctx.author.send("This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.", delete_after = 5.0)
+            await ctx.author.send(
+                "This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.",
+                delete_after=5.0)
         except discord.errors.Forbidden:
-            await ctx.send(f"{ctx.author.mention} I cannot procced since you have blocked me / you have your DMs closed.")
+            await ctx.send(
+                f"{ctx.author.mention} I cannot procced since you have blocked me / you have your DMs closed.")
             return
         else:
             if "spam" not in ctx.channel.name:
-                await ctx.send("If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
+                await ctx.send(
+                    "If you want the pings to remain and not get deleted, use this command in a channel with the name \"spam\"")
                 while currenttime < times:
                     currenttime += 1
                     if message is None:
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times", delete_after=1)
+                        await ctx.send(
+                            f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times",
+                            delete_after=1)
                     else:
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}", delete_after=1)
+                        await ctx.send(
+                            f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}",
+                            delete_after=1)
             else:
                 while currenttime < times:
                     currenttime += 1
                     if message is None:
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times")
+                        await ctx.send(
+                            f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times")
                     else:
-                        await ctx.send(f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}")
+                        await ctx.send(
+                            f"Directed by {ctx.author.mention}: {member.mention} ha get ponged {currenttime} times. {message}")
             await ctx.send(f"I have finished pinging {member.name}#{member.discriminator} {times} times.")
             try:
-                await member.send("Sorry for that *torture*... have a cookie <a:nogracookie:839049721220825130> <a:nyakiss:832467845417009162>")
+                await member.send(
+                    "Sorry for that *torture*... have a cookie <a:nogracookie:839049721220825130> <a:nyakiss:832467845417009162>")
             except discord.errors.Forbidden:
                 pass
             try:
-                await ctx.author.send("This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.",delete_after=5.0)
+                await ctx.author.send(
+                    "This message is sent to confirm that you did not block the bot. It will automatically delete after a few seconds.",
+                    delete_after=5.0)
             except discord.errors.Forbidden:
                 await ctx.send(
                     f"{ctx.author.mention} You have been blacklisted from using this command due to your unfair practices: blocking me while I am pinging you. ")
@@ -228,29 +207,34 @@ class Fun(commands.Cog):
             ctx.command.reset_cooldown(ctx)
             return
         errorembed = discord.Embed(title="Oops!",
-                                     description="This command just received an error. It has been sent to Argon.",
-                                     color=0x00ff00)
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
         logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(name="blacklist", brief="blacklists user", description="Sends user a fake dm just like Dank Memer when one is blacklisted")
+    @commands.command(name="blacklist", brief="blacklists user",
+                      description="Sends user a fake dm just like Dank Memer when one is blacklisted")
     @commands.cooldown(1, 3600, commands.BucketType.user)
     async def blacklist(self, ctx, member: discord.Member = None):
         await ctx.send("For what reason?")
         try:
-            msg = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author,timeout=20.0)
+            msg = await self.client.wait_for("message",
+                                             check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                             timeout=20.0)
         except asyncio.TimeoutError:
             await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
         await ctx.send("For how many days?")
         try:
-            secondmsg = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                                         timeout=30.0)
+            secondmsg = await self.client.wait_for("message",
+                                                   check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                                   timeout=30.0)
         except asyncio.TimeoutError:
             await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
         messagetousers = f"You have been temporarily blacklisted for {secondmsg.content} days by a Bot Moderator for {msg.content}\nIf you believe this is in error or would like to provide context, you can appeal at https://dankmemer.lol/appeals"
@@ -286,7 +270,8 @@ class Fun(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(name="typefor", brief="types", description="Types for however you want, but must be below 1000 seconds")
+    @commands.command(name="typefor", brief="types",
+                      description="Types for however you want, but must be below 1000 seconds")
     async def typefor(self, ctx, number=None):
         if number is None:
             await ctx.send("Aight I typed for 0 seconds")
@@ -325,7 +310,8 @@ class Fun(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(name="secretping", brief="Pings user secretly", description="Have Nogra help you ping someone, you just need that person's ID.")
+    @commands.command(name="secretping", brief="Pings user secretly",
+                      description="Have Nogra help you ping someone, you just need that person's ID.")
     async def secretping(self, ctx, userid=None, *, message=None):
         if id is None:
             await ctx.send(
@@ -340,8 +326,8 @@ class Fun(commands.Cog):
     @secretping.error
     async def secretping_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-                    return
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -381,11 +367,12 @@ class Fun(commands.Cog):
     async def yeet_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper member.")
-                    return
+            await ctx.send("You did not provide a proper member.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -421,11 +408,12 @@ class Fun(commands.Cog):
     async def unoreverse_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-                    return
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -441,11 +429,11 @@ class Fun(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def dumbfight(self, ctx, member:discord.Member=None):
+    async def dumbfight(self, ctx, member: discord.Member = None):
         if member is None:
             await ctx.send("You need to tell me who you want to dumbfight.")
         else:
-            duration = random.randint(1,120)
+            duration = random.randint(1, 120)
             decidingmoment = ["yes", "no"]
             doesauthorwin = random.choice(decidingmoment)
             channel = ctx.channel
@@ -454,7 +442,9 @@ class Fun(commands.Cog):
                 overwrite.send_messages = False
                 await channel.set_permissions(member, overwrite=overwrite)
                 embed = discord.Embed(colour=0x00FF00)
-                embed.add_field(name="**get rekt noob**", value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>", inline=True)
+                embed.add_field(name="**get rekt noob**",
+                                value=f"{ctx.author.mention} won against {member.mention} and {member.mention}has been muted for {duration} seconds. <a:RobloxDancee:830440782657486890>",
+                                inline=True)
                 embed.set_footer(text=f"Exercise more tbh {member.name}")
                 await ctx.send(embed=embed)
                 await asyncio.sleep(duration)
@@ -477,11 +467,12 @@ class Fun(commands.Cog):
     async def dumbfight_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
-                    return
+            await ctx.send("You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -497,17 +488,18 @@ class Fun(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.cooldown(1, 30, commands.BucketType.user)
-    async def firefight(self, ctx, member:discord.Member=None):
+    async def firefight(self, ctx, member: discord.Member = None):
         await ctx.send("<:nograRedX:801684348502933525> Did you mean...\n    • `a.dumbfight [member]`")
 
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
-    async def hug(self, ctx, target1:discord.Member=None, target2:discord.Member=None):
+    async def hug(self, ctx, target1: discord.Member = None, target2: discord.Member = None):
         if target1 is None:
             await ctx.send("You need to tell me who you want to hug <:sadsit:826716508750086195>")
         else:
             hug1, hug2 = (ctx.author, target1) if target2 is None else (target1, target2)
             hugembed = discord.Embed(title="", color=0x8B95C9)
-            hugembed.add_field(name="owo how cute", value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
+            hugembed.add_field(name="owo how cute",
+                               value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
             huggif = ['https://i.imgur.com/r9aU2xv.gif',
                       'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
                       'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
@@ -526,11 +518,12 @@ class Fun(commands.Cog):
     async def hug_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
-            await ctx.send(f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
+            await ctx.send(
+                f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
-                    return
+            await ctx.send("You did not provide a proper member to hug. <:hugthefuck:823352224340115537>")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -543,6 +536,7 @@ class Fun(commands.Cog):
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
+
 
 def setup(client):
     client.add_cog(Fun(client))

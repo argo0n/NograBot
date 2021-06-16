@@ -19,6 +19,7 @@ import postbin
 import traceback
 import json
 import random
+import secondstotiming
 
 def gettraceback(error):
     etype = type(error)
@@ -218,17 +219,16 @@ class Moderation(commands.Cog):
         current_time = time.time()
         current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
-        text = str(datetime.timedelta(seconds=difference))
         embed = discord.Embed(colour=0xc8dc6c)
         embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
         embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
-        embed.add_field(name="Uptime", value=text, inline=False)
+        embed.add_field(name="Uptime", value=secondstotiming(difference), inline=False)
         embed.set_footer(text="Time is in GMT+8 (Asia/Singapore)")
         try:
             await ctx.send(embed=embed)
         except discord.HTTPException:
-            await ctx.send("Current uptime: " + text)
+            await ctx.send("Current uptime: " + secondstotiming(difference))
 
     @commands.command(name="invite", brief="Invite the bot", description="Gives you invite links for Nogra")
     async def invite(self, ctx):

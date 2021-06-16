@@ -37,12 +37,6 @@ def gettraceback(error):
     traceback_text = ''.join(lines)
     return traceback_text
 
-
-
-# to expose to the eval command
-import datetime
-from collections import Counter
-
 class Pag(Paginator):
     async def teardown(self):
         try:

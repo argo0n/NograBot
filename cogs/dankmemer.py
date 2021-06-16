@@ -20,48 +20,7 @@ import traceback
 import random
 import json
 import math
-
-
-def secondstotiming(seconds):
-    seconds = round(seconds)
-    if seconds < 60:
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{seconds} second{secdisplay}"
-    minutes = math.trunc(seconds / 60)
-    if minutes < 60:
-        seconds = seconds - minutes * 60
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    hours = math.trunc(minutes / 60)
-    if hours < 24:
-        minutes = minutes - hours * 60
-        seconds = seconds - minutes * 60 - hours * 60 * 60
-        hdisplay = "s" if hours != 1 else ""
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    days = math.trunc(hours / 24)
-    if days < 7:
-        hours = hours - days * 24
-        minutes = minutes - hours * 60
-        seconds = seconds - minutes * 60 - hours * 60 * 60
-        ddisplay = "s" if days != 1 else ""
-        hdisplay = "s" if hours != 1 else ""
-        mindisplay = "s" if minutes != 1 else ""
-        secdisplay = "s" if seconds != 1 else ""
-        return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
-    weeks = math.trunc(days / 7)
-    days = days - weeks * 7
-    hours = hours - days * 24
-    minutes = minutes - hours * 60
-    seconds = seconds - minutes * 60 - hours * 60 * 60
-    wdisplay = "s" if weeks != 1 else ""
-    ddisplay = "s" if days != 1 else ""
-    hdisplay = "s" if hours != 1 else ""
-    mindisplay = "s" if minutes != 1 else ""
-    secdisplay = "s" if seconds != 1 else ""
-    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+import secondstotiming
 
 
 def gettraceback(error):
@@ -74,13 +33,17 @@ def gettraceback(error):
 
 timeformat = "%Y-%m-%d %H:%M:%S"
 durationformat = "%-dd %-Hh %-Mm %-Ss"
+
+
 def timetosgtime(x):
     utctime = x
     sgttime = utctime.astimezone(timezone("Asia/Singapore"))
     return sgttime.strftime(timeformat)
 
+
 start_time = time.time()
 utcbootime = datetime.datetime.now(timezone("UTC"))
+
 
 class DankMemerHelp(commands.Cog):
 
@@ -131,7 +94,7 @@ class DankMemerHelp(commands.Cog):
             return
         if message.content.startswith("pls lottery") or message.content.startswith(
                 "pls lotto") or message.content.startswith("Pls lottery") or message.content.startswith(
-                "Pls lotto") and message.author.id not in [270904126974590976, 341994639395520526]:
+            "Pls lotto") and message.author.id not in [270904126974590976, 341994639395520526]:
             try:
                 msg = await self.client.wait_for("message",
                                                  check=lambda message: message.author.id == 270904126974590976,
@@ -200,14 +163,13 @@ class DankMemerHelp(commands.Cog):
                         f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
                     return
 
-
         if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
             await message.delete()
             await message.channel.send(
                 f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
                 delete_after=3.0)
 
-        if ("were caught **HAHAHA**") in message.content and message.author.id == 270904126974590976:
+        if "were caught **HAHAHA**" in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 30 seconds <a:uwushyyy:807637815226531932>")
             tmanmfail = await message.channel.send("□□□□□□□□□□")
             await asyncio.sleep(3)
@@ -240,7 +202,7 @@ class DankMemerHelp(commands.Cog):
             await message.channel.send("nice i'm proud of you <:nograblushsuit:831001647005564970>")
 
         if ("a TINY portion") in message.content or ("a small portion") in message.content or (
-        "fairly decent chunk") in message.content and message.author.id == 270904126974590976:
+                "fairly decent chunk") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 2 minutes <a:uwushyyy:807637815226531932>")
             tmanmport = await message.channel.send("□□□□□□□□□□□□")
             await asyncio.sleep(10)
@@ -274,15 +236,19 @@ class DankMemerHelp(commands.Cog):
             await message.channel.send("No proper mention was found.")
 
         if (
-            message.content.startswith("Nice I'm proud of you")
-            and message.author.id == 805251248488054794
+                message.content.startswith("Nice I'm proud of you")
+                and message.author.id == 805251248488054794
         ):
             await message.channel.send("<:nograblushsuit:831001647005564970> ty")
 
         if message.content.startswith("pIs rob") or message.content.startswith("PIs rob"):
-            moneylist = ["30,620,956","2,912,053","21,706,777","12,879,693","98,088,176","77,629,360","13,020,603","49,996,631","4,885,187","467,511","22,375,088","37,523,359","68,228,030","62,615,734","48,622,895","92,330,896","18,646,281","63,114,372","13,510,918","36,952,204"]
+            moneylist = ["30,620,956", "2,912,053", "21,706,777", "12,879,693", "98,088,176", "77,629,360",
+                         "13,020,603", "49,996,631", "4,885,187", "467,511", "22,375,088", "37,523,359", "68,228,030",
+                         "62,615,734", "48,622,895", "92,330,896", "18,646,281", "63,114,372", "13,510,918",
+                         "36,952,204"]
             number = random.choice(moneylist)
-            await message.channel.send(f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")
+            await message.channel.send(
+                f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")
             for m in message.guild.members:
                 if str(m.id) in message.content:
                     targetmember = m

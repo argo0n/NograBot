@@ -1,6 +1,8 @@
 discord.py[voice]
 utils~=1.0.1
 buttons
-pytz
+pytz~=2021.1
 googletrans
 PyNaCl
+postbin~=1.2.0
+aiohttp~=3.7.3

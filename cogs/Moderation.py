@@ -55,7 +55,7 @@ class Moderation(commands.Cog):
         if str(message.guild.id) not in channeldetails:
             channeldetails[str(message.guild.id)] = {
                 'blacklist_channels': [],
-                'logging_channels': [],
+                'logging_channels': None,
             }
 
             with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
@@ -181,8 +181,8 @@ class Moderation(commands.Cog):
         else:
             await ctx.send("Your first option needs to be a `set`/`remove`/`view` so that I will know whether to set, remove or add channels.")
 
-
-    @commands.command(pass_context=True, name="purge", brief="Purges messages", description="purges messages")
+    @commands.command(pass_context=True, name="purge", brief="Purges messages", description="purges messages",
+                      aliases=["clear"])
     @commands.has_permissions(manage_channels=True)
     async def purge(self, ctx, number=None):
         if number is None:
@@ -313,7 +313,7 @@ class Moderation(commands.Cog):
     @ban.error
     async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send("wheeze you don't even have permissions to ban people")
+            await ctx.send("You are missing the permission `Ban Members`.")
         elif isinstance(error, commands.MemberNotFound):
             await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
             return
@@ -361,6 +361,9 @@ class Moderation(commands.Cog):
     async def purge_error(self, ctx, error):
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper number of messages to be blacklisted.")
+            return
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You are missing the permission: `Manage Messages`.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",

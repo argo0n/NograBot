@@ -22,7 +22,7 @@ from discord.ext.buttons import Paginator
 import postbin
 import traceback
 import aiohttp
-import secondstotiming
+from cogs.secondstotiming import *
 
 
 def gettraceback(error):

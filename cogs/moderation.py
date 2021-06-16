@@ -19,7 +19,7 @@ import postbin
 import traceback
 import json
 import random
-import secondstotiming
+from cogs.secondstotiming import *
 
 def gettraceback(error):
     etype = type(error)

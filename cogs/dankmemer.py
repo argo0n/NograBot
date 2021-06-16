@@ -8,7 +8,7 @@
 # |                                                                                    |
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
-from discord.ext import commands
+from discord.ext import commands, tasks
 import discord
 import datetime
 import time
@@ -18,6 +18,51 @@ import asyncio
 import postbin
 import traceback
 import random
+import json
+import math
+
+
+def secondstotiming(seconds):
+    seconds = round(seconds)
+    if seconds < 60:
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{seconds} second{secdisplay}"
+    minutes = math.trunc(seconds / 60)
+    if minutes < 60:
+        seconds = seconds - minutes * 60
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    hours = math.trunc(minutes / 60)
+    if hours < 24:
+        minutes = minutes - hours * 60
+        seconds = seconds - minutes * 60 - hours * 60 * 60
+        hdisplay = "s" if hours != 1 else ""
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    days = math.trunc(hours / 24)
+    if days < 7:
+        hours = hours - days * 24
+        minutes = minutes - hours * 60
+        seconds = seconds - minutes * 60 - hours * 60 * 60
+        ddisplay = "s" if days != 1 else ""
+        hdisplay = "s" if hours != 1 else ""
+        mindisplay = "s" if minutes != 1 else ""
+        secdisplay = "s" if seconds != 1 else ""
+        return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+    weeks = math.trunc(days / 7)
+    days = days - weeks * 7
+    hours = hours - days * 24
+    minutes = minutes - hours * 60
+    seconds = seconds - minutes * 60 - hours * 60 * 60
+    wdisplay = "s" if weeks != 1 else ""
+    ddisplay = "s" if days != 1 else ""
+    hdisplay = "s" if hours != 1 else ""
+    mindisplay = "s" if minutes != 1 else ""
+    secdisplay = "s" if seconds != 1 else ""
+    return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+
 
 def gettraceback(error):
     etype = type(error)
@@ -41,12 +86,40 @@ class DankMemerHelp(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.myLoop.start()
+
+    @tasks.loop(seconds=5.0)
+    async def myLoop(self):
+        channel = self.client.get_channel(832294688345292801)
+        await channel.send("hi")
+        with open('nograresources/lottery.json', 'r', encoding='utf8') as f:
+            lottery = json.load(f)
+            for userid in lottery:
+                if lottery[userid]["time"] > round(time.time()):
+                    user = self.client.get_user(int(userid))
+                    try:
+                        channelid = lottery[userid]["channel"]
+                        guildid = lottery[userid]["guild"]
+                        messageid = lottery[userid]["message"]
+                        user = self.client.get_user(int(userid))
+                        channel = self.client.get_channel(channelid)
+                        messagelink = discord.Embed(
+                            description=f"[Jump to message](https://discord.com/channels/{guildid}/{channelid}/{messageid})",
+                            color=0x00FFFF)
+                        messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+                        await user.send(
+                            f"{user.mention} You were reminded in **{channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>",
+                            embed=messagelink)
+                    except discord.errors.Forbidden:
+                        await channel.send(
+                            f"{user.mention} time to enter the lottery again <a:takethismoney:806096182594109471>")
+                    del lottery[userid]
+                    with open('nograresources/lottery.json', 'w', encoding='utf8') as f:
+                        json.dump(lottery, f, sort_keys=True, indent=4, ensure_ascii=False)
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("Cog \"DankMemerHelp\" loaded")
-        channel = self.client.get_channel(830352644027449354)
-        await channel.send("Rebooted, reminders erased.")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -56,7 +129,6 @@ class DankMemerHelp(commands.Cog):
 
         if message.author.id == 800184970298785802:
             return
-
         if message.content.startswith("pls lottery") or message.content.startswith(
                 "pls lotto") or message.content.startswith("Pls lottery") or message.content.startswith(
                 "Pls lotto") and message.author.id not in [270904126974590976, 341994639395520526]:
@@ -89,27 +161,38 @@ class DankMemerHelp(commands.Cog):
                 if msg2.content == "Alright whatever just come hit me up when you wanna win the lottery":
                     await message.channel.send("<:omagun:807125530897809448>")
                     return
-                for e in message.embeds:
-                    if "You bought a lottery ticket" in e.title and message.author.id == 270904126974590976:
+                for e in msg2.embeds:
+                    if "You bought a lottery ticket" in e.title and msg2.author.id == 270904126974590976:
                         pass
                     else:
                         return
                 emojis = ["<a:Tick:796984073603383296>", "⏲️"]
                 for emo in emojis:
                     await message.add_reaction(emo)
-                if message.author.id == 395020663116529674:
-                    await message.add_reaction("<:mention:838255192952274974>")
-                    await asyncio.sleep(3600)
-                    await message.channel.send(
-                        f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
-                    return
+                with open('nograresources/lottery.json', 'r', encoding='utf8') as f:
+                    remindtime = round(time.time())
+                    while remindtime % 3600 != 0:
+                        remindtime += 1
+                    lottery = json.load(f)
+                    lottery[f"{message.author.id}"]["time"] = remindtime
+                    lottery[f"{message.author.id}"]["channel"] = message.channel.id
+                    lottery[f"{message.author.id}"]["guild"] = message.guild.id
+                    lottery[f"{message.author.id}"]["message"] = message.id
+                    with open('nograresources/lottery.json', 'w', encoding='utf8') as f:
+                        json.dump(lottery, f, sort_keys=True, indent=4, ensure_ascii=False)
+                        await message.channel.send(
+                            f"I will remind you in {secondstotiming(remindtime - round(time.time()))} to participate in the lottery again!")
+
                 try:
-                    await message.author.send("I will remind you in your DMs after an hour!", delete_after = 10.0)
                     await message.add_reaction("<:dms:838255193266716742>")
                     await asyncio.sleep(3600)
-                    messagelink = discord.Embed(description=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})", color=0x00FFFF)
+                    messagelink = discord.Embed(
+                        description=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})",
+                        color=0x00FFFF)
                     messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
-                    await message.author.send(f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>", embed=messagelink)
+                    await message.author.send(
+                        f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>",
+                        embed=messagelink)
                 except discord.errors.Forbidden:
                     await message.add_reaction("<:mention:838255192952274974>")
                     await asyncio.sleep(3600)
@@ -197,28 +280,6 @@ class DankMemerHelp(commands.Cog):
             await message.channel.send("<:nograblushsuit:831001647005564970> ty")
 
         if message.content.startswith("pIs rob") or message.content.startswith("PIs rob"):
-            if message.author.id == 395020663116529674:
-                with open('questresources/robtimes.txt', 'r', encoding='utf8') as f:
-                    content = f.read()
-                    content = int(content)
-                    if content < 3:
-                        content += 1
-                        content = str(content)
-                        channel = self.client.get_channel(842615048371568650)
-                        await channel.send(f"bern has done fake rob {content} times.")
-                        with open('questresources/robtimes.txt', 'w', encoding='utf8') as f:
-                            f.write(content)
-                    else:
-                        with open('questresources/hasdonerob.txt', 'r', encoding='utf8') as f:
-                            content = f.read()
-                            if content == "1":
-                                pass
-                            else:
-                                with open('questresources/hasdonerob.txt', 'w', encoding='utf8') as f:
-                                    f.write("1")
-                                await message.channel.send("You completed a task! <a:Tick:796984073603383296>\n`lottery go brr`")
-                                channel = self.client.get_channel(842615048371568650)
-                                await channel.send("bern has finished fakerob task")
             moneylist = ["30,620,956","2,912,053","21,706,777","12,879,693","98,088,176","77,629,360","13,020,603","49,996,631","4,885,187","467,511","22,375,088","37,523,359","68,228,030","62,615,734","48,622,895","92,330,896","18,646,281","63,114,372","13,510,918","36,952,204"]
             number = random.choice(moneylist)
             await message.channel.send(f"{message.author.mention} You stole BASICALLY EVERYTHING LMFAO 🤑\nYour payout was **⏣ {number}**. ")
@@ -233,27 +294,22 @@ class DankMemerHelp(commands.Cog):
             except discord.errors.Forbidden:
                 await message.channel.send("that guy blocked me or closed his dms, what a loser")
 
-    @commands.command(name="manualremind", brief="Manually ping for lottery", description="Manually sets pings for lottery whenever bot reboots")
-    async def manualremind(self, ctx, memberid, duration):
-        memberid = int(memberid)
-        duration = int(duration)
-        durationinminutes = duration*60
-        member = ctx.guild.get_member(memberid)
-        await asyncio.sleep(durationinminutes)
-        if memberid in [392127809939570688, 650647680837484556]:
-            await member.send(f"{member.mention} You were reminded in **{ctx.guild.name}**: Time to buy a lottery again <a:takethismoney:806096182594109471>")
-            print(f"I've sent a lottery message to {member.name}#{member.discriminator}")
-        else:
-            await ctx.send(f"{member.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
-    @manualremind.error
-    async def manualremind_error(self, ctx, error):
+    @commands.command(name="stoptask", brief="Manually ping for lottery",
+                      description="Manually sets pings for lottery whenever bot reboots", hidden=True)
+    async def stoptask(self, ctx):
+        emojis = ["<a:Tick:796984073603383296>", "⏲️"]
+        for emo in emojis:
+            await ctx.message.add_reaction(emo)
+
+    @stoptask.error
+    async def stoptask_error(self, ctx, error):
         errorembed = discord.Embed(title="Oops!",
-                                     description="This command just received an error. It has been sent to Argon and it will be fixed soon.",
-                                     color=0x00ff00)
+                                   description="Error.",
+                                   color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
-        errorembed.set_footer(text="Thank you for bearing with me during this beta period!")
         await ctx.send(embed=errorembed)
-        print(error)
+
+
 def setup(client):
     client.add_cog(DankMemerHelp(client))

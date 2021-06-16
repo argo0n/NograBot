@@ -168,8 +168,14 @@ for filename in os.listdir('./cogs'):
         client.load_extension(f'cogs.{filename[:-3]}')
 @load.error
 async def load_error(ctx, error):
-    if "not be loaded" in error:
-        await ctx.send("The cog is either already loaded or not found.")
+    if isinstance(error, commands.CommandInvokeError):
+        error = error.original
+    if isinstance(error, discord.ext.commands.CheckFailure):
+        await ctx.send("You're not the owner of Nogra!")
+        return
+    if isinstance(error, discord.ext.commands.ExtensionError):
+        await ctx.send("That cog was not found.")
+        return
     else:
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
@@ -183,8 +189,18 @@ async def load_error(ctx, error):
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
+
+
 @unload.error
 async def unload(ctx, error):
+    if isinstance(error, commands.CommandInvokeError):
+        error = error.original
+    if isinstance(error, discord.ext.commands.CheckFailure):
+        await ctx.send("You're not the owner of Nogra!")
+        return
+    if isinstance(error, discord.ext.commands.ExtensionError):
+        await ctx.send("That cog was not found.")
+        return
     if "not been loaded" in error:
         await ctx.send("The cog is either already unloaded or not found.")
     else:
@@ -200,8 +216,18 @@ async def unload(ctx, error):
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
+
+
 @cogreboot.error
-async def cogreboot(ctx,error):
+async def cogreboot(ctx, error):
+    if isinstance(error, commands.CommandInvokeError):
+        error = error.original
+    if isinstance(error, discord.ext.commands.CheckFailure):
+        await ctx.send("You're not the owner of Nogra!")
+        return
+    if isinstance(error, discord.ext.commands.ExtensionError):
+        await ctx.send("That cog was not found.")
+        return
     errorembed = discord.Embed(title="Oops!",
                                description="This command just received an error. It has been sent to Argon.",
                                color=0x00ff00)

@@ -108,7 +108,7 @@ class Abuse(commands.Cog):
     @abuse.error
     async def abuse_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send("lmfao no you need \"manage permissions\" to let people abuse")
+            await ctx.send("You are missing the permission `Manage Permissions`.")
             return
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
@@ -146,7 +146,7 @@ class Abuse(commands.Cog):
     @stopabusing.error
     async def stopabusing_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send("You need \"manage permissions\" to stop people from wrecking the server")
+            await ctx.send("You are missing the permission `Manage Permissions`.")
         elif isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
             await ctx.send(

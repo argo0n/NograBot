@@ -45,6 +45,11 @@ INITIAL_EXTENSIONS = [
     'cogs.rso',
     'cogs.utility'
 ]
+for extension in INITIAL_EXTENSIONS:
+    try:
+        client.load_extension(extension)
+    except Exception as e:
+        print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
 
 class MyNewHelp(commands.MinimalHelpCommand):
     async def send_pages(self):
@@ -174,9 +179,6 @@ async def cogreboot(ctx, extension):
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)
 
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
 @load.error
 async def load_error(ctx, error):
     if isinstance(error, commands.CommandInvokeError):

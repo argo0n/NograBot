@@ -89,7 +89,7 @@ class Admin(commands.Cog):
         local_variables = {
             "discord": discord,
             "commands": commands,
-            "bot": self.client,
+            "client": self.client,
             "ctx": ctx,
             "channel": ctx.channel,
             "author": ctx.author,
@@ -249,14 +249,20 @@ class Admin(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(name="message", brief = "dms people", description = "Sends a message to someone requested by the developers.")
+    @commands.command(name="message", brief="dms people",
+                      description="Sends a message to someone requested by the developers.")
     @commands.is_owner()
-    async def message(self, ctx, member: discord.Member = None):
+    async def message(self, ctx, member=None):
         if member is None:
             await ctx.send("Mention someone you idiot")
             return
+        member = int(member)
+        member = self.client.get_user(member)
         if member.bot:
             await ctx.send("I can't DM bots.")
+            return
+        if member is None:
+            await ctx.send("I could not find that member.")
             return
         await ctx.send("Type your message now.")
         try:
@@ -266,10 +272,8 @@ class Admin(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send("Could not detect a message for the span of 2 minutes. Try again please.")
             return
-        colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
-                  0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
         dmembed = discord.Embed(title="You received a message from the developer!", description=msg.content,
-                                color=random.choice(colors))
+                                color=discord.Color.random())
         try:
             await member.send(embed=dmembed)
         except discord.errors.Forbidden:
@@ -373,6 +377,9 @@ class Admin(commands.Cog):
 
     @message.error
     async def message_error(self, ctx, error):
+        if isinstance(error, ValueError):
+            await ctx.send("You did not provide a proper member ID.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)

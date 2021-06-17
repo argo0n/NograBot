@@ -21,7 +21,7 @@ import asyncio
 from discord.ext.buttons import Paginator
 import postbin
 import traceback
-from cogs.secondstotiming import *
+from cogs.nograhelpers import *
 
 
 def gettraceback(error):
@@ -471,6 +471,7 @@ class Fun(commands.Cog):
                 f"Imagine not having patience smh, is it so hard to wait for another **{secondstotiming(cooldown)}**?")
             return
         if isinstance(error, commands.MemberNotFound):
+            ctx.command.reset_cooldown(ctx)
             await ctx.send("You did not provide a proper member to fight. <:fitethefuck:831879631119450112>")
             return
         errorembed = discord.Embed(title="Oops!",

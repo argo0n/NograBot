@@ -163,9 +163,9 @@ class Admin(commands.Cog):
                 await ctx.send(
                     "I have set my status to **playing " + statuswhat + "** while being " + ooommmaaa)
             elif presence == "stream":
-                # Setting `Streaming ` status
-                await ctx.send("Argon use this command when you have a twitch stream url ready")
-                # await bot.change_presence(activity=discord.Streaming(name="My Stream", url=my_twitch_url))
+                await self.client.change_presence(
+                    activity=discord.Streaming(name=statuswhat, url="https://www.twitch.tv/nograbot", platform="Twitch",
+                                               game="Among Us"))
             elif presence == "listen":
                 # Setting `Listening ` status
                 await self.client.change_presence(

@@ -19,7 +19,7 @@ import postbin
 import traceback
 import json
 import random
-from cogs.secondstotiming import *
+from cogs.nograhelpers import *
 
 def gettraceback(error):
     etype = type(error)
@@ -48,7 +48,7 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == 800184970298785802:
+        if message.author == self.client.user:
             return
         with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
             channeldetails = json.load(f)

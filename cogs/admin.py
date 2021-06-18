@@ -29,6 +29,7 @@ from discord.ext.buttons import Paginator
 import postbin
 import random
 import json
+from cogs.nograhelpers import *
 
 def gettraceback(error):
     etype = type(error)
@@ -131,18 +132,11 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.CheckFailure):
             await ctx.send("You're not the owner of Nogra!")
             return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
@@ -190,18 +184,11 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.CheckFailure):
             await ctx.send("You're not the owner of Nogra!")
             return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command()
     async def minecraft(self, ctx, *, member: discord.User = None):
@@ -234,20 +221,13 @@ class Admin(commands.Cog):
     @minecraft.error
     async def minecraft_error(self, ctx, error):
         if isinstance(error, commands.MemberNotFound):
-                    await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-                    return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
+            return
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command(name="message", brief="dms people",
                       description="Sends a message to someone requested by the developers.")
@@ -315,18 +295,11 @@ class Admin(commands.Cog):
 
     @dmads.error
     async def dmads_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
     @commands.is_owner()
@@ -339,18 +312,11 @@ class Admin(commands.Cog):
 
     @update.error
     async def update_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
     
     @commands.command()
     @commands.is_owner()
@@ -359,39 +325,25 @@ class Admin(commands.Cog):
         await asyncio.sleep(2)
         await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline, manually reboot it.")
         await self.client.logout()
-  
+
     @shutdown.error
     async def shutdown_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @message.error
     async def message_error(self, ctx, error):
         if isinstance(error, ValueError):
             await ctx.send("You did not provide a proper member ID.")
             return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
                                    color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @evalu.error
     async def _eval_error(self, ctx, error):

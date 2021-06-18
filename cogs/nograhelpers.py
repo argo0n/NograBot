@@ -41,3 +41,18 @@ def secondstotiming(seconds):
     mindisplay = "s" if minutes != 1 else ""
     secdisplay = "s" if seconds != 1 else ""
     return f"{weeks} week{wdisplay}, {days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
+
+
+def durationdisplay(seconds):
+    seconds = round(seconds)
+    time = []
+    if seconds < 60:
+        time.append("0")
+        time.append(str(seconds))
+        return ":".join(time)
+    minutes = math.trunc(seconds / 60)
+    if minutes < 60:
+        seconds = seconds - minutes * 60
+        time.append(str(minutes))
+        time.append("0" + str(seconds) if seconds < 10 else str(seconds))
+    return ":".join(time)

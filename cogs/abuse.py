@@ -14,7 +14,7 @@ import asyncio
 import postbin
 import traceback
 import math
-from cogs.secondstotiming import *
+from cogs.nograhelpers import *
 
 def gettraceback(error):
     etype = type(error)

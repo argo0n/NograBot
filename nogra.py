@@ -1,39 +1,41 @@
 from discord.utils import find
 import random
-import asyncio
 import discord
-import logging
+# import logging
 from discord.ext import commands
 import json
 import os
-import datetime
-import time
-from datetime import datetime as dt
-from datetime import date
-import nacl
-from pytz import timezone
-from discord.ext.buttons import Paginator
 import postbin
 import traceback
+from cogs.nograhelpers import *
+
+
+def get_prefix(client, message):
+    with open('nograresources/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+        guildprefixes = prefixes[str(message.guild.id)]
+    return commands.when_mentioned_or(guildprefixes)(client, message)
+
 
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
+
 
 blacklist = {"560251854399733760"}
 intents = discord.Intents(messages=True, guilds=True)
+intents.presences = True
 intents.reactions = True
 intents.members = True
 
 statuses = ["a.help is a good start", "almond stanky", "before asking use the help command", "Spotify", "No.", "your pestering", "another reboot?"]
 
 newstatus = random.choice(statuses)
-client = commands.Bot(command_prefix='a.', status=discord.Status.dnd,
+client = commands.Bot(command_prefix=get_prefix, status=discord.Status.dnd,
                       activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
-                      intents=intents)
+                      intents=intents, strip_after_prefix=True)
 INITIAL_EXTENSIONS = [
     'cogs.admin',
     'cogs.abuse',
@@ -81,7 +83,6 @@ async def on_ready():
     status = client.get_channel(839045672111308820)
     await status.send(embed=botready)
 
-
 @client.event
 async def on_command_error(ctx, error):
     pass
@@ -89,58 +90,108 @@ async def on_command_error(ctx, error):
 # This is for the bot to react to various situations
 
 @client.event
+async def on_guild_remove(guild):
+    with open('nograresources/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+    prefixes.pop(str(guild.id))
+    with open('nograresources/prefixes.json', 'w') as f:
+        json.dump(prefixes, f, indent=4)
+
+
+@client.event
 async def on_guild_join(guild):
     print(f"I have joined {guild.name}")
-    general = find(lambda x: 'general' in x.name,  guild.text_channels)
+    with open('nograresources/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+    prefixes[str(guild.id)] = 'a.'
+    with open('nograresources/prefixes.json', 'w') as f:
+        json.dump(prefixes, f, indent=4)
+
+    with open('nograresources/shutup.json', 'r') as f:
+        shutuplist = json.load(f)
+    shutuplist[str(guild.id)] = {"blacklist_channels": [], "logging_channels": None}
+    with open('nograresources/shutup.json', 'w') as f:
+        json.dump(shutuplist, f, indent=4)
+    general = find(lambda x: 'general' in x.name, guild.text_channels)
+    if general is None:
+        for channel in guild.text_channels:
+            if channel.permissions_for(guild.me).send_messages:
+                general = channel
+    if general is None:
+        return
     print(f"general chat name: {general.name} | general chat mention: {general.mention}")
     if general and general.permissions_for(guild.me).send_messages:
         joinembed = discord.Embed(title="Thanks for using Nogra!",
-                                 description="Nogra is a Discord bot with many different functions for your convenience and entertainment.",
-                                 color=0x00ff00)
+                                  description="Nogra is a Discord bot with many different functions for your convenience and entertainment.",
+                                  color=0x00ff00)
         joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
         joinembed.add_field(name="**__Not sure where to start?__**", value="\u200b", inline=False)
-        joinembed.add_field(name="__Fun commands!__", value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `a.help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",inline=False)
-        joinembed.add_field(name="__Moderation__", value="Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>", inline=True)
-        joinembed.add_field(name="__Dank Memer Help__", value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>", inline=True)
+        joinembed.add_field(name="__Fun commands!__",
+                            value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `{get_prefix[1]}help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",
+                            inline=False)
+        joinembed.add_field(name="__Moderation__",
+                            value="Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>",
+                            inline=True)
+        joinembed.add_field(name="__Dank Memer Help__",
+                            value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>",
+                            inline=True)
+        joinembed.add_field(name="__Userinfo commands__",
+                            value=f"{client.user.name} user info is much more informative than that of other bots. Try it out with userinfo",
+                            inline=True)
         joinembed.add_field(name="\u200b",
                             value="By using Nogra, you agree to Nogra's [Terms of Service](http://nogra.infinityfreeapp.com/nogra-tos/) and [Privacy Policy](http://nogra.infinityfreeapp.com/nogras-privacy-policy/).",
                             inline=False)
-        joinembed.set_footer(text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
+        joinembed.set_footer(
+            text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
         await general.send(embed=joinembed)
 
+
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.channel.id == 821042728849768478:
-        await message.add_reaction("<:nogranostar:821675503316238360>")
+    ctx = await client.get_context(message)
+    if ctx.valid:
+        await client.invoke(ctx)
+    else:
+        if message.author == client.user:
+            return
+        if message.channel.id == 821042728849768478:
+            await message.add_reaction("<:nogranostar:821675503316238360>")
 
-    if "<@800184970298785802>" in message.content:
-        MyNewHelp()
+        if client.user.mentioned_in(message):
+            if message.role_mentions or message.mention_everyone or message.reference:
+                return
+            prefix = await client.get_prefix(message)
+            prefix = prefix[2]
+            pingembed = discord.Embed(title=f"My prefix here is `{prefix}`",
+                                      description=f"Use `{prefix}help` to see my range of commands.")
+            pingembed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
+            pingembed.set_footer(text=f"Use `{prefix}prefix [prefix]` to change my prefix!")
+            await message.channel.send(embed=pingembed)
 
+        # CHEONG MEET LINK
+        if "cheong" in message.content or "Cheong" in message.content:
+            cheongembed = discord.Embed(title="Meeting link for Google Meet freeloaders",
+                                        description="Click [here](https://meet.google.com/shc-xgce-aix?authuser=1)",
+                                        color=0x00ff00)
+            cheongembed.set_image(
+                url="https://media.discordapp.net/attachments/764151467115544576/765918704142647346/IMG-20200925-WA0037.jpg")
+            cheongembed.set_footer(
+                text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source:")
+            await message.channel.send(embed=cheongembed)
 
-    # CHEONG MEET LINK
-    if "cheong" in message.content or "Cheong" in message.content:
-        cheongembed = discord.Embed(title="Meeting link for Google Meet freeloaders",
-                                    description="Click [here](https://meet.google.com/shc-xgce-aix?authuser=1)",
-                                    color=0x00ff00)
-        cheongembed.set_image(
-            url="https://media.discordapp.net/attachments/764151467115544576/765918704142647346/IMG-20200925-WA0037.jpg")
-        cheongembed.set_footer(
-            text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source:")
-        await message.channel.send(embed=cheongembed)
-
-    await client.process_commands(message)
 
 @client.event
 async def on_member_join(member):
+    with open('nograresources/lotterychoice.json', 'r') as f:
+        lotterychoice = json.load(f)
+    lotterychoice[str(member.id)] = "dm" if str(member.id) not in lotterychoice else lotterychoice[str(member.id)]
+    with open('nograresources/lotterychoice.json', 'w') as f:
+        json.dump(lotterychoice, f, indent=4)
     if member.guild.id == 789840820563476482:
         print("I detected someone joining the server.")
-
         await member.send("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         await client.get_channel(789840820563476485).send(f"{member.mention} AAAAAA")
-        print("I have sent a messagge to " + member.name + "#" + str(member.discriminator) + ".")
 
 # Bot COMMANDS go here.
 
@@ -187,7 +238,7 @@ async def load_error(ctx, error):
         await ctx.send("You're not the owner of Nogra!")
         return
     if isinstance(error, discord.ext.commands.ExtensionError):
-        await ctx.send("That cog was not found.")
+        await ctx.send(f"I was unable to start the extension. Details:\n```py\n{error}\n```")
         return
     else:
         errorembed = discord.Embed(title="Oops!",

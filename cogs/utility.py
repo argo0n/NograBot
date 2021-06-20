@@ -438,7 +438,6 @@ class utility(commands.Cog):
                 spotify.set_thumbnail(url=activity.album_cover_url)
                 listenduration = today - activity.start
                 listenduration = round(listenduration.total_seconds())
-                print(listenduration)
                 songend = round(activity.duration.total_seconds())
                 position = (listenduration / songend) * 20
                 position = round(position)
@@ -454,11 +453,10 @@ class utility(commands.Cog):
         spotify = discord.Embed(title=f"{member.name} is listening to",
                                 description=f"[Nothing!](https://open.spotify.com/track/3cdhgO3vgHyOIADMXokd2t?si=f7078aa59889446e)",
                                 color=0x1DB954)
-        spotify.set_author(name=f"Powered by Spotify®", icon_url="https://i.imgur.com/zNBmzpl.png")
+        spotify.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
         spotify.set_thumbnail(
             url="https://lh3.googleusercontent.com/proxy/2MW-6rV-ik6QiqydtV2T5d6PEM5894IXD990hxcCp17slr5F0bj0u1xypl-0MkChbMD6MabQDSCFGFGCm6w03EMSptzUIU9Y_u1eDgzOzC_27YoSOvRFgHUw4gLfaHrB2i_ImlYuJKPOTZg3-RD1bTAYv1-S4pIHU2UkyMZ0")
-        spotify.set_footer(
-            text=f"{self.client.user.name} fufills all guidelines according to Spotify®'s Design Guidelines.")
+        spotify.set_footer(text=f"Powered by Spotify®", icon_url="https://i.imgur.com/zNBmzpl.png")
         duration = "⚪────────────────────"
         bar = f" ◄◄⠀\▶⠀►► 0:00 / 4:31 ───○ 🔊"
         duration = list(duration)
@@ -500,7 +498,6 @@ class utility(commands.Cog):
         if member is None:
             member = ctx.author
         avatarurl = member.avatar_url
-        print(avatarurl)
         opener = urllib.request.build_opener()
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         urllib.request.install_opener(opener)
@@ -550,7 +547,6 @@ class utility(commands.Cog):
             await ctx.send(embed=activityembed)
             return
         for activity in activitylist:
-            print(type(activity))
             if isinstance(activity, discord.Game):
                 activityembed = discord.Embed(title=f"{member.name} is playing:", color=member.color)
                 activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
@@ -577,7 +573,6 @@ class utility(commands.Cog):
                 await ctx.send(embed=activityembed)
                 return
             elif isinstance(activity, discord.Activity):
-                print("found discord activity")
                 activityembed = discord.Embed(title=f"{member.name} is playing:", color=member.color)
                 activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
                 if activity.start:

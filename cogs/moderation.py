@@ -21,14 +21,25 @@ import json
 import random
 from cogs.nograhelpers import *
 
+
+def get_prefix(client, message):
+    with open('nograresources/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+        guildprefixes = prefixes[str(message.guild.id)]
+    return commands.when_mentioned_or(guildprefixes)(client, message)
+
+
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
     return ''.join(lines)
 
+
 timeformat = "%Y-%m-%d %H:%M:%S"
 durationformat = "%-dd %-Hh %-Mm %-Ss"
+
+
 def timetosgtime(x):
     utctime = x
     sgttime = utctime.astimezone(timezone("Asia/Singapore"))
@@ -72,11 +83,15 @@ class Moderation(commands.Cog):
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
-    @commands.command(pass_context=True, name="shutup", brief="Sets blacklisted channels for talking", description="Sets channels where people can talk but will have their messages deleted.")
+    @commands.command(pass_context=True, name="shutup", brief="Sets blacklisted channels for talking",
+                      description="Sets channels where people can talk but will have their messages deleted.")
     @commands.has_permissions(manage_messages=True)
     async def shutup(self, ctx, addremoveview=None, channel: discord.TextChannel = None):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
         if addremoveview is None:
-            await ctx.send("```\n[p]shutup [add/remove/view] [channel]\n          ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
+            await ctx.send(
+                "```\n[p]shutup [add/remove/view] [channel]\n          ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
             return
         addremoveview = addremoveview.lower()
         with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
@@ -84,7 +99,7 @@ class Moderation(commands.Cog):
         blacklisted_channels = channeldetails[str(ctx.guild.id)]['blacklist_channels']
         if addremoveview == "view":
             if len(blacklisted_channels) == 0:
-                output = "You have not added any channels yet. Use `a.shutup add [channel]` to do so!"
+                output = f"You have not added any channels yet. Use `{prefix}shutup add [channel]` to do so!"
             else:
                 output = ""
                 for i in blacklisted_channels:
@@ -132,12 +147,15 @@ class Moderation(commands.Cog):
         else:
             await ctx.send("Your first option needs to be a `add`/`remove`/`view` so that I will know whether to add, remove or view channels.")
 
-
-    @commands.command(pass_context=True, name="idot", brief="Sets logging channel", description="If people talk in blacklisted channels, use this command to log their talking here.")
+    @commands.command(pass_context=True, name="idot", brief="Sets logging channel",
+                      description="If people talk in blacklisted channels, use this command to log their talking here.")
     @commands.has_permissions(manage_channels=True)
     async def idot(self, ctx, setremoveview=None, channel: discord.TextChannel = None):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
         if setremoveview is None:
-            await ctx.send("```\n[p]idot [add/remove/view] [channel]\n        ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
+            await ctx.send(
+                "```\n[p]idot [add/remove/view] [channel]\n        ^^^^^^^^^^^^^^^^^\nYou missed out add/remove/view!```")
             return
         setremoveview = setremoveview.lower()
         with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
@@ -145,7 +163,7 @@ class Moderation(commands.Cog):
         logging_channels = channeldetails[str(ctx.guild.id)]['logging_channels']
         if setremoveview == "view":
             if logging_channels is None:
-                output = "You have not added any channels yet. Use `a.idot add [channel` to do so!"
+                output = f"You have not added any channels yet. Use `{prefix}idot add [channel` to do so!"
             else:
                 output = f"<#{logging_channels}>"
             colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,

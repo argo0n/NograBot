@@ -20,15 +20,18 @@ import traceback
 import random
 import json
 import math
-import secondstotiming
+from cogs.nograhelpers import *
+import sqlite3
+from discord.ext.buttons import Paginator
+
+DB_PATH = "databases/"
 
 
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 timeformat = "%Y-%m-%d %H:%M:%S"
@@ -41,6 +44,14 @@ def timetosgtime(x):
     return sgttime.strftime(timeformat)
 
 
+class Pag(Paginator):
+    async def teardown(self):
+        try:
+            await self.page.clear_reactions()
+        except discord.HTTPException:
+            pass
+
+
 start_time = time.time()
 utcbootime = datetime.datetime.now(timezone("UTC"))
 
@@ -51,50 +62,65 @@ class DankMemerHelp(commands.Cog):
         self.client = client
         self.myLoop.start()
 
-    @tasks.loop(seconds=5.0)
+    @tasks.loop(seconds=2.0)
     async def myLoop(self):
-        channel = self.client.get_channel(832294688345292801)
-        await channel.send("hi")
-        with open('nograresources/lottery.json', 'r', encoding='utf8') as f:
-            lottery = json.load(f)
-            for userid in lottery:
-                if lottery[userid]["time"] > round(time.time()):
-                    user = self.client.get_user(int(userid))
-                    try:
-                        channelid = lottery[userid]["channel"]
-                        guildid = lottery[userid]["guild"]
-                        messageid = lottery[userid]["message"]
-                        user = self.client.get_user(int(userid))
-                        channel = self.client.get_channel(channelid)
-                        messagelink = discord.Embed(
-                            description=f"[Jump to message](https://discord.com/channels/{guildid}/{channelid}/{messageid})",
-                            color=0x00FFFF)
-                        messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
-                        await user.send(
-                            f"{user.mention} You were reminded in **{channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>",
-                            embed=messagelink)
-                    except discord.errors.Forbidden:
-                        await channel.send(
-                            f"{user.mention} time to enter the lottery again <a:takethismoney:806096182594109471>")
-                    del lottery[userid]
-                    with open('nograresources/lottery.json', 'w', encoding='utf8') as f:
-                        json.dump(lottery, f, sort_keys=True, indent=4, ensure_ascii=False)
+        await self.client.wait_until_ready()
+        timenow = round(time.time())
+        lotterydb = sqlite3.connect('databases/lottery.sqlite')
+        cursor = lotterydb.cursor()
+        result = cursor.execute("SELECT * FROM main WHERE lotterytime < ?", (timenow,)).fetchall()
+        if len(result) == 0:
+            return
+        for row in result:
+            user = self.client.get_user(row[0])
+            guildid = row[2]
+            channelid = row[3]
+            messageid = row[4]
+            channel = self.client.get_channel(channelid)
+            messagelink = discord.Embed(
+                description=f"[Jump to message](https://discord.com/channels/{guildid}/{channelid}/{messageid})",
+                color=0x00FFFF)
+            messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+            with open("nograresources/lotterychoice.json", 'r', encoding="utf8") as f:
+                choices = json.load(f)
+                choice = choices[str(row[0])]
+            if choice == "dm" or choices not in ["dm", "mention"]:
+                try:
+                    await user.send(
+                        f"{user.mention} You were reminded in **{channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>",
+                        embed=messagelink)
+                except discord.errors.Forbidden:
+                    await channel.send(
+                        f"{user.mention} You have your DMs closed, so I have to mention you instead.\nTime to enter the lottery again <a:takethismoney:806096182594109471>")
+            elif choice == "mention":
+                await channel.send(
+                    f"{user.mention} Time to enter the lottery again <a:takethismoney:806096182594109471>")
+        cursor.execute("DELETE FROM main WHERE lotterytime < ?", (timenow,))
+        lotterydb.commit()
+        cursor.close()
+        lotterydb.close()
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("Cog \"DankMemerHelp\" loaded")
+        db = sqlite3.connect('databases/lottery.sqlite')
+        cursor = db.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS main(member_id integer, lotterytime integer, guild_id integer, channel_id integer, message_id integer)")
 
     @commands.Cog.listener()
-    async def on_message(self, message):
-        def embedcheck(message):
-            for e in message.embeds:
-                return "You bought a lottery ticket" in e.title and message.author.id == 270904126974590976
-
-        if message.author.id == 800184970298785802:
+    async def on_message(self, message):  # sourcery skip: remove-pass-body
+        if message.author == self.client.user:
+            return
+        if message.author.id == self.client.user.id:
             return
         if message.content.startswith("pls lottery") or message.content.startswith(
                 "pls lotto") or message.content.startswith("Pls lottery") or message.content.startswith(
             "Pls lotto") and message.author.id not in [270904126974590976, 341994639395520526]:
+            with open('nograresources/lotterychoice.json', 'r', encoding='utf8') as f:
+                lotterychoice = json.load(f)
+                if lotterychoice[str(message.author.id)] is None:
+                    return
             try:
                 msg = await self.client.wait_for("message",
                                                  check=lambda message: message.author.id == 270904126974590976,
@@ -136,67 +162,37 @@ class DankMemerHelp(commands.Cog):
                     remindtime = round(time.time())
                     while remindtime % 3600 != 0:
                         remindtime += 1
-                    lottery = json.load(f)
-                    lottery[f"{message.author.id}"]["time"] = remindtime
-                    lottery[f"{message.author.id}"]["channel"] = message.channel.id
-                    lottery[f"{message.author.id}"]["guild"] = message.guild.id
-                    lottery[f"{message.author.id}"]["message"] = message.id
-                    with open('nograresources/lottery.json', 'w', encoding='utf8') as f:
-                        json.dump(lottery, f, sort_keys=True, indent=4, ensure_ascii=False)
-                        await message.channel.send(
-                            f"I will remind you in {secondstotiming(remindtime - round(time.time()))} to participate in the lottery again!")
-
-                try:
-                    await message.add_reaction("<:dms:838255193266716742>")
-                    await asyncio.sleep(3600)
-                    messagelink = discord.Embed(
-                        description=f"[Jump to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})",
-                        color=0x00FFFF)
-                    messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
-                    await message.author.send(
-                        f"{message.author.mention} You were reminded in **{message.channel.mention}**: Time to buy a lottery again <a:takethismoney:806096182594109471>",
-                        embed=messagelink)
-                except discord.errors.Forbidden:
-                    await message.add_reaction("<:mention:838255192952274974>")
-                    await asyncio.sleep(3600)
+                    lottery = sqlite3.connect('databases/lottery.sqlite')
+                    cursor = lottery.cursor()
+                    sql = "INSERT INTO main(member_id ,lotterytime, guild_id, channel_id,message_id) VALUES(?,?,?,?,?)"
+                    val = (message.author.id, remindtime, message.guild.id, message.channel.id, message.id)
+                    cursor.execute(sql, val)
+                    lottery.commit()
+                    cursor.close()
+                    lottery.close()
                     await message.channel.send(
-                        f"{message.author.mention} Time to buy a lottery again <a:takethismoney:806096182594109471>")
-                    return
-
-        if message.channel.id == 821640987003977778 and "roblox.com" not in message.content:
-            await message.delete()
-            await message.channel.send(
-                f"{message.author.mention} this channel is for posting ROBLOX games only! :c\nIf you want to talk about the game, do it in <#818436261891014660> or <#821033003823923212>",
-                delete_after=3.0)
+                        f"I will remind you in {secondstotiming(remindtime - round(time.time()))} to participate in the lottery again!")
 
         if "were caught **HAHAHA**" in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 30 seconds <a:uwushyyy:807637815226531932>")
-            tmanmfail = await message.channel.send("□□□□□□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■□□□□□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■□□□□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■□□□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■□□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■□□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■■□□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■■■□□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■■■■□□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■■■■■□")
-            await asyncio.sleep(3)
-            await tmanmfail.edit(content="■■■■■■■■■■")
+            loadingbar = "□□□□□□□□□□"
+            tmanmfail = await message.channel.send(loadingbar)
+            duration = 30
+            separator = ""
+            cycle = duration / 10
+            while "□" in loadingbar:
+                await asyncio.sleep(cycle)
+                loadingbar = list(loadingbar)
+                index = loadingbar.index("□")
+                loadingbar[index] = "■"
+                loadingbar = separator.join(loadingbar)
+                await tmanmfail.edit(content=loadingbar)
             for m in message.guild.members:
-                if str(m.id) in message.content:
+                if m.mentioned_in(message):
                     await message.channel.send(f"{m.mention} rob now!")
                     return
-            await message.channel.send("No proper mention was found.")
+            await message.channel.send(
+                "No proper mention was found. Run `pls settings pings true` if you would like to be pinged when your rob cooldown is over.")
 
         if ("BASICALLY EVERYTHING") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("nice i'm proud of you <:nograblushsuit:831001647005564970>")
@@ -204,36 +200,24 @@ class DankMemerHelp(commands.Cog):
         if ("a TINY portion") in message.content or ("a small portion") in message.content or (
                 "fairly decent chunk") in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 2 minutes <a:uwushyyy:807637815226531932>")
-            tmanmport = await message.channel.send("□□□□□□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■□□□□□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■□□□□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■□□□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■□□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■□□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■□□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■□□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■■□□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■■■□□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■■■■□□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■■■■■□")
-            await asyncio.sleep(10)
-            await tmanmport.edit(content="■■■■■■■■■■■■")
+            loadingbar = "□□□□□□□□□□"
+            tmanmfail = await message.channel.send(loadingbar)
+            duration = 120
+            separator = ""
+            cycle = duration / 10
+            while "□" in loadingbar:
+                await asyncio.sleep(cycle)
+                loadingbar = list(loadingbar)
+                index = loadingbar.index("□")
+                loadingbar[index] = "■"
+                loadingbar = separator.join(loadingbar)
+                await tmanmfail.edit(content=loadingbar)
             for m in message.guild.members:
-                if str(m.id) in message.content:
+                if m.mentioned_in(message):
                     await message.channel.send(f"{m.mention} rob now!")
                     return
-            await message.channel.send("No proper mention was found.")
+            await message.channel.send(
+                "No proper mention was found. Run `pls settings pings true` if you would like to be pinged when your rob cooldown is over.")
 
         if (
                 message.content.startswith("Nice I'm proud of you")
@@ -263,18 +247,118 @@ class DankMemerHelp(commands.Cog):
     @commands.command(name="stoptask", brief="Manually ping for lottery",
                       description="Manually sets pings for lottery whenever bot reboots", hidden=True)
     async def stoptask(self, ctx):
-        emojis = ["<a:Tick:796984073603383296>", "⏲️"]
-        for emo in emojis:
-            await ctx.message.add_reaction(emo)
+        self.myLoop.stop()
+        await ctx.message.add_reaction("<a:Tick:796984073603383296>")
+
+    @commands.group(invoke_without_command=True, name="lotteryconfig", aliases=["lottery"],
+                    brief="Customize your lottery reminder",
+                    description="Change the type of reminder you want when you are reminded for the lottery!")
+    async def lotteryconfig(self, ctx):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        await ctx.send(
+            f"To change the type of notification to receive for your lottery reminder, do `{prefix}lotteryconfig [dm/mention/none]`")
+
+    @lotteryconfig.command(name="dm")
+    async def dm(self, ctx):
+        with open("nograresources/lotterychoice.json", 'r', encoding="utf8") as f:
+            choices = json.load(f)
+        choices[str(ctx.author.id)] = "dm"
+        with open('nograresources/lotterychoice.json', 'w', encoding='utf8') as f:
+            json.dump(choices, f, sort_keys=True, indent=4, ensure_ascii=False)
+        await ctx.send(
+            "<a:Tick:796984073603383296> Got it. From now, you will be **DMed** when you are reminded to participate in the lottery again.")
+
+    @lotteryconfig.command(name="mention", aliases=["ping"])
+    async def mention(self, ctx):
+        with open("nograresources/lotterychoice.json", 'r', encoding="utf8") as f:
+            choices = json.load(f)
+        choices[str(ctx.author.id)] = "mention"
+        with open('nograresources/lotterychoice.json', 'w', encoding='utf8') as f:
+            json.dump(choices, f, sort_keys=True, indent=4, ensure_ascii=False)
+        await ctx.send(
+            "<a:Tick:796984073603383296> Got it. From now, you will be **mentioned** when you are reminded to participate in the lottery again.")
+
+    @lotteryconfig.command(name="none")
+    async def none(self, ctx):
+        with open("nograresources/lotterychoice.json", 'r', encoding="utf8") as f:
+            choices = json.load(f)
+        choices[str(ctx.author.id)] = None
+        with open('nograresources/lotterychoice.json', 'w', encoding='utf8') as f:
+            json.dump(choices, f, sort_keys=True, indent=4, ensure_ascii=False)
+        await ctx.send(
+            "<a:Tick:796984073603383296> Got it. From now, you will not be reminded to participate in the lottery again.")
+
+    @commands.command(name="testtask", hidden=True)
+    @commands.is_owner()
+    async def testtask(self, ctx):
+        timenow = round(time.time())
+        timenow += 20
+        lottery = sqlite3.connect('databases/lottery.sqlite')
+        cursor = lottery.cursor()
+        sql = "INSERT INTO main(member_id ,lotterytime, guild_id, channel_id,message_id) VALUES(?,?,?,?,?)"
+        val = (ctx.author.id, timenow, ctx.guild.id, ctx.channel.id, ctx.message.id)
+        print(cursor.execute(sql, val))
+        lottery.commit()
+        cursor.close()
+        lottery.close()
+        await ctx.send(
+            f"You should be reminded in 20 seconds to do lottery <:nograpepepoker:803933885876273153>\n Added this entry into `databases/lottery.sqlite`:\n```\nmember_id  |  lotterytime  |  guild_id  |  channel_id  |  message_id\n{ctx.author.id}  |  {timenow}  |  {ctx.guild.id}  |  {ctx.channel.id}  |  {ctx.message.id}\n```")
+
+    @commands.command(name="viewdb", aliases=["database", "lotterydatabase", "db"], hidden=True)
+    @commands.is_owner()
+    async def viewdb(self, ctx):
+        lotterydb = sqlite3.connect('databases/lottery.sqlite')
+        cursor = lotterydb.cursor()
+        result = cursor.execute("SELECT * FROM main").fetchall()
+        pager = Pag(
+            timeout=100,
+            use_defaults=True,
+            entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
+            length=1,
+            prefix="```py\n",
+            suffix="```"
+        )
+        await pager.start(ctx)
+
+    @testtask.error
+    async def testtask_error(self, ctx, error):
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
+                                   color=0x00ff00)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
 
     @stoptask.error
     async def stoptask_error(self, ctx, error):
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
+                                   color=0x00ff00)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+
+    @viewdb.error
+    async def viewdb_error(self, ctx, error):
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{gettraceback(error)}\n```",
+                                   color=0x00ff00)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+
+    @lotteryconfig.error
+    async def lotteryconfig_error(self, ctx, error):
         errorembed = discord.Embed(title="Oops!",
-                                   description="Error.",
+                                   description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://www.freeiconspng.com/thumbs/error-icon/orange-error-icon-0.png")
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
 
 
 def setup(client):

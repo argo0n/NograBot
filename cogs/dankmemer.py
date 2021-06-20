@@ -158,20 +158,19 @@ class DankMemerHelp(commands.Cog):
                 emojis = ["<a:Tick:796984073603383296>", "⏲️"]
                 for emo in emojis:
                     await message.add_reaction(emo)
-                with open('nograresources/lottery.json', 'r', encoding='utf8') as f:
-                    remindtime = round(time.time())
-                    while remindtime % 3600 != 0:
-                        remindtime += 1
-                    lottery = sqlite3.connect('databases/lottery.sqlite')
-                    cursor = lottery.cursor()
-                    sql = "INSERT INTO main(member_id ,lotterytime, guild_id, channel_id,message_id) VALUES(?,?,?,?,?)"
-                    val = (message.author.id, remindtime, message.guild.id, message.channel.id, message.id)
-                    cursor.execute(sql, val)
-                    lottery.commit()
-                    cursor.close()
-                    lottery.close()
-                    await message.channel.send(
-                        f"I will remind you in {secondstotiming(remindtime - round(time.time()))} to participate in the lottery again!")
+                remindtime = round(time.time())
+                while remindtime % 3600 != 0:
+                    remindtime += 1
+                lottery = sqlite3.connect('databases/lottery.sqlite')
+                cursor = lottery.cursor()
+                sql = "INSERT INTO main(member_id ,lotterytime, guild_id, channel_id,message_id) VALUES(?,?,?,?,?)"
+                val = (message.author.id, remindtime, message.guild.id, message.channel.id, message.id)
+                cursor.execute(sql, val)
+                lottery.commit()
+                cursor.close()
+                lottery.close()
+                await message.channel.send(
+                    f"I will remind you in {secondstotiming(remindtime - round(time.time()))} to participate in the lottery again!")
 
         if "were caught **HAHAHA**" in message.content and message.author.id == 270904126974590976:
             await message.channel.send("Wait for 30 seconds <a:uwushyyy:807637815226531932>")

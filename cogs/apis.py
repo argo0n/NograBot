@@ -22,15 +22,16 @@ from discord.ext.buttons import Paginator
 import postbin
 import traceback
 import aiohttp
-from cogs.secondstotiming import *
+from cogs.nograhelpers import *
+import json
+import requests
 
 
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 class APIs(commands.Cog):
@@ -54,15 +55,18 @@ class APIs(commands.Cog):
             await channel.send(f"<@650647680837484556> LMFAOOO {message.author.mention} dmed me \"orange\"")
             return
 
-    @commands.command(name="dogs", brief="cute dogs", description="Sends you pictures of cute dogs!")
+    @commands.command(name="dogs", brief="cute dogs",
+                      description="Sends you pictures of cute dogs along with a fact about them!")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def dogs(self, ctx):
+        r = requests.get('https://api.thedogapi.com/v1/images/search',
+                         headers={'x-api-key': 'df2a30e7-db77-4036-b071-e840da424a93'})
+        jsondata1 = json.loads(r.text)
+        jsondata1 = jsondata1[0]
+        imagelink = jsondata1["url"]
         async with aiohttp.ClientSession() as session:
-            request1 = await session.get("https://dog.ceo/api/breeds/image/random")
             request2 = await session.get("https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1")
-            jsondata1 = await request1.json()
             jsondata2 = await request2.json()
-            imagelink = jsondata1["message"]
         for i in jsondata2:
             fact = i['fact']
             dogembed = discord.Embed(title="A random dog!", description=fact, color=discord.Color.random())
@@ -71,24 +75,57 @@ class APIs(commands.Cog):
 
     @dogs.error
     async def dogs_error(self, ctx, error):
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
+
+    @commands.command(name="cats", brief="cute cats",
+                      description="Sends you pictures of cute cats along with a fact about them!")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def cats(self, ctx):
+        r = requests.get('https://api.thecatapi.com/v1/images/search',
+                         headers={'x-api-key': 'db23dec2-5442-4f1d-ba5d-12f896996069'})
+        async with aiohttp.ClientSession() as session:
+            request2 = await session.get("https://catfact.ninja/fact")
+        jsondata1 = json.loads(r.text)
+        jsondata2 = await request2.json()
+        jsondata1 = jsondata1[0]
+        imagelink = jsondata1["url"]
+        fact = jsondata2["fact"]
+        catembed = discord.Embed(title="A random cat!", description=fact, color=discord.Color.random())
+        catembed.set_image(url=imagelink)
+        await ctx.send(embed=catembed)
+
+    @cats.error
+    async def cats_error(self, ctx, error):
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
+        message = await logchannel.send("Uploading traceback to Hastebin...")
+        tracebacklink = await postbin.postAsync(gettraceback(error))
+        await message.edit(content=tracebacklink)
+
+    async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             cooldown = error.retry_after
             await ctx.send(
                 f"As this command requires an external API, you need to wait for **{secondstotiming(cooldown)}** to prevent requests being spammed to this API.")
             return
-        else:
-            errorembed = discord.Embed(title="Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-            message = await logchannel.send("Uploading traceback to Hastebin...")
-            tracebacklink = await postbin.postAsync(gettraceback(error))
-            await message.edit(content=tracebacklink)
 
 
 def setup(client):

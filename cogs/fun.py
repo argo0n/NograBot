@@ -487,11 +487,6 @@ class Fun(commands.Cog):
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
 
-    @commands.command(hidden=True)
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    async def firefight(self, ctx, member: discord.Member = None):
-        await ctx.send("<:nograRedX:801684348502933525> Did you mean...\n    • `a.dumbfight [member]`")
-
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
     async def hug(self, ctx, target1: discord.Member = None, target2: discord.Member = None):
         if target1 is None:

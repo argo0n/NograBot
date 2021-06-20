@@ -44,5 +44,4 @@ Nogra is hosted on DigitalOcean.
   4. `git clone https://github.com/argo0n/NograBot/` to copy my repository to your directory.
   5. Create a environment variable called NOGRAtoken to store the token for the bot. You can do so on <a href="https://docs.oracle.com/en/database/oracle/machine-learning/oml4r/1.5.1/oread/creating-and-modifying-environment-variables-on-windows.html">Windows</a>, <a href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X</a> and <a href="https://askubuntu.com/questions/58814/how-do-i-add-environment-variables">Ubuntu</a>, for example.
   
- ## Future Plans
- I will be improving Nogra's performance with more usage of JSON files and possibly databases in the future.
+<a href="https://www.digitalocean.com/?refcode=dc24e169f576&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg" alt="DigitalOcean Referral Badge" /></a>

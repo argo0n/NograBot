@@ -79,24 +79,23 @@ class Moderation(commands.Cog):
             await ctx.send(
                 "I expected a number somwhere in your command, but I got something else instead. Check if the numbers I require are just integers.")
             return
-        else:
-            errorembed = discord.Embed(title="Oops!",
-                                       description="This command just received an error. It has been sent to Argon.",
-                                       color=0x00ff00)
-            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
-            logchannel = self.client.get_channel(839016255733497917)
-            await logchannel.send(
-                f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
-            filename = random.randint(1, 9999999999)
-            filename = f"temp/{filename}.txt"
-            print(filename)
-            with open(filename, "w") as f:
-                f.write(gettraceback(error))
-            file = discord.File(filename)
-            await logchannel.send(file=file)
-            os.remove(filename)
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to Argon.",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        print(filename)
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await logchannel.send(file=file)
+        os.remove(filename)
 
     @commands.Cog.listener()
     async def on_message(self, message):

@@ -280,13 +280,12 @@ class Admin(commands.Cog):
         if isinstance(error, discord.ext.commands.CheckFailure):
             await ctx.send("You're not the owner of Nogra!")
             return
-        else:
-            fulltraceback = gettraceback(error)
-            errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                       description=f"```py\n{fulltraceback[0, 1024]}\n```",
-                                       color=0x00ff00)
-            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-            await ctx.send(embed=errorembed)
+        fulltraceback = gettraceback(error)
+        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                   description=f"```py\n{fulltraceback[0, 1024]}\n```",
+                                   color=0x00ff00)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

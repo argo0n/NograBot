@@ -74,6 +74,8 @@ class Fun(commands.Cog):
 
     @commands.command(name="pogpong", brief="real ping !! 1 ms!!", description="Creates a fake ping duration.")
     async def pogpong(self, ctx, pong):
+        if pong == None:
+            await ctx.send("Pong! ∞ ms  🏓")
         await ctx.send(f'Pong! {pong}ms  🏓')
 
     @pogpong.error
@@ -221,8 +223,11 @@ class Fun(commands.Cog):
 
     @commands.command(name="blacklist", brief="blacklists user",
                       description="Sends user a fake dm just like Dank Memer when one is blacklisted")
-    @commands.cooldown(1, 3600, commands.BucketType.user)
+    @commands.cooldown(1, 1800, commands.BucketType.user)
     async def blacklist(self, ctx, member: discord.Member = None):
+        if member is None:
+            await ctx.send("You didn't provide a member lol")
+            ctx.command.reset_cooldown(ctx)
         await ctx.send("For what reason?")
         try:
             msg = await self.client.wait_for("message",

@@ -371,7 +371,7 @@ class DankMemerHelp(commands.Cog):
                 f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
             return
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(error)
+            await ctx.send(f"{error}\n It has to be a mention or user ID.")
             return
         else:
             errorembed = discord.Embed(title="Oops!",

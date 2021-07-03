@@ -158,12 +158,12 @@ class utility(commands.Cog):
         for permission in iter(botpermissions):
             if permission[0] in voice_permissions:
                 pass
-            elif permission[1] == True:
+            elif permission[1] is True:
                 spacingno = 21 - len(permission[0])
                 spacing = " " * spacingno
                 output += f"+ {permission[0]}{spacing} =  True\n"
 
-            elif permission[1] == False:
+            elif permission[1] is False:
                 spacingno = 21 - len(permission[0])
                 spacing = " " * spacingno
                 output += f"- {permission[0]}{spacing} = False\n"

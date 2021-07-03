@@ -423,7 +423,7 @@ class utility(commands.Cog):
                 if output:
                     output = output
                 else:
-                    output = "Nothing to show here ¯\_(ツ)_/¯"
+                    output = r"Nothing to show here ¯\_(ツ)_/¯"
                 activityembed.add_field(name=activity.name, value=output, inline=False)
                 await ctx.send(embed=activityembed)
                 return

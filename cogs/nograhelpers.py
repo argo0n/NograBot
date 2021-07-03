@@ -1,7 +1,7 @@
 import math
 
 
-def secondstotiming(seconds):
+def secondstotiming(seconds):  # sourcery no-metrics
     seconds = round(seconds)
     if seconds < 60:
         secdisplay = "s" if seconds != 1 else ""
@@ -23,7 +23,7 @@ def secondstotiming(seconds):
     days = math.trunc(hours / 24)
     if days < 7:
         hours = hours - days * 24
-        minutes = minutes - hours * 60
+        minutes = minutes - hours * 24
         seconds = seconds - minutes * 60 - hours * 60 * 60
         ddisplay = "s" if days != 1 else ""
         hdisplay = "s" if hours != 1 else ""

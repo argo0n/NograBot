@@ -127,7 +127,7 @@ async def on_guild_join(guild):
         joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
         joinembed.add_field(name="**__Not sure where to start?__**", value="\u200b", inline=False)
         joinembed.add_field(name="__Fun commands!__",
-                            value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `{get_prefix[1]}help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",
+                            value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `a.help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",
                             inline=False)
         joinembed.add_field(name="__Moderation__",
                             value="Not all moderation commands are written yet, but for now we have `ban` and `cban` (countdown ban). Use these commands to moderate your server! <a:nograban:803868903196852245>",
@@ -136,10 +136,10 @@ async def on_guild_join(guild):
                             value=f"Do you use Dank Memer? {client.user.name} has a few utilities related to Dank Memer, such as lottery and rob reminders. <:peepoguns:796022792381661225>",
                             inline=True)
         joinembed.add_field(name="__Userinfo commands__",
-                            value=f"{client.user.name} user info is much more informative than that of other bots. Try it out with userinfo",
+                            value=f"{client.user.name} user info is much more informative than that of other bots. Try it out with userinfo!",
                             inline=True)
         joinembed.add_field(name="\u200b",
-                            value="By using Nogra, you agree to Nogra's [Terms of Service](http://nogra.infinityfreeapp.com/nogra-tos/) and [Privacy Policy](http://nogra.infinityfreeapp.com/nogras-privacy-policy/).",
+                            value="By using Nogra, you agree to Nogra's [Terms of Service](https://nograbot.wixsite.com/home/terms) and [Privacy Policy](https://nograbot.wixsite.com/home/privacy).",
                             inline=False)
         joinembed.set_footer(
             text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")

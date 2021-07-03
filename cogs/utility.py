@@ -63,6 +63,40 @@ class utility(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.ChannelNotFound):
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
+            return
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send(error)
+            return
+        else:
+            errorembed = discord.Embed(title="Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+            filename = random.randint(1, 9999999999)
+            filename = f"temp/{filename}.txt"
+            print(filename)
+            with open(filename, "w") as f:
+                f.write(gettraceback(error))
+            file = discord.File(filename)
+            await logchannel.send(file=file)
+            os.remove(filename)
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("Cogs \"Utility\" has loaded")
@@ -189,120 +223,17 @@ class utility(commands.Cog):
                     embed.set_footer(text="this will be made into a pie chart soon!")
         await ctx.send(embed=embed)
 
-    @createchannel.error
-    async def createchannel_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @emojiinfo.error
-    async def emojiinfo_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @hmmm.error
-    async def hmmm_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @ping.error
-    async def ping_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @checkpermissions.error
-    async def checkpermissions_error(self, ctx, error):
-        if isinstance(error, discord.ext.commands.ChannelNotFound):
-            await ctx.send(error)
-            return
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send("You are missing the permission `Manage Permissions`.")
-            return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @calc.error
-    async def calc_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @chatchart.error
-    async def chatchart_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-    @commands.command(pass_context=True)
+    @commands.command()
     @commands.has_permissions(manage_guild=True)
-    async def prefix(self, ctx, prefix):  # command: bl!changeprefix ...
+    async def prefix(self, ctx, prefix=None):
+        if prefix is None:
+            prefix = await self.client.get_prefix(ctx)
+            prefix = prefix[2]
+            pingembed = discord.Embed(title=f"My prefix here is `{prefix}`",
+                                      description=f"Use `{prefix}prefix [prefix]` to change my prefix.")
+            pingembed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
+            await ctx.send(embed=pingembed)
+            return
         with open('nograresources/prefixes.json', 'r') as f:
             prefixes = json.load(f)
         prefixes[str(ctx.guild.id)] = prefix
@@ -310,21 +241,6 @@ class utility(commands.Cog):
             json.dump(prefixes, f, sort_keys=True, indent=4, ensure_ascii=False)
         await ctx.send(
             f' <a:Tick:796984073603383296> The prefix for **{ctx.guild.name}** has been changed to: `{prefix}`')
-
-    @prefix.error
-    async def prefix_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command(name="userinfo", brief="gives you info about a user",
                       description="Gives you information about a user.", aliases=["ui", "userinformation"])
@@ -398,26 +314,6 @@ class utility(commands.Cog):
         userinfo.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=userinfo)
 
-    @userinfo.error
-    async def userinfo_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            cooldown = error.retry_after
-            await ctx.send(
-                f"To prevent requests being spammed to the API, you have to wait for another **{secondstotiming(cooldown)}**.")
-            return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
     @commands.command(name="spotify", brief="shows you what you're listening to",
                       description="Shows you what you are listening to on Spotify.", aliases=["nowplaying"])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -468,29 +364,6 @@ class utility(commands.Cog):
                           inline=False)
         await ctx.send(embed=spotify)
 
-    @spotify.error
-    async def spotify_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            cooldown = error.retry_after
-            await ctx.send(
-                f"To prevent requests being spammed to the API, you have to wait for another **{secondstotiming(cooldown)}**.")
-            return
-        if isinstance(error, commands.MemberNotFound):
-            await ctx.send(error)
-            return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
     @commands.command(name="color", brief="pfp color time",
                       description="Gets dominant and matching colors of your profile picture.", aliases=["colour"])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -512,24 +385,6 @@ class utility(commands.Cog):
         items = messagecontents
         menu = menus.MenuPages(EmbedPageSource(items, per_page=1))
         await menu.start(ctx)
-
-    @color.error
-    async def color_error(self, ctx, error):
-        if isinstance(error, discord.ext.commands.MemberNotFound):
-            await ctx.send(error)
-            return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
     @commands.command(name="gameprofile", brief="Shows you what you are doing/playing.",
                       description="Shows you what you are doing/playing.", aliases=["game", "activity", "status"])
@@ -617,29 +472,6 @@ class utility(commands.Cog):
         activityembed = discord.Embed(title=f"{member.name} isn't doing anything now!", color=member.color)
         activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
         await ctx.send(embed=activityembed)
-
-    @gameprofile.error
-    async def gameprofile_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            cooldown = error.retry_after
-            await ctx.send(
-                f"To prevent requests being spammed to the API, you have to wait for another **{secondstotiming(cooldown)}**.")
-            return
-        if isinstance(error, commands.MemberNotFound):
-            await ctx.send(error)
-            return
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
 
 
 def setup(client):

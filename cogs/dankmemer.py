@@ -23,6 +23,7 @@ import math
 from cogs.nograhelpers import *
 import sqlite3
 from discord.ext.buttons import Paginator
+import os
 
 DB_PATH = "databases/"
 
@@ -310,6 +311,9 @@ class DankMemerHelp(commands.Cog):
         lotterydb = sqlite3.connect('databases/lottery.sqlite')
         cursor = lotterydb.cursor()
         result = cursor.execute("SELECT * FROM main").fetchall()
+        if len(result) == 0:
+            await ctx.send("There are no entries in the database.")
+            return
         pager = Pag(
             timeout=100,
             use_defaults=True,
@@ -322,42 +326,71 @@ class DankMemerHelp(commands.Cog):
 
     @testtask.error
     async def testtask_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        print(filename)
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await ctx.send("error encountered on a admin command", file=file)
+        os.remove(filename)
 
     @stoptask.error
     async def stoptask_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        print(filename)
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await ctx.send("error encountered on a admin command", file=file)
+        os.remove(filename)
 
     @viewdb.error
     async def viewdb_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        print(filename)
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await ctx.send("error encountered on a admin command", file=file)
+        os.remove(filename)
 
     @lotteryconfig.error
     async def lotteryconfig_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
+        if isinstance(error, discord.ext.commands.ChannelNotFound):
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
+            return
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send(error)
+            return
+        else:
+            errorembed = discord.Embed(title="Oops!",
+                                       description="This command just received an error. It has been sent to Argon.",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+            filename = random.randint(1, 9999999999)
+            filename = f"temp/{filename}.txt"
+            print(filename)
+            with open(filename, "w") as f:
+                f.write(gettraceback(error))
+            file = discord.File(filename)
+            await logchannel.send(file=file)
+            os.remove(filename)
 
 
 def setup(client):

@@ -76,7 +76,7 @@ class utility(commands.Cog):
                 f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
             return
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(error)
+            await ctx.send(f"{error}\n It has to be a mention or user ID.")
             return
         else:
             errorembed = discord.Embed(title="Oops!",
@@ -449,7 +449,7 @@ class utility(commands.Cog):
                     keydetails += f"**{activity.details}**\n"
                 if activity.state:
                     keydetails += f"**{activity.state}\n**"
-                    output = start + stop
+                output = start + stop
                 if output:
                     keydetails += output
                 if activity.large_image_url:
@@ -459,11 +459,11 @@ class utility(commands.Cog):
                 return
             elif isinstance(activity, discord.Streaming):
                 if activity.platform == "Twitch" or activity.platform not in ["YouTube", "Twitch"]:
-                    platform = "Twitch <:nogratwitch:855401374795563009>"
+                    platform, emoji = "Twitch", "<:nogratwitch:855401374795563009>"
                 elif activity.platform == "YouTube":
-                    platform = "YouTube <:nograyoutube:855401359003090956>"
+                    platform, emoji = "YouTube", "<:nograyoutube:855401359003090956>"
                 activityembed = discord.Embed(title=f"{member.name} is streaming:",
-                                              description=f'[{activity.name} on {platform}]({activity.url} "{activity.name} on {activity.platform}")',
+                                              description=f'[{activity.name} on {platform}]({activity.url} "{activity.name} on {activity.platform}") {emoji}',
                                               color=member.color)
                 activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
                 activityembed.add_field(name="Steam details", value=f"Playing {activity.game}", inline=False)

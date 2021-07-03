@@ -55,6 +55,13 @@ class APIs(commands.Cog):
             await channel.send(f"<@650647680837484556> LMFAOOO {message.author.mention} dmed me \"orange\"")
             return
 
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"As this command requires an external API, you need to wait for **{secondstotiming(cooldown)}** to prevent requests being spammed to this API.")
+            return
+
     @commands.command(name="dogs", brief="cute dogs",
                       description="Sends you pictures of cute dogs along with a fact about them!")
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -75,6 +82,9 @@ class APIs(commands.Cog):
 
     @dogs.error
     async def dogs_error(self, ctx, error):
+        cog = ctx.cog
+        if cog and cog._get_overridden_method(cog.cog_command_error) is not None:
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -107,6 +117,14 @@ class APIs(commands.Cog):
 
     @cats.error
     async def cats_error(self, ctx, error):
+        cog = ctx.cog
+        if cog and cog._get_overridden_method(cog.cog_command_error) is not None:
+            return
+        if isinstance(error, commands.CommandOnCooldown):
+            cooldown = error.retry_after
+            await ctx.send(
+                f"As this command requires an external API, you need to wait for **{secondstotiming(cooldown)}** to prevent requests being spammed to this API.")
+            return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to Argon.",
                                    color=0x00ff00)
@@ -119,13 +137,6 @@ class APIs(commands.Cog):
         message = await logchannel.send("Uploading traceback to Hastebin...")
         tracebacklink = await postbin.postAsync(gettraceback(error))
         await message.edit(content=tracebacklink)
-
-    async def cog_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            cooldown = error.retry_after
-            await ctx.send(
-                f"As this command requires an external API, you need to wait for **{secondstotiming(cooldown)}** to prevent requests being spammed to this API.")
-            return
 
 
 def setup(client):

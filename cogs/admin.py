@@ -124,19 +124,7 @@ class Admin(commands.Cog):
     '''@commands.command(pass_context=True)
     async def dm(self, ctx, *, message):'''
 
-    @edit.error
-    async def edit_error(self, ctx, error):
-        if isinstance(error, discord.ext.commands.ChannelNotFound):
-            await ctx.send(error)
-            return
-        if isinstance(error, discord.ext.commands.CheckFailure):
-            await ctx.send("You're not the owner of Nogra!")
-            return
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
+
 
     @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
@@ -179,17 +167,6 @@ class Admin(commands.Cog):
         else:
             await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
-    @setstatus.error
-    async def setstatus_error(self, ctx, error):
-        if isinstance(error, discord.ext.commands.CheckFailure):
-            await ctx.send("You're not the owner of Nogra!")
-            return
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-
     @commands.command()
     async def minecraft(self, ctx, *, member: discord.User = None):
         if member is None:
@@ -217,17 +194,6 @@ class Admin(commands.Cog):
                 await ctx.message.add_reaction("<a:Tick:796984073603383296>")
             else:
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
-
-    @minecraft.error
-    async def minecraft_error(self, ctx, error):
-        if isinstance(error, commands.MemberNotFound):
-            await ctx.send("You did not provide a proper user. It has to be a mention or user ID.")
-            return
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
 
     @commands.command(name="message", brief="dms people",
                       description="Sends a message to someone requested by the developers.")
@@ -293,14 +259,6 @@ class Admin(commands.Cog):
             else:
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
 
-    @dmads.error
-    async def dmads_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-
     @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
     @commands.is_owner()
     async def update(self, ctx, *, message):
@@ -309,14 +267,6 @@ class Admin(commands.Cog):
         for i in channelids:
             channel = self.client.get_channel(i)
             await channel.send(message)
-
-    @update.error
-    async def update_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
     
     @commands.command()
     @commands.is_owner()
@@ -326,33 +276,17 @@ class Admin(commands.Cog):
         await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline, manually reboot it.")
         await self.client.logout()
 
-    @shutdown.error
-    async def shutdown_error(self, ctx, error):
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-
-    @message.error
-    async def message_error(self, ctx, error):
-        if isinstance(error, ValueError):
-            await ctx.send("You did not provide a proper member ID.")
-            return
-        errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{gettraceback(error)}\n```",
-                                   color=0x00ff00)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-
-    @evalu.error
-    async def _eval_error(self, ctx, error):
-        return
-
     async def cog_command_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.CheckFailure):
             await ctx.send("You're not the owner of Nogra!")
             return
+        else:
+            fulltraceback = gettraceback(error)
+            errorembed = discord.Embed(title="Error encountered on an Admin Command.",
+                                       description=f"```py\n{fulltraceback[0, 1024]}\n```",
+                                       color=0x00ff00)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
 
 def clean_code(content):
     if content.startswith("```") and content.endswith("```"):

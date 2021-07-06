@@ -344,7 +344,6 @@ class DankMemerHelp(commands.Cog):
     async def testtask_error(self, ctx, error):
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)
@@ -355,7 +354,6 @@ class DankMemerHelp(commands.Cog):
     async def stoptask_error(self, ctx, error):
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)
@@ -366,7 +364,6 @@ class DankMemerHelp(commands.Cog):
     async def viewdb_error(self, ctx, error):
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)
@@ -400,7 +397,6 @@ class DankMemerHelp(commands.Cog):
             f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)

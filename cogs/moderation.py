@@ -90,7 +90,6 @@ class Moderation(commands.Cog):
             f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)
@@ -233,7 +232,6 @@ class Moderation(commands.Cog):
                         except asyncio.TimeoutError:
                             pass
                         else:
-                            print(feedback.content)
                     option = option-1
                     logchannel = self.client.get_channel(861956356419616808)
                     leaveembed = discord.Embed(title=f"Just removed {self.client.user.name} from the server {ctx.guild.name}.")

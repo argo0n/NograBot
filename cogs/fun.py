@@ -70,7 +70,7 @@ class Fun(commands.Cog):
             await ctx.send("I do not have the permissions to perform the required actions in this command. ")
             return
         errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+                                   description="This command just received an error. It has been sent to the bot developer..",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
@@ -105,9 +105,10 @@ class Fun(commands.Cog):
                 f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.mention}) just used the say command to say {arg} in {ctx.channel.mention}")
 
     @commands.command(name="pogpong", brief="real ping !! 1 ms!!", description="Creates a fake ping duration.")
-    async def pogpong(self, ctx, pong):
+    async def pogpong(self, ctx, pong=None):
         if pong is None:
             await ctx.send("Pong! ∞ ms  🏓")
+            return
         await ctx.send(f'Pong! {pong}ms  🏓')
 
     @commands.command(name="bon", brief="Fake ban", description="Makes a fake ban message")

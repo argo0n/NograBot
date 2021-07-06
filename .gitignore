@@ -1,4 +1,9 @@
 /RemovedResources/
 /resources/
-/resources/spblacklist.txt
 /nograresources/
+/cogs/__pycache__
+/questresources/
+/databases/
+resources/spblacklist.txt
+.vscode/
+.idea/

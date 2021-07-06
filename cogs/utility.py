@@ -8,6 +8,8 @@
 # |                                                                                    |
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
+import ast
+
 from discord.utils import find
 import random
 import asyncio
@@ -79,7 +81,7 @@ class utility(commands.Cog):
             await ctx.send(f"{error}\n It has to be a mention or user ID.")
             return
         errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+                                   description="This command just received an error. It has been sent to the bot developer..",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
@@ -89,7 +91,6 @@ class utility(commands.Cog):
             f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
         filename = random.randint(1, 9999999999)
         filename = f"temp/{filename}.txt"
-        print(filename)
         with open(filename, "w") as f:
             f.write(gettraceback(error))
         file = discord.File(filename)
@@ -112,6 +113,96 @@ class utility(commands.Cog):
             items = messagecontents
             menu = menus.MenuPages(EmbedPageSource(items, per_page=1))
             await menu.start(ctx)
+
+    @commands.command(name="info", brief="Information on Nogra", description = "Shows information on Nogra, including the owner.", aliases = ["about"])
+    async def info(self, ctx):
+        with ctx.typing():
+            prefix = await self.client.get_prefix(ctx)
+            prefix = prefix[2]
+            embed = discord.Embed(title = f"About {self.client.user.name}", description=f"{self.client.user.name} is a multipurpose Discord bot with *somewhat* fun features and integrations with other bots!\nCurrent Features:\n    • [Dank Memer](https://dankmemer.lol) utilities\n    • Fun and entertaining commands (not really tbh)\n    • Informational utility commands\n    • Moderation commands\nUse `a.help` to discover all my commands!", timestamp=datetime.utcnow(), color=discord.Color.random())
+            channel = self.client.get_channel(852477760089489449)
+            messagelist = await channel.history(limit=1).flatten()
+            for message in messagelist:
+                version = message.content.split("\n")[0]
+            embed.add_field(name="Current version", value=f"{version}, know more in `{prefix}changelog`", inline=False)
+            embed.add_field(name="Current prefix", value=f"`{prefix}`", inline=True)
+            owner = self.client.get_user(self.client.owner_id)
+            embed.add_field(name="Owner", value=f"{owner.name}#{owner.discriminator}", inline=True)
+            embed.add_field(name="Support", value="DM Argon#0002", inline=True)
+            counting=[0,0]
+            for file in os.listdir():
+                if file.endswith('.py'):
+                    with open(file,"r", encoding="utf8") as f:
+                        content = f.read()
+                    with open(file,"r", encoding="utf8") as f:
+                        linne = f.readlines()
+                    lines = counting[0]
+                    counting[0] += lines + len(linne)
+                    characters = counting[1]
+                    counting[1] = characters + len(content)
+            for files in os.listdir("./cogs"):
+                if files.endswith('.py'):
+                    with open(f"cogs/{files}","r", encoding="utf8") as f:
+                        content = f.read()
+                    with open(f"cogs/{files}","r", encoding="utf8") as f:
+                        linne = f.readlines()
+                    lines = counting[0]
+                    counting[0] += lines + len(linne)
+                    characters = counting[1]
+                    counting[1] = characters + len(content)
+            embed.add_field(name="Statistics", value=f"**Servers:** {len(self.client.guilds)}\n **Users:** {len(self.client.users)+40}\n **Commands:** {len(self.client.commands)}\n**Lines of codes written:** {counting[0]}\n**Characters written: **{counting[1]}", inline=True)
+            embed.add_field(name="Important links", value="[Nogra's website - https://nogra.me](https://nogra.me)\n[Nogra's GitHub repo](https://github.com/argo0n/nograbot)", inline=True)
+            member = ctx.guild.get_member(self.client.user.id)
+            today = datetime.today()
+            acccreationdate = self.client.user.created_at
+            embed.add_field(name=f"\u200b",value=f"\u200b",inline=False)
+            embed.add_field(name=f"{self.client.user.name} was created on",value=f"{acccreationdate.strftime('%a, %m/%d/%Y, %H:%M:%S UTC')}, {(today - acccreationdate).days} days ago",inline=True)
+            joindate = member.joined_at
+            embed.add_field(name=f"{member.name} joined {ctx.guild.name} on", value=f"{joindate.strftime('%a, %m/%d/%Y, %H:%M:%S UTC')}, {(today - joindate).days} days ago", inline=True)
+            embed.add_field(name=f"\u200b",value=f"\u200b",inline=False)
+            embed.add_field(name="Account is a bot", value="<:bottag:855278053311774740>", inline=True)
+            embed.add_field(name="Nickname", value=member.display_name if member.display_name != member.name else "None", inline=True)
+            status = member.status
+            if status == discord.Status.online:
+                statusoutput = "<:nograonline:830765387422892033> Online"
+            elif status == discord.Status.idle:
+                statusoutput = "<:nograyellow:830765423112880148> Idle"
+            elif status == discord.Status.dnd:
+                statusoutput = "<:nograred:830765450412425236> Do Not Disturb"
+            elif status == discord.Status.offline:
+                statusoutput = "<:nograoffline:830765506792259614> Offline"
+            else:
+                statusoutput = "Unknown"
+            embed.add_field(name="Status", value=statusoutput, inline=True)
+            activitylist = member.activities
+            for activity in activitylist:
+                if isinstance(activity, discord.CustomActivity):
+                    customstatus = activity.name
+                    embed.add_field(name="Custom status", value=customstatus, inline=True)
+                elif isinstance(activity, discord.Spotify):
+                    artists = ", ".join(activity.artists)
+                    embed.add_field(name="Spotify status <:nograspotify:855151063530471465>",
+                                    value=f"Listening to **{artists}** - **{activity.title}**, know more in `{prefix}spotify`",
+                                    inline=False)
+                elif isinstance(activity, discord.Game):
+                    embed.add_field(name="Activity status 🎮",
+                                    value=f"Playing **{activity.name}**, know more in `{prefix}game`",
+                                    inline=False)
+                elif isinstance(activity, discord.Activity):
+                    embed.add_field(name="Activity status 🎮",
+                                    value=f"Playing **{activity.name}**, know more in `{prefix}game`",
+                                    inline=False)
+                elif isinstance(activity, discord.Streaming):
+                    embed.add_field(name="Activity status 🎮",
+                                    value=f"Streaming **[{activity.name}]({activity.url})**, know more in `{prefix}game`",
+                                    inline=False)
+                else:
+                    print(f"unrecognised activity, type is {type(activity)}")
+            embed.set_author(name=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar_url)
+            embed.set_footer(text=f"Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+
 
     @commands.command(brief="gives emojis info in guild", description="Gives info about emojis in guild")
     async def emojiinfo(self, ctx):
@@ -172,11 +263,11 @@ class utility(commands.Cog):
                 text=f"Does a command not work? You can check whether {self.client.user.name} has the required permissions using this command.")
         await ctx.send(embed=permissions)
 
-    @commands.command(pass_context=True, brief="calculates", description="calculates your stupid math problems")
-    async def calc(self, ctx, *, yourcalculation):
+    @commands.command(pass_context=True, brief="calculates", description="calculates your stupid math problems", aliases =["calc"])
+    async def calculate(self, ctx, *, yourcalculation):
         if "^" in yourcalculation:
             yourcalculation = yourcalculation.replace("^", "**")
-        result = eval(yourcalculation)
+        result = ast.literal_eval(yourcalculation)
         await ctx.send(str(yourcalculation) + " = " + str(result))
 
     @commands.command(name="emojis", brief="Lists out emojis", description="Lists out emojis")
@@ -245,6 +336,7 @@ class utility(commands.Cog):
                       description="Gives you information about a user.", aliases=["ui", "userinformation"])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def userinfo(self, ctx, member: discord.Member = None):
+        # sourcery no-metrics
         today = datetime.today()
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]

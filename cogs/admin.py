@@ -30,6 +30,11 @@ import postbin
 import random
 import json
 from cogs.nograhelpers import *
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from random import randint
+from string import Template
 
 def gettraceback(error):
     etype = type(error)
@@ -271,6 +276,34 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def shutdown(self, ctx):
+        code = randint(100000, 999999)
+        with open("assets/mail/mail.txt", 'r', encoding="utf8") as f:
+            mailcontent = f.read()
+        mail_content = Template(mailcontent)
+        author = f"{ctx.author.name}#{ctx.author.discriminator}"
+        mail_content = mail_content.safe_substitute(code1=str(code), author=author, code2=str(code))
+        async with ctx.typing():
+            sender_address = os.environ['NOGRAemail']
+            sender_pass = os.environ['NOGRAemailpassword']
+            receiver_address = 'laiyeqi@gmail.com'
+            message = MIMEMultipart()
+            message['From'] = sender_address
+            message['To'] = receiver_address
+            message['Subject'] = f'Nogra shutdown request by {ctx.author.name}#{ctx.author.discriminator}.'
+            message.attach(MIMEText(mail_content, 'html'))
+            session = smtplib.SMTP('smtp.gmail.com', 587)
+            session.starttls()
+            session.login(sender_address, sender_pass)
+            text = message.as_string()
+            session.sendmail(sender_address, receiver_address, text)
+            session.quit()
+        await ctx.send("A 6-digit verification code has been sent to your email **(l-----i@gmail.com)**. \nPlease enter the code here within 2 minutes.")
+        try:
+            verifi = await self.client.wait_for("message",
+                                         check=lambda message: message.author.id == ctx.author.id and message.content == str(code),timeout=120.0)
+        except asyncio.TimeoutError:
+            await ctx.send("I did not get the proper code in time. Please try again.")
+            return
         message = await ctx.send("<:nograred:830765450412425236> Logging off bot account and shutting down ")
         await asyncio.sleep(2)
         await message.edit(content="<:nograoffline:830765506792259614> Nogra is offline, manually reboot it.")
@@ -282,7 +315,7 @@ class Admin(commands.Cog):
             return
         fulltraceback = gettraceback(error)
         errorembed = discord.Embed(title="Error encountered on an Admin Command.",
-                                   description=f"```py\n{fulltraceback[0, 1024]}\n```",
+                                   description=f"```py\n{fulltraceback[0:1024]}\n```",
                                    color=0x00ff00)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
         await ctx.send(embed=errorembed)

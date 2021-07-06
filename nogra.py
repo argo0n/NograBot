@@ -149,6 +149,8 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_message(message):
+    if isinstance(message.channel, discord.DMChannel):
+        return
     ctx = await client.get_context(message)
     if ctx.valid:
         await client.invoke(ctx)

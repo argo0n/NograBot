@@ -289,6 +289,22 @@ class DankMemerHelp(commands.Cog):
         await ctx.send(
             "<a:Tick:796984073603383296> Got it. From now, you will not be reminded to participate in the lottery again.")
 
+    @commands.command(name="dankmemer",brief = "dank memer information", description = "Gives you information about Dank Memer utilities.")
+    async def dankmemer(self, ctx):
+        embed = discord.Embed(title="Dank Memer Utilities")
+        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+        embed.add_field(name="\u200b",
+                        value="**<:nogralottery:861088502070509568> Lottery reminder**\nNogra will remind you to perform the lottery when you type `pls lottery` automatically. You can customize your reminder via `a.lotteryconfig`. ",
+                        inline=False)
+        embed.add_field(name="\u200b",
+                        value="**<a:nograrob:861089145475694612> Fake rob**\nComplete with a rob DM, using `pIs rob @mention` will send a message making your target think that you have robbed them!",
+                        inline=False)
+        embed.add_field(name="\u200b",
+                        value="**🕙 Rob cooldown helper**\n we know how annoying rob cooldowns can be, and you often forget to rob after waiting for 2 minutes. With Nogra, Nogra will automatically remind you when the cooldown is over. For this to work properly, please enable reply pings in Dank Memer.",
+                        inline=False)
+        embed.set_footer(text="All of Nogra's Dank Memer utilities abide by Dank Memer's ToS.")
+        await ctx.send(embed=embed)
+
     @commands.command(name="testtask", hidden=True)
     @commands.is_owner()
     async def testtask(self, ctx):
@@ -374,7 +390,7 @@ class DankMemerHelp(commands.Cog):
             await ctx.send(f"{error}\n It has to be a mention or user ID.")
             return
         errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+                                   description="This command just received an error. It has been sent to the bot developer..",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")

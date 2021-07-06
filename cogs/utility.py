@@ -130,16 +130,14 @@ class utility(commands.Cog):
             embed.add_field(name="Owner", value=f"{owner.name}#{owner.discriminator}", inline=True)
             embed.add_field(name="Support", value="DM Argon#0002", inline=True)
             counting=[0,0]
-            for file in os.listdir():
-                if file.endswith('.py'):
-                    with open(file,"r", encoding="utf8") as f:
-                        content = f.read()
-                    with open(file,"r", encoding="utf8") as f:
-                        linne = f.readlines()
-                    lines = counting[0]
-                    counting[0] += lines + len(linne)
-                    characters = counting[1]
-                    counting[1] = characters + len(content)
+            with open("nogra.py","r", encoding="utf8") as f:
+                content = f.read()
+            with open("nogra.py","r", encoding="utf8") as f:
+                linne = f.readlines()
+            lines = counting[0]
+            counting[0] = lines + len(linne)
+            characters = counting[1]
+            counting[1] = characters + len(content)
             for files in os.listdir("./cogs"):
                 if files.endswith('.py'):
                     with open(f"cogs/{files}","r", encoding="utf8") as f:
@@ -147,10 +145,10 @@ class utility(commands.Cog):
                     with open(f"cogs/{files}","r", encoding="utf8") as f:
                         linne = f.readlines()
                     lines = counting[0]
-                    counting[0] += lines + len(linne)
+                    counting[0] = lines + len(linne)
                     characters = counting[1]
                     counting[1] = characters + len(content)
-            embed.add_field(name="Statistics", value=f"**Servers:** {len(self.client.guilds)}\n **Users:** {len(self.client.users)+40}\n **Commands:** {len(self.client.commands)}\n**Lines of codes written:** {counting[0]}\n**Characters written: **{counting[1]}", inline=True)
+            embed.add_field(name="Statistics", value=f"**Servers:** {len(self.client.guilds)}\n **Users:** {len(self.client.users)}\n **Commands:** {len(self.client.commands)}\n**Lines of codes written:** {counting[0]}\n**Characters written: **{counting[1]}", inline=True)
             embed.add_field(name="Important links", value="[Nogra's website - https://nogra.me](https://nogra.me)\n[Nogra's GitHub repo](https://github.com/argo0n/nograbot)", inline=True)
             member = ctx.guild.get_member(self.client.user.id)
             today = datetime.today()

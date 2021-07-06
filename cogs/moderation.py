@@ -80,7 +80,7 @@ class Moderation(commands.Cog):
                 "I expected a number somwhere in your command, but I got something else instead. Check if the numbers I require are just integers.")
             return
         errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
+                                   description="This command just received an error. It has been sent to the bot developer..",
                                    color=0x00ff00)
         errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
         errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
@@ -99,7 +99,7 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.client.user:
+        if message.author == self.client.user or isinstance(message.channel, discord.DMChannel):
             return
         with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
             channeldetails = json.load(f)
@@ -186,6 +186,71 @@ class Moderation(commands.Cog):
             return
         else:
             await ctx.send("Your first option needs to be a `add`/`remove`/`view` so that I will know whether to add, remove or view channels.")
+
+    @commands.command(name="leave", brief="Makes the bot leave", description="Makes the bot leave.", aliases=["bye", "goodbye"])
+    @commands.has_permissions(manage_guild=True)
+    async def leave(self, ctx):
+        if ctx.author.id in [341994639395520526, 642318626044772362, 749983318795354122]:
+            await ctx.send("You have been locked from using this command. Ask the developer for more information.")
+        await ctx.send(
+            f"**WARNING**\nAre you sure you want remove {self.client.user.name} from {ctx.guild.name}? This will erase all configurations you have set to Nogra.`(y/n)`")
+        try:
+            confirmation = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=20.0) 
+        except asyncio.TimeoutError:
+            await ctx.send("I did not get a response from you.")
+            return
+        if "y" in confirmation.content or "Y" in confirmation.content:
+            requester = ctx.author
+            reasons = [
+                ("1️⃣", "No longer needed it", "We will try to make our features more inclusive for your use. "), 
+                ("2️⃣", "It didn't meet my needs", "You can always DM the developer about a suggestion, but we are always working to include more features. "), 
+                ("3️⃣", "Found an alternative bot", "There will always be bots which have the same or higher capabilities with us, and we understand that. "), 
+                ("4️⃣", "Quality was less than expected", f"You can always report bugs to the developer, or suggest how we can improve {self.client.user.name}. "), 
+                ("5️⃣", "It was not easy to use", "As much as we made it accessible, we may have been shortsighted for some features. You can inform DM the developer if it is not easy to use, or ask for support. "), 
+                ("6️⃣", "It was not easy to reach support", f"As {self.client.user.name} is still a fairly small bot, a server is not required for support. Instead, you can DM the developer, Argon#0002. "), 
+                ("7️⃣", "Others", "Thank you for your input! ")]
+            survey = ""
+            for reason in reasons:
+                survey += f"{reason[0]} {reason[1]}\n"
+            try:
+                await requester.send(f"Before {self.client.user.name} leaves your server, I would like to ask you to answer this survey. If you do not want to answer the survey, you can leave it untouched until I leave your server.\nWhat was the primary reason for removing {self.client.user.name} from your server?\n{survey}Type the appropriate number corresponding to your reason.")
+            except discord.HTTPException:
+                await ctx.send(f"{requester.mention} I am now leaving **{ctx.guild.name}**.")
+                await ctx.guild.leave()
+                return
+            else:
+                await ctx.send("Please check your DMs!")
+                try:
+                    option = await self.client.wait_for("message",check=lambda m: m.content in ["1", "2", "3", "4", "5", "6", "7"] and isinstance(m.channel, discord.DMChannel) and m.author == ctx.author, timeout=20.0) 
+                except asyncio.TimeoutError:
+                    pass
+                else:
+                    option = int(option.content)
+                    if option == 7:
+                        await requester.send(f"Please tell us why you are removing Nogra from your server, within 2 minutes.")
+                        try:
+                            feedback = await self.client.wait_for("message",check=lambda m: isinstance(m.channel, discord.DMChannel) and m.author == ctx.author, timeout=120.0) 
+                        except asyncio.TimeoutError:
+                            pass
+                        else:
+                            print(feedback.content)
+                    option = option-1
+                    logchannel = self.client.get_channel(861956356419616808)
+                    leaveembed = discord.Embed(title=f"Just removed {self.client.user.name} from the server {ctx.guild.name}.")
+                    leaveembed.set_author(name = f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id})", icon_url=ctx.author.avatar_url)
+                    leaveembed.add_field(name="Reason", value =reasons[option][1], inline=False)
+                    leaveembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/755954448009920592.gif?v=1")
+                    if 'feedback' in locals():
+                        leaveembed.add_field(name="Additional Information", value =f"\u200b{feedback.content}", inline=False)
+                    leaveembed.set_footer(text=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar_url)
+                    await logchannel.send(embed=leaveembed)
+                    await requester.send(f"{reasons[option][2]} Thank you for inviting {self.client.user.name}!")
+                await requester.send(f"I have left **{ctx.guild.name}**.")
+            await ctx.guild.leave()
+            return
+        else:
+            await ctx.send("I'll be staying here then <:thethumb:852486551867097089>")
+            return
 
     @commands.command(pass_context=True, name="idot", brief="Sets logging channel",
                       description="If people talk in blacklisted channels, use this command to log their talking here.")
@@ -293,9 +358,9 @@ class Moderation(commands.Cog):
         embed = discord.Embed(colour=0x00FF00)
         embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Recommended Invite Link",
-                        value="[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id=800184970298785802&permissions=1544416503&scope=bot)")
+                        value=f"[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=1544416503&scope=bot)")
         embed.add_field(name="Admin Invite Link",
-                        value="[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot)")
+                        value=f"[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot)")
         embed.set_thumbnail(url=str(self.client.user.avatar_url))
         try:
             await ctx.send(embed=embed)

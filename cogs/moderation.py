@@ -189,10 +189,11 @@ class Moderation(commands.Cog):
     @commands.command(name="leave", brief="Makes the bot leave", description="Makes the bot leave.", aliases=["bye", "goodbye"])
     @commands.has_permissions(manage_guild=True)
     async def leave(self, ctx):
-        if ctx.author.id in [341994639395520526, 642318626044772362, 749983318795354122]:
+        if ctx.author.id in [642318626044772362, 749983318795354122]:
             await ctx.send("You have been locked from using this command. Ask the developer for more information.")
+            return
         await ctx.send(
-            f"**WARNING**\nAre you sure you want remove {self.client.user.name} from {ctx.guild.name}? This will erase all configurations you have set to Nogra.`(y/n)`")
+            f"**WARNING**\nAre you sure you want to remove {self.client.user.name} from {ctx.guild.name}? This will erase all configurations you have set to Nogra.`(y/n)`")
         try:
             confirmation = await self.client.wait_for("message",check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=20.0) 
         except asyncio.TimeoutError:
@@ -231,7 +232,6 @@ class Moderation(commands.Cog):
                             feedback = await self.client.wait_for("message",check=lambda m: isinstance(m.channel, discord.DMChannel) and m.author == ctx.author, timeout=120.0) 
                         except asyncio.TimeoutError:
                             pass
-                        else:
                     option = option-1
                     logchannel = self.client.get_channel(861956356419616808)
                     leaveembed = discord.Embed(title=f"Just removed {self.client.user.name} from the server {ctx.guild.name}.")
@@ -356,14 +356,14 @@ class Moderation(commands.Cog):
         embed = discord.Embed(colour=0x00FF00)
         embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Recommended Invite Link",
-                        value=f"[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=1544416503&scope=bot)")
+                        value=f"[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=1544416503&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot)")
         embed.add_field(name="Admin Invite Link",
-                        value=f"[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot)")
+                        value=f"[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot)")
         embed.set_thumbnail(url=str(self.client.user.avatar_url))
         try:
             await ctx.send(embed=embed)
         except discord.HTTPException:
-            await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&scope=bot\n")
+            await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot\n")
 
     @commands.command(brief="ban hammer", description = "Bans members")
     @commands.has_permissions(ban_members=True)

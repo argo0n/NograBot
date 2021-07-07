@@ -1,4 +1,43 @@
 import math
+import ast
+import re
+NUMBER_REGEX = r"[0-9\.]+"
+
+
+class Calculator:
+    operators = ("^", "/", "*", "-", "+")    
+       
+    def __init__(self, expression: str):
+        self.expression = expression.lower().replace(" ", "").strip()
+
+    def __repr__(self):
+        def recur(op):
+            self.sub_regex(op)
+            if re.search(fr"(-?{NUMBER_REGEX}\{op}-?{NUMBER_REGEX})", self.expression):
+                recur(op)
+        for op in self.operators:
+            if re.search(fr"(-?{NUMBER_REGEX}\{op}-?{NUMBER_REGEX})", self.expression):
+                recur(op)
+        return self.expression
+
+    def append(self, obj):
+        self.expression += str(obj.lower().replace(" ", "").strip())
+
+    def sub_regex(self, operator):
+        def sub_fn(v):
+            x, y = v.group().split(operator)
+            x, y = float(x), float(y)
+            conv = {
+                "/": x/y,
+                "*": x*y,
+                "-": x-y,
+                "+": x+y,
+            }      
+            return str(conv.get(operator))
+        try:
+            self.expression = re.sub(fr"(-?{NUMBER_REGEX}\{operator}-?{NUMBER_REGEX})", sub_fn, self.expression)
+        except TypeError:
+            pass
 
 
 def secondstotiming(seconds):  # sourcery no-metrics
@@ -23,8 +62,8 @@ def secondstotiming(seconds):  # sourcery no-metrics
     days = math.trunc(hours / 24)
     if days < 7:
         hours = hours - days * 24
-        minutes = minutes - hours * 24
-        seconds = seconds - minutes * 60 - hours * 60 * 60
+        minutes = minutes - hours * 60 - days * 24 * 60
+        seconds = seconds - minutes * 60 - hours * 60 * 60 - days * 24 * 60 * 60
         ddisplay = "s" if days != 1 else ""
         hdisplay = "s" if hours != 1 else ""
         mindisplay = "s" if minutes != 1 else ""
@@ -32,9 +71,9 @@ def secondstotiming(seconds):  # sourcery no-metrics
         return f"{days} day{ddisplay}, {hours} hour{hdisplay}, {minutes} minute{mindisplay} and {seconds} second{secdisplay}"
     weeks = math.trunc(days / 7)
     days = days - weeks * 7
-    hours = hours - days * 24
-    minutes = minutes - hours * 60
-    seconds = seconds - minutes * 60 - hours * 60 * 60
+    hours = hours - weeks*168 - days * 24
+    minutes = minutes - hours * 60 - days* 24 * 60 - weeks * 168 * 60
+    seconds = seconds - minutes * 60 - hours * 60 * 60 - days * 24 * 60 * 60 - weeks * 168 * 60 * 60
     wdisplay = "s" if weeks != 1 else ""
     ddisplay = "s" if days != 1 else ""
     hdisplay = "s" if hours != 1 else ""
@@ -56,3 +95,22 @@ def durationdisplay(seconds):
         time.append(str(minutes))
         time.append("0" + str(seconds) if seconds < 10 else str(seconds))
     return ":".join(time)
+
+def stringtotime(timing):
+    allowedsymbols=["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "y", "d", "h", "m", "s"]
+    seconds = timing.lower()
+    for character in list(seconds):
+        if character not in allowedsymbols:
+            return None
+    if "y" in timing:
+        timing = timing.replace("y", "*31536000+")
+    if "d" in timing:
+        timing = timing.replace("d", "*86400+")
+    if "h" in timing:
+        timing = timing.replace("h", "*3600+")
+    if "m" in timing:
+        timing = timing.replace("m", "*60+")
+    if "s" in timing:
+        timing = timing.replace("s", "")
+        print(timing)
+    return Calculator(timing)

@@ -38,13 +38,11 @@ client = commands.Bot(command_prefix=get_prefix, status=discord.Status.dnd,
                       intents=intents, strip_after_prefix=True)
 INITIAL_EXTENSIONS = [
     'cogs.admin',
-    'cogs.abuse',
     'cogs.afk',
     'cogs.apis',
     'cogs.dankmemer',
     'cogs.fun',
-    'cogs.moderation',
-    'cogs.rso',
+    'cogs.moderation'
     'cogs.utility'
 ]
 for extension in INITIAL_EXTENSIONS:

@@ -35,6 +35,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from random import randint
 from string import Template
+from cogs.nograhelpers import *
 
 def gettraceback(error):
     etype = type(error)

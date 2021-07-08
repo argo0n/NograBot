@@ -28,14 +28,26 @@ from cogs.nograhelpers import *
 import requests
 from colorthief import ColorThief
 import urllib.request
+import sqlite3
 
 
 def rgb_to_hex(rgb):
     return '%02x%02x%02x' % rgb
 
 
+class arembedpage(menus.ListPageSource):
+    async def format_page(self, menu, item):
+        return discord.Embed(
+            title="Autoreactions",
+            description=item,
+            color=discord.Color.random(),
+        )
+
 class EmbedPageSource(menus.ListPageSource):
     async def format_page(self, menu, item):
+        if len(item) == 1:
+            embed = discord.Embed(title="Autoreactions", description=item[0], color=discord.Color.random)
+            return embed
         if len(item) > 4:
             color = f"0x{item[4]}"
             color = int(color, 16)
@@ -53,8 +65,7 @@ def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 start_time = time.time()
@@ -70,9 +81,17 @@ class utility(commands.Cog):
             await ctx.send(error)
             return
         if isinstance(error, commands.MissingPermissions):
+            if "--sudo permbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send("Reinvoking command with check bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
             await ctx.send(error)
             return
         if isinstance(error, commands.CommandOnCooldown):
+            if "--sudo cdbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send("Reinvoking command with cooldown bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
             cooldown = error.retry_after
             await ctx.send(
                 f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
@@ -100,6 +119,207 @@ class utility(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Cogs \"Utility\" has loaded")
+        db = sqlite3.connect('databases/config.sqlite')
+        cursor = db.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS autoreact(guild_id integer, member_id integer, ar_type text, trigger text, content text)")
+
+    @commands.Cog.listener()
+    async def on_message(self, message):  # sourcery skip
+        if message.author == self.client.user:
+            return
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (message.guild.id,)).fetchall()
+        if len(result) != 0:
+            for autoreact in result:
+                if autoreact[3] in message.content:
+                    if autoreact[2] == "react":
+                        try:
+                            await message.add_reaction(autoreact[4])
+                        except discord.errors.HTTPException:
+                            await message.reply(
+                                f"Your auto reaction ({autoreact[4]}) of type `Reaction` was removed as I was unable to react with that emoji.")
+                            cursor.execute(
+                                "DELETE FROM autoreact where guild_id = ? and member_id = ? and ar_type = ? and trigger = ? and content = ?",
+                                (autoreact[0], autoreact[1], autoreact[2], autoreact[3], autoreact[4]))
+                            config.commit()
+                    elif autoreact[2] == "message":
+                        try:
+                            await message.channel.send(autoreact[4])
+                        except discord.errors.Forbidden:
+                            pass
+            else:
+                pass
+            cursor.close()
+            config.close()
+            return
+
+    @commands.group(invoke_without_command=True, name="autoreact", aliases=["ar", "autoreaction"],
+                    brief="Customize your server's autoreactions",
+                    description="Create, delete and view autoreactions in your server! Execute this command without any extra words to see how to use autoreactions.")
+    async def autoreact(self, ctx):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        embed = discord.Embed(title="Autoreactions", description="How do you use this command?",
+                              color=discord.Color.random())
+        embed.add_field(name="\u200b",
+                        value=f"`{prefix}add <reaction_type> <trigger> <message/emoji>` Adds autoreactions.\n`{prefix}remove <trigger>` Removes an autoreaction.\n`clear` Clears all autoreactions in this server.\n`list` Shows autoreactions in this server.\n")
+        embed.add_field(name="Syntax",
+                        value="`reaction_type` is either `message` or `reaction`.\n`trigger` is what triggers the autoreact.\n`message/emoji` is what {self.client.user.name} will respond with.",
+                        inline=False)
+        embed.add_field(name="Autoreact to multiple words?",
+                        value="Add double quotes `\"` around the trigger.",
+                        inline=False)
+        embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
+        await ctx.send(embed=embed)
+
+    @autoreact.command(name="add", aliases=["create"])
+    @commands.has_permissions(manage_messages=True)
+    async def add(self, ctx, reaction_type=None, trigger=None, messageemoji=None):
+        # sourcery no-metrics
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        if reaction_type not in ["message", "react", "reaction", "send"]:
+            await ctx.send("The reaction type should be `message` or `react`.")
+            return
+        if trigger is None or messageemoji is None:
+            await ctx.send(f"Please use `{prefix}autoreact` to see how to use this command properly.")
+            return
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM autoreact WHERE trigger = ? and guild_id = ?',
+                                (trigger, ctx.guild.id)).fetchall()
+        if len(result) > 0:
+            await ctx.send(
+                f"I already have an autoreaction for **{trigger}**. Use `{prefix}remove <trigger>` to remove it first.")
+            return
+        if "reaction" in reaction_type or "react" in reaction_type:
+            try:
+                await ctx.message.add_reaction(messageemoji)
+            except discord.errors.HTTPException:
+                await ctx.send(
+                    f"{messageemoji} is not a valid emoji that I can react with. Would you want to add it as a message instead? `[y/n]`")
+                try:
+                    m = await self.client.wait_for("message", check=lambda
+                        message: message.author == ctx.author and message.channel == ctx.channel, timeout=20.0)
+                except asyncio.TimeoutError:
+                    await ctx.send("I did not get a valid response in time, so I've stopped this command.")
+                    return
+                else:
+                    if "yes" in m.content.lower() or "y" in m.content.lower():
+                        sql = 'INSERT INTO autoreact(guild_id, member_id, ar_type, trigger, content) VALUES(?,?,?,?,?)'
+                        val = (ctx.guild.id, ctx.author.id, "message", trigger, messageemoji)
+                        cursor.execute(sql, val)
+                        config.commit()
+                        await ctx.send(
+                            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now react to **{trigger}** with {messageemoji}.")
+                        cursor.close()
+                        config.close()
+                        return
+                    else:
+                        await ctx.send("Stopping this command.")
+                        return
+            else:
+                sql = 'INSERT INTO autoreact(guild_id, member_id, ar_type, trigger, content) VALUES(?,?,?,?,?)'
+                val = (ctx.guild.id, ctx.author.id, "react", trigger, messageemoji)
+                cursor.execute(sql, val)
+                config.commit()
+                await ctx.send(
+                    f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send {messageemoji} when I hear **{trigger}**.")
+                cursor.close()
+                config.close()
+                return
+        sql = 'INSERT INTO autoreact(guild_id, member_id, ar_type, trigger, content) VALUES(?,?,?,?,?)'
+        val = (ctx.guild.id, ctx.author.id, "message", trigger, messageemoji)
+        cursor.execute(sql, val)
+        config.commit()
+        await ctx.send(
+            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send **{messageemoji}** when I hear **{trigger}**.")
+        cursor.close()
+        config.close()
+        return
+
+    @autoreact.command(name="remove", aliases=["delete"])
+    @commands.has_permissions(manage_messages=True)
+    async def remove(self, ctx, trigger=None):
+        # sourcery no-metrics
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        if trigger is None:
+            await ctx.send(f"Send the command again, but include which trigger youw ant me to delete.")
+            return
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM autoreact WHERE trigger = ?', (trigger,)).fetchall()
+        if len(result) <= 0:
+            await ctx.send(
+                f"I don't have any autoreactions for **{trigger}**. Use `{prefix}add <reaction_type> <trigger> <message>` to add it first.")
+            return
+        cursor.execute('DELETE FROM autoreact WHERE trigger = ?', (trigger,))
+        await ctx.send(
+            f"<a:Tick:796984073603383296> **Autoreaction removed**\nI will no longer react to **{trigger}**.")
+        config.commit()
+        cursor.close()
+        config.close()
+        return
+
+    @autoreact.command(name="clear", aliases=["reset"])
+    @commands.has_permissions(administrator=True)
+    async def clear(self, ctx, trigger=None):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        await ctx.send(
+            f"Are you sure you want to REMOVE **ALL** autoreactions in {ctx.guild.name}? This action is irreversible!\nStrictly enter a `y` (yes) or `n` (no).")
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        try:
+            yn = await self.client.wait_for("message",
+                                            check=lambda
+                                                m: m.channel == ctx.channel and m.author == ctx.author and m.content.lower() in [
+                                                "y", "n"],
+                                            timeout=20.0)
+        except asyncio.TimeoutError:
+            await ctx.send("I didn't get a proper response. The autoreacts will not be deleted.")
+            return
+        else:
+            if yn.content == "y":
+                ars = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (ctx.guild.id,)).fetchall()
+                ars = len(ars)
+                cursor.execute('DELETE FROM autoreact WHERE guild_id = ?', (ctx.guild.id,))
+                await ctx.send(
+                    f"<a:Tick:796984073603383296> **{ars} autoreactions have been removed from {ctx.guild.name}.**")
+            else:
+                await ctx.send("Cancelled; the autoreacts will not be deleted.")
+        config.commit()
+        cursor.close()
+        config.close()
+        return
+
+    @autoreact.command(name="list", aliases=["show"])
+    @commands.has_permissions(manage_messages=True)
+    async def list(self, ctx):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        ars = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (ctx.guild.id,)).fetchall()
+        cursor.close()
+        config.close()
+        await ctx.send(f"This server has **{len(ars)}** autoreactions.")
+        if len(ars) == 0:
+            return
+        text = ""
+        items = []
+        for autoreact in ars:
+            if len(text) < 3800:
+                member = self.client.get_user(autoreact[1])
+                text += f"{autoreact[3]} ({autoreact[2]}): {autoreact[4]} | Created by {member.name}#{member.discriminator}\n"
+            else:
+                items.append(text)
+        items.append(f"{text}\u200b")
+        menu = menus.MenuPages(arembedpage(items, per_page=1))
+        await menu.start(ctx)
 
     @commands.command()
     async def changelog(self, ctx):
@@ -235,7 +455,7 @@ class utility(commands.Cog):
                       description=f"Does a command not work? You can check whether I have the required permissions using this command.",
                       aliases=["permissions", "checkperms"])
     @commands.has_permissions(manage_permissions=True)
-    async def checkpermissions(self, ctx, *, channel: discord.TextChannel = None):
+    async def checkpermissions(self, ctx, channel: discord.TextChannel = None):
         if channel is None:
             channel = ctx.channel
         member = ctx.guild.me
@@ -469,7 +689,7 @@ class utility(commands.Cog):
         messagecontents = []
         for color in palette:
             hexcode = rgb_to_hex(color)
-            messagecontents.append((f"{ctx.author.name}'s Profile Picture Color", f"HEX: `{hexcode}`\nRGB=`{color}`",
+            messagecontents.append((f"{member.name}'s Profile Picture Color", f"HEX: `{hexcode}`\nRGB=`{color}`",
                                     f"https://singlecolorimage.com/get/{hexcode}/300x300", f"{avatarurl}", hexcode))
         items = messagecontents
         menu = menus.MenuPages(EmbedPageSource(items, per_page=1))

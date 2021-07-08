@@ -69,7 +69,7 @@ class Admin(commands.Cog):
     async def on_ready(self):
         print('Cog \"Admin\" loaded')
 
-    @commands.command(pass_context=True, name="edit", brief="Edit Nogra's messages", description="Edit's Nogra's messages")
+    @commands.command(pass_context=True, name="edit", brief="Edit Nogra's messages", description="Edit's Nogra's messages", hidden=True)
     @commands.is_owner()
     async def edit(self, ctx,messageid:int=None, channel:discord.TextChannel=None,*, newmessage=None):
         if messageid is None:
@@ -89,7 +89,7 @@ class Admin(commands.Cog):
             else:
                 await ctx.send("That message was not sent by me, I can't edit it.")
 
-    @commands.command(name="eval", aliases=["exec"])
+    @commands.command(name="eval", aliases=["exec"], hidden=True)
     @commands.is_owner()
     async def evalu(self,ctx,*,code):
 
@@ -130,9 +130,19 @@ class Admin(commands.Cog):
     '''@commands.command(pass_context=True)
     async def dm(self, ctx, *, message):'''
 
+    @commands.command(name="admincommands", aliases=["ac"], hidden=True)
+    async def admincommands(self, ctx):
+        embed = discord.Embed(title=f"{self.client.user.name}'s admin commands", color = discord.Color.random())
+        embed.add_field(name="\u200b", value="setstatus\neval\nedit\nminecraft\nmessage\ndmads\nupdate\nshutdown")
+        await ctx.send(embed=embed)
+    
+    @commands.command(name="adminflags", aliases=["af"], hidden=True)
+    async def adminflags(self, ctx):
+        embed = discord.Embed(title=f"{self.client.user.name}'s flags", color = discord.Color.random())
+        embed.add_field(name="--sudo", value="permbypass\ncdbypass")
+        await ctx.send(embed=embed)
 
-
-    @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status")
+    @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status", hidden=True)
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
         if ctx.author.id != 650647680837484556:
             await ctx.send("You can only change the status of the bot if you are Argon!")
@@ -173,7 +183,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
-    @commands.command()
+    @commands.command(hidden = True)
     async def minecraft(self, ctx, *, member: discord.User = None):
         if member is None:
             await ctx.send("Aren't you supposed to mention someone?")
@@ -202,7 +212,7 @@ class Admin(commands.Cog):
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
 
     @commands.command(name="message", brief="dms people",
-                      description="Sends a message to someone requested by the developers.")
+                      description="Sends a message to someone requested by the developers.", hidden=True)
     @commands.is_owner()
     async def message(self, ctx, member=None):
         if member is None:
@@ -233,7 +243,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send("Message successfully sent <a:Tick:796984073603383296>")
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def dmads(self, ctx, member: discord.User = None):
         if member is None:
             await ctx.send("Aren't you supposed to mention someone?")
@@ -265,7 +275,7 @@ class Admin(commands.Cog):
             else:
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
 
-    @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels")
+    @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels", hidden=True)
     @commands.is_owner()
     async def update(self, ctx, *, message):
         await ctx.message.delete()
@@ -274,7 +284,7 @@ class Admin(commands.Cog):
             channel = self.client.get_channel(i)
             await channel.send(message)
     
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def shutdown(self, ctx):
         code = randint(100000, 999999)

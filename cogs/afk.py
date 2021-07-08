@@ -34,6 +34,7 @@ class Afk(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.description = "Let people know you're AFK"
 
     @commands.Cog.listener()
     async def on_ready(self):

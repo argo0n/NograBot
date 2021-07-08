@@ -40,6 +40,7 @@ class Fun(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.description = "Fun commands!"
 
     @commands.Cog.listener()
     async def on_ready(self):

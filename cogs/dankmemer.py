@@ -62,6 +62,7 @@ class DankMemerHelp(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.myLoop.start()
+        self.description = "Dank Memer Utilities"
 
     @tasks.loop(seconds=2.0)
     async def myLoop(self):

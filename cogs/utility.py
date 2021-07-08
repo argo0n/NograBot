@@ -75,6 +75,7 @@ class utility(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.description = "Useful commands"
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.ChannelNotFound):

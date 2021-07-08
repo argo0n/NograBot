@@ -8,6 +8,8 @@ import os
 import postbin
 import traceback
 from cogs.nograhelpers import *
+import contextlib
+import datetime
 
 
 def get_prefix(client, message):
@@ -30,12 +32,16 @@ intents.presences = True
 intents.reactions = True
 intents.members = True
 
-statuses = ["a.help is a good start", "almond stanky", "before asking use the help command", "Spotify", "No.", "your pestering", "another reboot?"]
+statuses = ["a.help is a good start", "almond stanky", "before asking use the help command", "Spotify", "No.",
+            "your pestering", "another reboot?"]
 
 newstatus = random.choice(statuses)
 client = commands.Bot(command_prefix=get_prefix, status=discord.Status.dnd,
                       activity=discord.Activity(type=discord.ActivityType.listening, name=newstatus),
                       intents=intents, strip_after_prefix=True)
+
+client._BotBase__cogs = commands.core._CaseInsensitiveDict()
+
 INITIAL_EXTENSIONS = [
     'cogs.admin',
     'cogs.afk',
@@ -51,33 +57,125 @@ for extension in INITIAL_EXTENSIONS:
     except Exception as e:
         print('Failed to load extension {}\n{}: {}'.format(extension, type(e).__name__, e))
 
-class MyNewHelp(commands.MinimalHelpCommand):
-    async def send_pages(self):
-        destination = self.get_destination()
-        for page in self.paginator.pages:
-            emby = discord.Embed(description=page)
-            await destination.send(embed=emby)
-    async def send_command_help(self, command):
-        embed = discord.Embed(title=self.get_command_signature(command))
-        embed.add_field(name="Help", value=command.description)
-        alias = command.aliases
-        if alias:
-            embed.add_field(name="Aliases", value=", ".join(alias), inline=False)
 
+class HelpEmbed(discord.Embed):  # Our embed with some preset attributes to avoid setting it multiple times
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.timestamp = datetime.datetime.utcnow()
+        text = f"Use help [command] or help [category] for more information."
+        self.set_footer(text=text)
+        self.color = discord.Color.random()
+
+
+class MyHelp(commands.HelpCommand):
+    def __init__(self):
+        super().__init__(  # create our class with some aliases and cooldown
+            command_attrs={
+                "help": "The help command for the bot",
+                "aliases": ['commands']
+            }
+        )
+
+    async def send(self, **kwargs):
+        """a short cut to sending to get_destination"""
+        await self.get_destination().send(**kwargs)
+
+    async def send_bot_help(self, mapping):
+        # foundation of help command
+        ctx = self.context
+        embed = HelpEmbed(title=f"{ctx.me.display_name}'s Help Page")
+        embed.set_thumbnail(url=ctx.me.avatar_url)
+        usable = 0
+
+        for cog, commands in mapping.items():  # iterating through our mapping of cog: commands
+            filtered_commands = await self.filter_commands(commands)
+            if filtered_commands:
+                # if no commands are usable in this category, we don't want to display it
+                amount_commands = len(filtered_commands)
+                usable += amount_commands
+                if cog:  # getting attributes dependent on if a cog exists or not
+                    name = cog.qualified_name
+                    description = cog.description or "No description"
+                    embed.add_field(name=f"{name} [{amount_commands}]", value=description)
+
+        embed.description = f"Thank you for using {client.user.name}!"
+
+        await self.send(embed=embed)
+
+    async def on_help_command_error(self, ctx, error):
+        if not isinstance(error, commands.BadArgument):
+            errorembed = discord.Embed(title="Oops!",
+                                       description="This command just received an error. It has been sent to the bot developer..",
+                                       color=0x00ff00)
+            errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+            errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+            await ctx.send(embed=errorembed)
+            logchannel = self.client.get_channel(839016255733497917)
+            await logchannel.send(
+                f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+            filename = random.randint(1, 9999999999)
+            filename = f"temp/{filename}.txt"
+            with open(filename, "w") as f:
+                f.write(gettraceback(error))
+            file = discord.File(filename)
+            await logchannel.send(file=file)
+            os.remove(filename)
+        embed = discord.Embed(title="Error", description=str(error))
+        await ctx.send(embed=embed)
+
+    async def send_command_help(self, command):
+        signature = self.get_command_signature(command)
+        embed = HelpEmbed(title=signature, description=command.description or "*Nothing to see here*")
+        if command.cog:
+            embed.add_field(name="Category", value=command.cog.qualified_name)
+
+        if command._buckets and command._buckets._cooldown:  # use of internals to get the cooldown of the command
+            cooldown = command._buckets._cooldown
+            embed.add_field(
+                name="Cooldown",
+                value=f"{cooldown.rate} per {cooldown.per:.0f} seconds",
+            )
+        if command.aliases:
+            embed.add_field(name="Aliases", value=", ".join(command.aliases), inline=False)
         channel = self.get_destination()
         await channel.send(embed=embed)
 
-client.help_command = MyNewHelp()
+    async def send_help_embed(self, title, description, commands):  # a helper function to add commands to an embed
+        embed = HelpEmbed(title=title, description=description or "No help found...")
 
+        filtered_commands = await self.filter_commands(commands)
+        text = ""
+        if filtered_commands:
+            for command in filtered_commands:
+                text += f"`{command.name}` - {command.brief}\n"
+        embed.add_field(name="Commands", value=text)
+
+        await self.send(embed=embed)
+
+    async def send_group_help(self, group):
+        """triggers when a `<prefix>help <group>` is called"""
+        title = self.get_command_signature(group)
+        await self.send_help_embed(title, group.help, group.commands)
+
+    async def send_cog_help(self, cog):
+        """triggers when a `<prefix>help <cog>` is called"""
+        title = cog.qualified_name or "No"
+        await self.send_help_embed(f'{title} Category', cog.description, cog.get_commands())
+
+
+client.help_command = MyHelp()
 
 '''client.remove_command("help")'''
+
 
 @client.event
 async def on_ready():
     print('Successfully connected to Discord as {0.user}'.format(client))
-    botready = discord.Embed(title="Bot is ready!", description="[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)", color=0x32CD32)
+    botready = discord.Embed(title="Bot is ready!",
+                             description="[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)",
+                             color=0x32CD32)
     botready.set_author(name=f"{client.user.name}", icon_url=client.user.avatar_url,
-                         url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+                        url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=botready)
 

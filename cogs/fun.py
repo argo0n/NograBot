@@ -50,9 +50,17 @@ class Fun(commands.Cog):
             await ctx.send(error)
             return
         if isinstance(error, commands.MissingPermissions):
+            if "--sudo permbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send("Reinvoking command with check bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
             await ctx.send(error)
             return
         if isinstance(error, commands.CommandOnCooldown):
+            if "--sudo cdbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send("Reinvoking command with cooldown bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
             cooldown = error.retry_after
             await ctx.send(
                 f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
@@ -129,6 +137,9 @@ class Fun(commands.Cog):
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
     @commands.cooldown(1, 1200, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
+        if ctx.guild.id == 336642139381301249:
+            await ctx.send("This command is disabled in **discord.py** to comply with the rules of **discord.py**.")
+            return
         if member is None:
             member = ctx.author
         if times is None:

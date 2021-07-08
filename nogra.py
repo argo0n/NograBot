@@ -42,7 +42,7 @@ INITIAL_EXTENSIONS = [
     'cogs.apis',
     'cogs.dankmemer',
     'cogs.fun',
-    'cogs.moderation'
+    'cogs.moderation',
     'cogs.utility'
 ]
 for extension in INITIAL_EXTENSIONS:

@@ -2,43 +2,7 @@ import math
 import ast
 import re
 NUMBER_REGEX = r"[0-9\.]+"
-
-
-class Calculator:
-    operators = ("^", "/", "*", "-", "+")    
-       
-    def __init__(self, expression: str):
-        self.expression = expression.lower().replace(" ", "").strip()
-
-    def __repr__(self):
-        def recur(op):
-            self.sub_regex(op)
-            if re.search(fr"(-?{NUMBER_REGEX}\{op}-?{NUMBER_REGEX})", self.expression):
-                recur(op)
-        for op in self.operators:
-            if re.search(fr"(-?{NUMBER_REGEX}\{op}-?{NUMBER_REGEX})", self.expression):
-                recur(op)
-        return self.expression
-
-    def append(self, obj):
-        self.expression += str(obj.lower().replace(" ", "").strip())
-
-    def sub_regex(self, operator):
-        def sub_fn(v):
-            x, y = v.group().split(operator)
-            x, y = float(x), float(y)
-            conv = {
-                "/": x/y,
-                "*": x*y,
-                "-": x-y,
-                "+": x+y,
-            }      
-            return str(conv.get(operator))
-        try:
-            self.expression = re.sub(fr"(-?{NUMBER_REGEX}\{operator}-?{NUMBER_REGEX})", sub_fn, self.expression)
-        except TypeError:
-            pass
-
+from simpleeval import simple_eval
 
 def secondstotiming(seconds):  # sourcery no-metrics
     seconds = round(seconds)
@@ -111,6 +75,8 @@ def stringtotime(timing):
     if "m" in timing:
         timing = timing.replace("m", "*60+")
     if "s" in timing:
-        timing = timing.replace("s", "")
-        print(timing)
-    return Calculator(timing)
+        timing = timing.replace("s", "*1+")
+    timing += "0"
+    timing = simple_eval(timing)
+    print(timing)
+    return timing

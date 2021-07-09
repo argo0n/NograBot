@@ -21,6 +21,8 @@ import json
 import random
 from cogs.nograhelpers import *
 import os
+from typing import Union
+
 
 
 def get_prefix(client, message):
@@ -49,6 +51,11 @@ def timetosgtime(x):
 start_time = time.time()
 utcbootime = datetime.datetime.now(timezone("UTC"))
 
+class timestringError(Exception):
+    def __init__(self, message="You did not send a proper duration/timestring. \nAn example of a proper duration would be `1d2h3m4s` to represent 1 day, 2 hours, 3 minutes and 4 seconds."):            
+        self.message = message
+        super().__init__(self.message)
+
 class Moderation(commands.Cog):
 
     def __init__(self, client):
@@ -62,6 +69,9 @@ class Moderation(commands.Cog):
         if isinstance(error, discord.ext.commands.ChannelNotFound):
             await ctx.send(error)
             return
+
+        if isinstance(error, timestringError):
+            await ctx.send("You did not send a proper duration/timestring. \nAn example of a proper duration would be `1d2h3m4s` to represent 1 day, 2 hours, 3 minutes and 4 seconds.")
         if isinstance(error, commands.MissingPermissions):
             if "--sudo permbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
                 await ctx.send("Reinvoking command with check bypass. Errors, if any, will show up in the console")
@@ -129,6 +139,44 @@ class Moderation(commands.Cog):
                     if idotchannels is not None:
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+
+    @commands.command(name="slowmode", brief="Sets slowmode", description = "Sets or changes the slowmode in a channel.")
+    async def slowmode(self, ctx, channel:Union[discord.TextChannel, str] = None, duration = None):
+        if channel is None:
+            await ctx.channel.edit(slowmode_delay = 0, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
+            await ctx.send(f"The slowmode in {ctx.channel.name} has been changed to **0 seconds.**")
+
+        if isinstance(channel, discord.TextChannel):
+            if duration is None:
+                duration = 0
+                await channel.edit(slowmode_delay = duration, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await ctx.send(f"The slowmode in {channel.name} has been changed to **{secondstotiming(duration)}**.")
+                return
+            duration = stringtotime(duration)
+            if duration is None:
+                raise timestringError
+            duration = int(duration)
+            if duration is None:
+                duration = 0
+            if duration > 21600:
+                duration = 21600
+            if duration < 0:
+                duration = 0
+            await channel.edit(slowmode_delay = duration, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
+            await ctx.send(f"The slowmode in {channel.name} has been changed to **{secondstotiming(duration)}**.")
+        elif isinstance(channel, str):
+            duration = stringtotime(channel)
+            if duration is None:
+                raise timestringError
+            duration = int(duration)
+            if duration > 21600:
+                duration = 21600
+            if duration < 0:
+                duration = 0
+            await ctx.channel.edit(slowmode_delay = duration, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
+            await ctx.send(f"The slowmode in {ctx.channel.name} has been changed to **{secondstotiming(duration)}**.")
+
+
 
     @commands.command(pass_context=True, name="shutup", brief="Sets blacklisted channels for talking",
                       description="Sets channels where people can talk but will have their messages deleted.")

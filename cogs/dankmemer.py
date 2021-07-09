@@ -315,7 +315,7 @@ class DankMemerHelp(commands.Cog):
         cursor = lottery.cursor()
         sql = "INSERT INTO main(member_id ,lotterytime, guild_id, channel_id,message_id) VALUES(?,?,?,?,?)"
         val = (ctx.author.id, timenow, ctx.guild.id, ctx.channel.id, ctx.message.id)
-        print(cursor.execute(sql, val))
+        cursor.execute(sql, val)
         lottery.commit()
         cursor.close()
         lottery.close()

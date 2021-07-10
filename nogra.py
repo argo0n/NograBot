@@ -142,20 +142,22 @@ class MyHelp(commands.HelpCommand):
 
     async def send_help_embed(self, title, description, commands):  # a helper function to add commands to an embed
         embed = HelpEmbed(title=title, description=description or "No help found...")
-
-        filtered_commands = await self.filter_commands(commands)
         text = ""
-        if filtered_commands:
-            for command in filtered_commands:
-                text += f"`{command.name}` - {command.brief}\n"
-        embed.add_field(name="Commands", value=text)
-
+        for command in commands:
+                text += f"`{command.name}` - {command.description}\n"
+        for command in commands:
+            if command.cog:
+                if len(embed.fields) > 0:
+                    pass
+                else:
+                    embed.add_field(name="Category", value=command.cog.qualified_name)
+        embed.add_field(name="Sub-commands", value=text, inline=False)
         await self.send(embed=embed)
 
     async def send_group_help(self, group):
         """triggers when a `<prefix>help <group>` is called"""
         title = self.get_command_signature(group)
-        await self.send_help_embed(title, group.help, group.commands)
+        await self.send_help_embed(title, group.description, group.commands)
 
     async def send_cog_help(self, cog):
         """triggers when a `<prefix>help <cog>` is called"""

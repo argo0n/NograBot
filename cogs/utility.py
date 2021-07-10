@@ -46,9 +46,6 @@ class arembedpage(menus.ListPageSource):
 
 class EmbedPageSource(menus.ListPageSource):
     async def format_page(self, menu, item):
-        if len(item) == 1:
-            embed = discord.Embed(title="Autoreactions", description=item[0], color=discord.Color.random)
-            return embed
         if len(item) > 4:
             color = f"0x{item[4]}"
             color = int(color, 16)
@@ -159,7 +156,7 @@ class utility(commands.Cog):
 
     @commands.group(invoke_without_command=True, name="autoreact", aliases=["ar", "autoreaction"],
                     brief="Customize your server's autoreactions",
-                    description="Create, delete and view autoreactions in your server! Execute this command without any extra words to see how to use autoreactions.")
+                    description="Create, delete and view autoreactions in your server!\nExecute this command without any extra words to see how to use autoreactions.")
     async def autoreact(self, ctx):
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]
@@ -175,8 +172,65 @@ class utility(commands.Cog):
                         inline=False)
         embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         await ctx.send(embed=embed)
+    
+    @autoreact.command(name="clear", aliases=["reset"], description = "Removes **ALL** autoreactions from this server.")
+    @commands.has_permissions(administrator=True)
+    async def clear(self, ctx, trigger=None):
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        await ctx.send(
+            f"Are you sure you want to REMOVE **ALL** autoreactions in {ctx.guild.name}? This action is irreversible!\nStrictly enter a `y` (yes) or `n` (no).")
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        try:
+            yn = await self.client.wait_for("message",
+                                            check=lambda
+                                                m: m.channel == ctx.channel and m.author == ctx.author and m.content.lower() in [
+                                                "y", "n"],
+                                            timeout=20.0)
+        except asyncio.TimeoutError:
+            await ctx.send("I didn't get a proper response. The autoreacts will not be deleted.")
+            return
+        else:
+            if yn.content == "y":
+                ars = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (ctx.guild.id,)).fetchall()
+                ars = len(ars)
+                cursor.execute('DELETE FROM autoreact WHERE guild_id = ?', (ctx.guild.id,))
+                await ctx.send(
+                    f"<a:Tick:796984073603383296> **{ars} autoreactions have been removed from {ctx.guild.name}.**")
+            else:
+                await ctx.send("Cancelled; the autoreacts will not be deleted.")
+        config.commit()
+        cursor.close()
+        config.close()
+        return
 
-    @autoreact.command(name="add", aliases=["create"])
+    
+    @autoreact.command(name="remove", aliases=["delete"], description = "Removes specified autoreaction in this server.")
+    @commands.has_permissions(manage_messages=True)
+    async def remove(self, ctx, trigger=None):
+        # sourcery no-metrics
+        prefix = await self.client.get_prefix(ctx)
+        prefix = prefix[2]
+        if trigger is None:
+            await ctx.send(f"Send the command again, but include which trigger youw ant me to delete.")
+            return
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM autoreact WHERE trigger = ?', (trigger,)).fetchall()
+        if len(result) <= 0:
+            await ctx.send(
+                f"I don't have any autoreactions for **{trigger}**. Use `{prefix}add <reaction_type> <trigger> <message>` to add it first.")
+            return
+        cursor.execute('DELETE FROM autoreact WHERE trigger = ?', (trigger,))
+        await ctx.send(
+            f"<a:Tick:796984073603383296> **Autoreaction removed**\nI will no longer react to **{trigger}**.")
+        config.commit()
+        cursor.close()
+        config.close()
+        return
+
+    @autoreact.command(name="add", aliases=["create"], description = "Add autoreactions to this server.")
     @commands.has_permissions(manage_messages=True)
     async def add(self, ctx, reaction_type=None, trigger=None, messageemoji=None):
         # sourcery no-metrics
@@ -242,63 +296,8 @@ class utility(commands.Cog):
         config.close()
         return
 
-    @autoreact.command(name="remove", aliases=["delete"])
-    @commands.has_permissions(manage_messages=True)
-    async def remove(self, ctx, trigger=None):
-        # sourcery no-metrics
-        prefix = await self.client.get_prefix(ctx)
-        prefix = prefix[2]
-        if trigger is None:
-            await ctx.send(f"Send the command again, but include which trigger youw ant me to delete.")
-            return
-        config = sqlite3.connect('databases/config.sqlite')
-        cursor = config.cursor()
-        result = cursor.execute('SELECT * FROM autoreact WHERE trigger = ?', (trigger,)).fetchall()
-        if len(result) <= 0:
-            await ctx.send(
-                f"I don't have any autoreactions for **{trigger}**. Use `{prefix}add <reaction_type> <trigger> <message>` to add it first.")
-            return
-        cursor.execute('DELETE FROM autoreact WHERE trigger = ?', (trigger,))
-        await ctx.send(
-            f"<a:Tick:796984073603383296> **Autoreaction removed**\nI will no longer react to **{trigger}**.")
-        config.commit()
-        cursor.close()
-        config.close()
-        return
-
-    @autoreact.command(name="clear", aliases=["reset"])
-    @commands.has_permissions(administrator=True)
-    async def clear(self, ctx, trigger=None):
-        prefix = await self.client.get_prefix(ctx)
-        prefix = prefix[2]
-        await ctx.send(
-            f"Are you sure you want to REMOVE **ALL** autoreactions in {ctx.guild.name}? This action is irreversible!\nStrictly enter a `y` (yes) or `n` (no).")
-        config = sqlite3.connect('databases/config.sqlite')
-        cursor = config.cursor()
-        try:
-            yn = await self.client.wait_for("message",
-                                            check=lambda
-                                                m: m.channel == ctx.channel and m.author == ctx.author and m.content.lower() in [
-                                                "y", "n"],
-                                            timeout=20.0)
-        except asyncio.TimeoutError:
-            await ctx.send("I didn't get a proper response. The autoreacts will not be deleted.")
-            return
-        else:
-            if yn.content == "y":
-                ars = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (ctx.guild.id,)).fetchall()
-                ars = len(ars)
-                cursor.execute('DELETE FROM autoreact WHERE guild_id = ?', (ctx.guild.id,))
-                await ctx.send(
-                    f"<a:Tick:796984073603383296> **{ars} autoreactions have been removed from {ctx.guild.name}.**")
-            else:
-                await ctx.send("Cancelled; the autoreacts will not be deleted.")
-        config.commit()
-        cursor.close()
-        config.close()
-        return
-
-    @autoreact.command(name="list", aliases=["show"])
+    
+    @autoreact.command(name="list", aliases=["show"], description = "Shows all the autoreactions in this server.")
     @commands.has_permissions(manage_messages=True)
     async def list(self, ctx):
         prefix = await self.client.get_prefix(ctx)

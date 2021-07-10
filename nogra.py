@@ -86,7 +86,6 @@ class MyHelp(commands.HelpCommand):
         embed = HelpEmbed(title=f"{ctx.me.display_name}'s Help Page")
         embed.set_thumbnail(url=ctx.me.avatar_url)
         usable = 0
-
         for cog, commands in mapping.items():  # iterating through our mapping of cog: commands
             filtered_commands = await self.filter_commands(commands)
             if filtered_commands:
@@ -128,8 +127,7 @@ class MyHelp(commands.HelpCommand):
         embed = HelpEmbed(title=signature, description=command.description or "*Nothing to see here*")
         if command.cog:
             embed.add_field(name="Category", value=command.cog.qualified_name)
-
-        if command._buckets and command._buckets._cooldown:  # use of internals to get the cooldown of the command
+        if command._buckets and command._buckets._cooldown:
             cooldown = command._buckets._cooldown
             embed.add_field(
                 name="Cooldown",
@@ -137,6 +135,23 @@ class MyHelp(commands.HelpCommand):
             )
         if command.aliases:
             embed.add_field(name="Aliases", value=", ".join(command.aliases), inline=False)
+        if command.checks:
+            permissions = []
+            if command.cog.qualified_name == "Admin":
+                permissions.append("Sudo Perms/Bot Owner")
+            try:
+                check = command.checks[0] # get the first check
+                check(0) # This would raise an error, because `0` is passed as ctx
+            except Exception as e:
+                *frames, last_frame = traceback.walk_tb(e.__traceback__) # Iterate through the generator and get the last element
+                frame = last_frame[0] # get the first element to get the trace
+                permissionslist = frame.f_locals['perms']
+                for permission in permissionslist:
+                    permission = permission.replace("_", " ")
+                    permission = permission.title()
+                    permissions.append(permission)
+            permissions = ", ".join(permissions)
+            embed.add_field(name="Requirements", value=permissions, inline=False)
         channel = self.get_destination()
         await channel.send(embed=embed)
 
@@ -145,12 +160,8 @@ class MyHelp(commands.HelpCommand):
         text = ""
         for command in commands:
                 text += f"`{command.name}` - {command.description}\n"
-        for command in commands:
-            if command.cog:
-                if len(embed.fields) > 0:
-                    pass
-                else:
-                    embed.add_field(name="Category", value=command.cog.qualified_name)
+        if command.cog:
+            embed.add_field(name="Category", value=command.cog.qualified_name)
         embed.add_field(name="Sub-commands", value=text, inline=False)
         await self.send(embed=embed)
 
@@ -162,7 +173,14 @@ class MyHelp(commands.HelpCommand):
     async def send_cog_help(self, cog):
         """triggers when a `<prefix>help <cog>` is called"""
         title = cog.qualified_name or "No"
-        await self.send_help_embed(f'{title} Category', cog.description, cog.get_commands())
+        embed = HelpEmbed(title=f'{title} Category', description=cog.description or "No cog description")
+        text = ""
+        commandcount = 0
+        for command in cog.get_commands():
+            text += f"`{command.name}` - {command.description}\n"
+            commandcount += 1
+        embed.add_field(name=f"Commands in {title} ({commandcount})", value=text, inline=False)
+        await self.send(embed=embed)
 
 
 client.help_command = MyHelp()
@@ -183,7 +201,46 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
-    pass
+    if isinstance(error, discord.ext.commands.ChannelNotFound):
+            await ctx.send(error)
+            return
+    if isinstance(error, commands.MissingPermissions):
+        if "--sudo permbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+            await ctx.send("Reinvoking command with check bypass. Errors, if any, will show up in the console")
+            await ctx.reinvoke()
+            return
+        await ctx.send(error)
+        return
+    if isinstance(error, commands.CommandOnCooldown):
+        if "--sudo cdbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+            await ctx.send("Reinvoking command with cooldown bypass. Errors, if any, will show up in the console")
+            await ctx.reinvoke()
+            return
+        cooldown = error.retry_after
+        await ctx.send(
+            f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
+        return
+    if isinstance(error, commands.MemberNotFound):
+        await ctx.send(f"{error}\n It has to be a mention or user ID.")
+        return
+    if isinstance(error, commands.ExtensionFailed):
+        await ctx.send(f"I failed to load this extension. Details:\n```{error}```")
+    errorembed = discord.Embed(title="Oops!",
+                                description="This command just received an error. It has been sent to the bot developer..",
+                                color=0x00ff00)
+    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+    errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+    await ctx.send(embed=errorembed)
+    logchannel = client.get_channel(839016255733497917)
+    await logchannel.send(
+        f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+    filename = random.randint(1, 9999999999)
+    filename = f"temp/{filename}.txt"
+    with open(filename, "w") as f:
+        f.write(gettraceback(error))
+    file = discord.File(filename)
+    await logchannel.send(file=file)
+    os.remove(filename)
 
 # This is for the bot to react to various situations
 
@@ -296,6 +353,42 @@ async def on_member_join(member):
 # Bot COMMANDS go here.
 
 # clear (purge command)
+
+@client.command(aliases = ["sr"])
+@commands.is_owner()
+async def softreboot(ctx):
+    for extension in INITIAL_EXTENSIONS:
+        if 'message' in locals():
+            mcontent = message.content
+            try:
+                client.unload_extension(extension)
+                await message.edit(content= f"{mcontent}\n{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` unloaded. <:nograred:830765450412425236>")
+            except commands.ExtensionNotLoaded:
+                await message.edit(content= f"{mcontent}\n{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` **was never loaded.** <:nograred:830765450412425236>")
+                pass
+            try:
+                client.load_extension(extension)
+                await message.edit(content=f"{mcontent}\n{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` successfully reloaded. <:nograonline:830765387422892033>")
+            except commands.ExtensionFailed:
+                await message.edit(content=f"{mcontent}\n{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` **failed to load, load it manually**. <:nograyellow:830765423112880148>")
+        else:
+            try:
+                client.unload_extension(extension)
+                message = await ctx.send(f"{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` unloaded. <:nograred:830765450412425236>")
+            except commands.ExtensionNotLoaded:
+                message = await ctx.send(f"{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` **was never loaded**. <:nograred:830765450412425236>")
+                pass
+            try:
+                client.load_extension(extension)
+                await message.edit(content=f"{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` successfully reloaded. <:nograonline:830765387422892033>")
+            except commands.ExtensionFailed:
+                await message.edit(content=f"{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` **failed to load, load it manually**. <:nograyellow:830765423112880148>")
+    cogsoftreboot = discord.Embed(title="Soft Reboot completed", color=0x00ff00)
+    cogsoftreboot.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    status = client.get_channel(839045672111308820)
+    await status.send(embed=cogsoftreboot)
+
+
 @client.command(brief="Loads cogs", description = "Loads cogs")
 @commands.is_owner()
 async def load(ctx, extension):
@@ -329,80 +422,6 @@ async def cogreboot(ctx, extension):
     rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)
-
-@load.error
-async def load_error(ctx, error):
-    if isinstance(error, commands.CommandInvokeError):
-        error = error.original
-    if isinstance(error, discord.ext.commands.CheckFailure):
-        await ctx.send("You're not the owner of Nogra!")
-        return
-    if isinstance(error, discord.ext.commands.ExtensionError):
-        await ctx.send(f"I was unable to start the extension. Details:\n```py\n{error}\n```")
-        return
-    errorembed = discord.Embed(title="Oops!",
-                               description="This command just received an error. It has been sent to Argon.",
-                               color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-    await ctx.send(embed=errorembed)
-    logchannel = client.get_channel(839016255733497917)
-    await logchannel.send(
-        f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-    message = await logchannel.send("Uploading traceback to Hastebin...")
-    tracebacklink = await postbin.postAsync(gettraceback(error))
-    await message.edit(content=tracebacklink)
-
-
-@unload.error
-async def unload(ctx, error):
-    if isinstance(error, commands.CommandInvokeError):
-        error = error.original
-    if isinstance(error, discord.ext.commands.CheckFailure):
-        await ctx.send("You're not the owner of Nogra!")
-        return
-    if isinstance(error, discord.ext.commands.ExtensionError):
-        await ctx.send("That cog was not found.")
-        return
-    if "not been loaded" in error:
-        await ctx.send("The cog is either already unloaded or not found.")
-    else:
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to Argon.",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
-
-
-@cogreboot.error
-async def cogreboot(ctx, error):
-    if isinstance(error, commands.CommandInvokeError):
-        error = error.original
-    if isinstance(error, discord.ext.commands.CheckFailure):
-        await ctx.send("You're not the owner of Nogra!")
-        return
-    if isinstance(error, discord.ext.commands.ExtensionError):
-        await ctx.send("That cog was not found.")
-        return
-    errorembed = discord.Embed(title="Oops!",
-                               description="This command just received an error. It has been sent to Argon.",
-                               color=0x00ff00)
-    errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-    errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-    await ctx.send(embed=errorembed)
-    logchannel = client.get_channel(839016255733497917)
-    await logchannel.send(
-        f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-    message = await logchannel.send("Uploading traceback to Hastebin...")
-    tracebacklink = await postbin.postAsync(gettraceback(error))
-    await message.edit(content=tracebacklink)
 
 client.run(os.environ['NOGRAtoken'])
 # betargon's ID was reset btw

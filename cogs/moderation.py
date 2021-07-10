@@ -140,7 +140,7 @@ class Moderation(commands.Cog):
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
-    @commands.command(name="slowmode", brief="Sets slowmode", description = "Sets or changes the slowmode in a channel.")
+    @commands.command(name="slowmode", brief="Sets slowmode", description = "Sets or changes the slowmode in a channel.", aliases = ["sm"])
     async def slowmode(self, ctx, channel:Union[discord.TextChannel, str] = None, duration = None):
         if channel is None:
             await ctx.channel.edit(slowmode_delay = 0, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")

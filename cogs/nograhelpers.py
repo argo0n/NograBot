@@ -3,6 +3,10 @@ import ast
 import re
 NUMBER_REGEX = r"[0-9\.]+"
 from simpleeval import simple_eval
+import random
+
+def tempgen():
+    return random.randint(1, 9999999999)
 
 def secondstotiming(seconds):  # sourcery no-metrics
     seconds = round(seconds)

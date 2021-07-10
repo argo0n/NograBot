@@ -59,6 +59,7 @@ class timestringError(Exception):
 class Moderation(commands.Cog):
 
     def __init__(self, client):
+        self.description = "🛡️ Keep your server safe and healthy."
         self.client = client
 
     @commands.Cog.listener()
@@ -422,7 +423,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"Invite {self.client.user.name} to your server with only necessary permissions here **(Recommended): https://discord.com/api/oauth2/authorize?client_id=800184970298785802&permissions=8&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot\n")
 
     @commands.command(brief="ban hammer", description = "Bans members")
-    @commands.has_permissions(ban_members=True)
+    @commands.has_permissions(create_instant_invite =  True, kick_members = True, ban_members =  True, administrator = False, manage_channels =  True, manage_guild =  True, add_reactions =  True, view_audit_log =  True, priority_speaker = False, stream = False, read_messages =  True, send_messages =  True, send_tts_messages =  True, manage_messages =  True, embed_links =  True, attach_files =  True, read_message_history =  True, mention_everyone = False, external_emojis =  True, view_guild_insights =  True, change_nickname =  True, manage_nicknames =  True, manage_roles =  True, manage_webhooks = False, manage_emojis =  True)
     async def ban(self, ctx, member: discord.Member = None, *, reason=None):
         if member is None or member == ctx.message.author:
             await ctx.send("You cannot ban yourself...")

@@ -38,9 +38,10 @@ start_time = time.time()
 
 class Fun(commands.Cog):
 
-    def __init__(self, client):
+    def __init__(self, client, emoji="🎮"):
         self.client = client
-        self.description = "Fun commands!"
+        self.description = "🎮 Fun commands!"
+        self.emoji =emoji
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -75,8 +76,11 @@ class Fun(commands.Cog):
             await ctx.send(
                 "I expected a number somwhere in your command, but I got something else instead. Check if the numbers I require are just integers.")
             return
-        if isinstance(error, discord.errors.Forbidden) and "Missing Permissions" in str(error):
-            await ctx.send("I do not have the permissions to perform the required actions in this command. ")
+        if isinstance(error, discord.errors.Forbidden):
+            if "Missing Permissions" in str(error):
+                await ctx.send("I do not have the permissions to perform the required actions in this command. ")
+            elif "Missing Access" in str(error):
+                await ctx.send("I do not have the permissions to access something (probably a channel).")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to the bot developer..",
@@ -302,7 +306,8 @@ class Fun(commands.Cog):
                 embed.set_footer(text=f"Exercise more tbh {member.name}")
                 await ctx.send(embed=embed)
                 await asyncio.sleep(duration)
-                await channel.set_permissions(member, overwrite=None)
+                overwrite.send_messages = True
+                await channel.set_permissions(member, overwrite=overwrite)
 
             else:
                 overwrite = discord.PermissionOverwrite()
@@ -315,7 +320,8 @@ class Fun(commands.Cog):
                 embed.set_footer(text=f"Exercise more tbh {ctx.author.name}")
                 await ctx.send(embed=embed)
                 await asyncio.sleep(duration)
-                await channel.set_permissions(ctx.author, overwrite=None)
+                overwrite.send_messages = True
+                await channel.set_permissions(ctx.author, overwrite=overwrite)
 
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
     async def hug(self, ctx, target1: discord.Member = None, target2: discord.Member = None):

@@ -73,7 +73,7 @@ class utility(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.description = "Useful commands"
+        self.description = "⚒️ Useful commands"
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.ChannelNotFound):
@@ -208,12 +208,12 @@ class utility(commands.Cog):
     
     @autoreact.command(name="remove", aliases=["delete"], description = "Removes specified autoreaction in this server.")
     @commands.has_permissions(manage_messages=True)
-    async def remove(self, ctx, trigger=None):
+    async def remove(self, ctx, *, trigger=None):
         # sourcery no-metrics
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]
         if trigger is None:
-            await ctx.send(f"Send the command again, but include which trigger youw ant me to delete.")
+            await ctx.send(f"Send the command again, but include which trigger you want me to delete.")
             return
         config = sqlite3.connect('databases/config.sqlite')
         cursor = config.cursor()
@@ -232,15 +232,15 @@ class utility(commands.Cog):
 
     @autoreact.command(name="add", aliases=["create"], description = "Add autoreactions to this server.")
     @commands.has_permissions(manage_messages=True)
-    async def add(self, ctx, reaction_type=None, trigger=None, messageemoji=None):
+    async def add(self, ctx, reaction_type=None, trigger=None, *, messageemoji=None):
         # sourcery no-metrics
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]
         if reaction_type not in ["message", "react", "reaction", "send"]:
-            await ctx.send("The reaction type should be `message` or `react`.")
+            await ctx.send(f"The reaction type should be `message` or `react`. See `{prefix}autoreact` for more information.")
             return
         if trigger is None or messageemoji is None:
-            await ctx.send(f"Please use `{prefix}autoreact` to see how to use this command properly.")
+            await ctx.send(f"You're either missing the trigger or the response to the trigger. Please use `{prefix}autoreact` to see how to use this command.")
             return
         config = sqlite3.connect('databases/config.sqlite')
         cursor = config.cursor()
@@ -269,7 +269,7 @@ class utility(commands.Cog):
                         cursor.execute(sql, val)
                         config.commit()
                         await ctx.send(
-                            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now react to **{trigger}** with {messageemoji}.")
+                            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send {messageemoji} when I hear **{trigger}**.")
                         cursor.close()
                         config.close()
                         return

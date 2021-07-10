@@ -131,22 +131,22 @@ class Admin(commands.Cog):
     async def dm(self, ctx, *, message):'''
 
     @commands.command(name="admincommands", aliases=["ac"], hidden=True)
+    @commands.is_owner()
     async def admincommands(self, ctx):
         embed = discord.Embed(title=f"{self.client.user.name}'s admin commands", color = discord.Color.random())
         embed.add_field(name="\u200b", value="setstatus\neval\nedit\nminecraft\nmessage\ndmads\nupdate\nshutdown")
         await ctx.send(embed=embed)
     
     @commands.command(name="adminflags", aliases=["af"], hidden=True)
+    @commands.is_owner()
     async def adminflags(self, ctx):
         embed = discord.Embed(title=f"{self.client.user.name}'s flags", color = discord.Color.random())
         embed.add_field(name="--sudo", value="permbypass\ncdbypass")
         await ctx.send(embed=embed)
 
     @commands.command(name="setstatus", brief="Edit Nogra's status", description="Edit's Nogra's (presence) status", hidden=True)
+    @commands.is_owner()
     async def setstatus(self, ctx, ooommmaaa=None, presence=None, *, statuswhat=None):
-        if ctx.author.id != 650647680837484556:
-            await ctx.send("You can only change the status of the bot if you are Argon!")
-            return
         allstatus = ['online', 'idle', 'dnd']
         if ooommmaaa in allstatus:
             if ooommmaaa == 'dnd':
@@ -184,6 +184,7 @@ class Admin(commands.Cog):
             await ctx.send("You can only use `online`, `idle`, or `dnd` stupid.")
 
     @commands.command(hidden = True)
+    @commands.is_owner()
     async def minecraft(self, ctx, *, member: discord.User = None):
         if member is None:
             await ctx.send("Aren't you supposed to mention someone?")
@@ -210,6 +211,11 @@ class Admin(commands.Cog):
                 await ctx.message.add_reaction("<a:Tick:796984073603383296>")
             else:
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
+
+    @commands.command(name="emojiserver", aliases = ["es"], hidden=True)
+    @commands.is_owner()
+    async def emojiserver(self, ctx):
+        await ctx.send("<#805604591630286918>")
 
     @commands.command(name="message", brief="dms people",
                       description="Sends a message to someone requested by the developers.", hidden=True)

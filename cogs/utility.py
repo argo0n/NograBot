@@ -9,7 +9,7 @@
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
 import ast
-
+import operator
 from discord.utils import find
 import random
 import asyncio
@@ -29,6 +29,7 @@ import requests
 from colorthief import ColorThief
 import urllib.request
 import sqlite3
+import matplotlib.pyplot as plt
 
 
 def rgb_to_hex(rgb):
@@ -507,30 +508,58 @@ class utility(commands.Cog):
             await ctx.send("You can only use this command if you are Argon.")
 
     @commands.command(name="chatchart", brief="Lists portions of messages sent by members", description = "Shows the percentage of messages sent by various members")
-    async def chatchart(self, ctx, channel:discord.TextChannel=None):
+    async def chatchart(self, ctx, channel:discord.TextChannel =None):
         count = {}
         if channel is None:
             channel = ctx.channel
         with ctx.typing():
             messagelist = await channel.history(limit=1000).flatten()
-            messageno = len(messagelist)
             for message in messagelist:
-                authorid = message.author.id
-                if authorid not in count:
-                    count[authorid] = 1
+                if message.webhook_id is not None:
+                    pass
                 else:
-                    count[authorid] += 1
-            output = ""
-            for ele in count:
-                if len(output) < 1800:
-                    percentage = round((count[ele]/messageno)*100, 1)
-                    output += f"<@{ele}>: {percentage}%\n"
-                    colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4,
-                              0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
-                    embed = discord.Embed(title = f"Chat chart for {channel.name}", color=random.choice(colors))
-                    embed.add_field(name="\u200b", value=output, inline=False)
-                    embed.set_footer(text="this will be made into a pie chart soon!")
-        await ctx.send(embed=embed)
+                    authorid = message.author.id
+                    if len(count.keys()) > 15 and authorid not in count:
+                        if "Others" not in count:
+                            count["Others"] = 1
+                        else:
+                            count["Others"] += 1
+                    else:
+                        if authorid not in count:
+                            count[authorid] = 1
+                        else:
+                            count[authorid] += 1
+            counted = sorted(count.items(), key=operator.itemgetter(1), reverse=True)
+            labels = []
+            sizes = []
+            for entry in counted:
+                if entry[0] == "Others":
+                    labels.append("Others")
+                    sizes.append(entry[1])
+                else:
+                    member = self.client.get_user(entry[0])
+                    if len(member.name) > 15:
+                        name = f"{member.name[0:15]}...#{member.discriminator}"
+                    else:
+                        name = f"{member.name}#{member.discriminator}"
+                    labels.append(name)
+                    sizes.append(entry[1])
+            count = counted
+            plt.figure(figsize=plt.figaspect(1))
+            newlabels = []
+            for l, s in zip(labels, sizes):
+                s = s/sum(sizes)*100
+                s = round(s,1)
+                newlabels.append(f"{l}, {s}%")
+            title = plt.title(f"Messages in #{channel.name}", color = 'w')
+            plt.pie(sizes)
+            plt.legend(bbox_to_anchor=(1,0.5), loc='center left', labels=newlabels, facecolor="gray", edgecolor="white")
+            filename = f"temp/{tempgen()}.png"
+            plt.savefig(filename, bbox_inches="tight", pad_inches = 0.1, transparent=True)
+            file = discord.File(filename)
+            await ctx.send(file=file)
+            os.remove(filename)
+        
 
     @commands.command()
     @commands.has_permissions(manage_guild=True)

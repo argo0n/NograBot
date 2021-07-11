@@ -125,14 +125,14 @@ class utility(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):  # sourcery skip
-        if message.author == self.client.user:
+        if message.author == self.client.user or message.author.bot:
             return
         config = sqlite3.connect('databases/config.sqlite')
         cursor = config.cursor()
         result = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (message.guild.id,)).fetchall()
         if len(result) != 0:
             for autoreact in result:
-                if autoreact[3] in message.content:
+                if any([autoreact[3] == word for word in message.content.split()]):
                     if autoreact[2] == "react":
                         try:
                             await message.add_reaction(autoreact[4])
@@ -163,7 +163,7 @@ class utility(commands.Cog):
         embed = discord.Embed(title="Autoreactions", description="How do you use this command?",
                               color=discord.Color.random())
         embed.add_field(name="\u200b",
-                        value=f"`{prefix}add <reaction_type> <trigger> <message/emoji>` Adds autoreactions.\n`{prefix}remove <trigger>` Removes an autoreaction.\n`clear` Clears all autoreactions in this server.\n`list` Shows autoreactions in this server.\n")
+                        value=f"`{prefix}autoreact add <reaction_type> <trigger> <message/emoji>` Adds autoreactions.\n`{prefix}autoreact remove <trigger>` Removes an autoreaction.\n`{prefix}autoreact clear` Clears all autoreactions in this server.\n`{prefix}autoreact list` Shows autoreactions in this server.\n")
         embed.add_field(name="Syntax",
                         value="`reaction_type` is either `message` or `reaction`.\n`trigger` is what triggers the autoreact.\n`message/emoji` is what {self.client.user.name} will respond with.",
                         inline=False)
@@ -315,7 +315,7 @@ class utility(commands.Cog):
         for autoreact in ars:
             if len(text) < 3800:
                 member = self.client.get_user(autoreact[1])
-                text += f"{autoreact[3]} ({autoreact[2]}): {autoreact[4]} | Created by {member.name}#{member.discriminator}\n"
+                text += f"{autoreact[3]} `({autoreact[2]})`: **{autoreact[4]}** | Created by `{member.name}#{member.discriminator}`\n"
             else:
                 items.append(text)
         items.append(f"{text}\u200b")

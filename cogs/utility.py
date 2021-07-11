@@ -345,8 +345,11 @@ class utility(commands.Cog):
             messagelist = await channel.history(limit=1).flatten()
             for message in messagelist:
                 version = message.content.split("\n")[0]
-            embed.add_field(name="Current version", value=f"{version}, know more in `{prefix}changelog`", inline=False)
-            embed.add_field(name="Current prefix", value=f"`{prefix}`", inline=True)
+            embed.add_field(name="Current version", value=f"{version}, know more in `{prefix}changelog`", inline=True)
+            cversion = discord.version_info
+            embed.add_field(name="Discord.py Library version", value=f"{cversion[0]}.{cversion[1]}.{cversion[2]} {cversion[3]}~{cversion[4]}", inline=True)
+            embed.add_field(name=f"\u200b",value=f"\u200b",inline=False)
+            embed.add_field(name="Prefix", value=f"`{prefix}`", inline=True)
             owner = self.client.get_user(self.client.owner_id)
             embed.add_field(name="Owner", value=f"{owner.name}#{owner.discriminator}", inline=True)
             embed.add_field(name="Support", value="DM Argon#0002", inline=True)
@@ -393,30 +396,6 @@ class utility(commands.Cog):
             else:
                 statusoutput = "Unknown"
             embed.add_field(name="Status", value=statusoutput, inline=True)
-            activitylist = member.activities
-            for activity in activitylist:
-                if isinstance(activity, discord.CustomActivity):
-                    customstatus = activity.name
-                    embed.add_field(name="Custom status", value=customstatus, inline=True)
-                elif isinstance(activity, discord.Spotify):
-                    artists = ", ".join(activity.artists)
-                    embed.add_field(name="Spotify status <:nograspotify:855151063530471465>",
-                                    value=f"Listening to **{artists}** - **{activity.title}**, know more in `{prefix}spotify`",
-                                    inline=False)
-                elif isinstance(activity, discord.Game):
-                    embed.add_field(name="Activity status 🎮",
-                                    value=f"Playing **{activity.name}**, know more in `{prefix}game`",
-                                    inline=False)
-                elif isinstance(activity, discord.Activity):
-                    embed.add_field(name="Activity status 🎮",
-                                    value=f"Playing **{activity.name}**, know more in `{prefix}game`",
-                                    inline=False)
-                elif isinstance(activity, discord.Streaming):
-                    embed.add_field(name="Activity status 🎮",
-                                    value=f"Streaming **[{activity.name}]({activity.url})**, know more in `{prefix}game`",
-                                    inline=False)
-                else:
-                    print(f"unrecognised activity, type is {type(activity)}")
             embed.set_author(name=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar_url)
             embed.set_footer(text=f"Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

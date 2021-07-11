@@ -350,7 +350,7 @@ class utility(commands.Cog):
             embed.add_field(name="Discord.py Library version", value=f"{cversion[0]}.{cversion[1]}.{cversion[2]} {cversion[3]}~{cversion[4]}", inline=True)
             embed.add_field(name=f"\u200b",value=f"\u200b",inline=False)
             embed.add_field(name="Prefix", value=f"`{prefix}`", inline=True)
-            owner = self.client.get_user(self.client.owner_id)
+            owner = self.client.get_user(650647680837484556)
             embed.add_field(name="Owner", value=f"{owner.name}#{owner.discriminator}", inline=True)
             embed.add_field(name="Support", value="DM Argon#0002", inline=True)
             counting=[0,0]

@@ -140,8 +140,10 @@ class Fun(commands.Cog):
                 f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
-    @commands.cooldown(1, 1200, commands.BucketType.user)
+    @commands.cooldown(1, 1, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
+        await ctx.send("This command is deprecated from build **version number** onwards. For more information, check out the changelog.\nIt will be permenantly removed during the next update.")
+        return
         if ctx.guild.id == 336642139381301249:
             await ctx.send("This command is disabled in **discord.py** to comply with the rules of **discord.py**.")
             return

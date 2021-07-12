@@ -8,7 +8,8 @@
 # |                                                                                    |
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
-from discord.ext import commands
+from discord.ext import commands, tasks
+import sqlite3
 import discord
 import datetime
 import time
@@ -140,6 +141,42 @@ class Moderation(commands.Cog):
                     if idotchannels is not None:
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+
+    @commands.command(name="role", brief = "add/remove roles", description="Adds or remove roles from a member.")    
+    @commands.has_permissions(manage_roles = True)                    
+    async def role(self, ctx, member:discord.Member = None, *, role:discord.Role = None):
+        if role in member.roles:
+            try:
+                await member.remove_roles(role, reason=f"Role removal for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await ctx.send(f"Removed **{role.name}** from **{member.name}#{member.discriminator}**.")
+            except discord.errors.Forbidden:
+                await ctx.send(f"I do not have the permission to remove **{role.name}** from **{member.name}#{member.discriminator}**.")
+                return
+        else:
+            try:
+                await member.add_roles(role, reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await ctx.send(f"Added **{role.name}** to **{member.name}#{member.discriminator}**.")
+            except discord.errors.Forbidden:
+                await ctx.send(f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
+                return
+
+    @commands.command(name="temprole", brief = "add/remove roles", description="Adds or remove roles from a member.", aliases = ["temporaryrole"])
+    async def role(self, ctx, member:discord.Member = None, *, role:discord.Role = None):
+        if role in member.roles:
+            try:
+                await member.remove_roles(role, reason=f"Role removal for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await ctx.send(f"Removed **{role.name}** from **{member.name}#{member.discriminator}**.")
+            except discord.errors.Forbidden:
+                await ctx.send(f"I do not have the permission to remove **{role.name}** from **{member.name}#{member.discriminator}**.")
+                return
+        else:
+            try:
+                await member.add_roles(role, reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await ctx.send(f"Added **{role.name}** to **{member.name}#{member.discriminator}**.")
+            except discord.errors.Forbidden:
+                await ctx.send(f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
+                return
+
 
     @commands.command(name="slowmode", brief="Sets slowmode", description="Sets or changes the slowmode in a channel.",
                       aliases=["sm"])

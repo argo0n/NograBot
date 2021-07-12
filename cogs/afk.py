@@ -20,6 +20,9 @@ import math
 import postbin
 import traceback
 from cogs.nograhelpers import *
+import sqlite3
+import os
+
 
 def gettraceback(error):
     etype = type(error)
@@ -27,6 +30,7 @@ def gettraceback(error):
     lines = traceback.format_exception(etype, error, trace)
     traceback_text = ''.join(lines)
     return traceback_text
+
 
 start_time = time.time()
 
@@ -38,75 +42,101 @@ class Afk(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        db = sqlite3.connect('databases/config.sqlite')
+        cursor = db.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS afk(guild_id integer, member_id integer, time integer, message text)")
         print("Cog \"AFK\" loaded")
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot or message.author == self.client.user:
             return
-        with open('resources/test.json', 'r', encoding='utf8') as f:
-            timenow = time.time()
-            afkdetails = json.load(f)
-            k = list(afkdetails.keys())
-            if str(message.author.id) in k:
-                afktime = afkdetails[str(message.author.id)]['time']
-                if timenow < afktime:
-                    await message.channel.send(f"You still have {round(afktime - timenow)} more seconds to talk. ")
-                    return
-                if "[AFK] " in message.author.display_name:
-                    newname = message.author.display_name.replace("[AFK]", "")
-                    await message.author.edit(nick=newname)
-                del afkdetails[str(message.author.id)]
-                with open('resources/test.json', 'w', encoding='utf8') as f:
-                    json.dump(afkdetails, f, sort_keys=True, indent=4, ensure_ascii=False)
-                    await message.channel.send(f"Welcome back {message.author.name}! I have removed your AFK status.")
-            else:
-                for i in k:
-                    userid = int(i)
-                    guildid = afkdetails[i]['guild_id']
-                    afktime = afkdetails[i]['time']
-                    afkmessage = afkdetails[i]['message']
-                    guild = self.client.get_guild(guildid)
-                    member = guild.get_member(userid)
-                    if guild == message.guild and member.mentioned_in(message):
+        timenow = time.time()
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and member_id = ? and time < ? ',
+                                (message.guild.id, message.author.id, timenow,)).fetchall()
+        print(len(result))
+        if len(result) == 0:
+            result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and time < ?',
+                                    (message.guild.id, timenow,)).fetchall()
+            if len(result) > 0:
+                for afkdetail in result:
+                    member = self.client.get_user(afkdetail[1])
+                    if member.mentioned_in(message):
                         current_time = time.time()
-                        afk_duration = int(round(current_time - afktime))
+                        afk_duration = int(round(current_time - afkdetail[3]))
                         afk_embed = discord.Embed(title="", color=0x00ff00)
-                        afk_embed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=str(member.avatar_url))
-                        afk_embed.add_field(name=f"{member.name} is AFK", value=afkmessage, inline=True)
+                        afk_embed.set_author(name=f"{member.name}#{member.discriminator}",
+                                             icon_url=str(member.avatar_url))
+                        afk_embed.add_field(name=f"{member.name} is AFK", value=afkdetail[2], inline=True)
                         afk_embed.set_footer(text=f"{member.name} has been AFK for {secondstotiming(afk_duration)}.")
                         await message.channel.send(embed=afk_embed)
+        else:
+            result = result[0]
+            if "[AFK] " in message.author.display_name:
+                newname = message.author.display_name.replace("[AFK]", "")
+                await message.author.edit(nick=newname)
+            print(result)
+            print(result[0])
+            print(result[1])
+            print(result[2])
+            cursor.execute("DELETE FROM afk where guild_id = ? and member_id = ?", (result[0], result[1],))
+            config.commit()
+            await message.channel.send(f"Welcome back {message.author.mention}! I have removed your AFK status.")
+        cursor.close()
+        config.close()
+
+    @commands.command(name="afkclear", brief="Removes afk status", description="Removes the AFK status of a member.")
+    @commands.has_permissions(manage_messages=True)
+    async def afkclear(self, ctx, member: discord.Member):
+        await ctx.send(f"Are you sure you want to remove **{member.name}#{member.discriminator}**'s AFK status?")
+        yn = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                        timeout=20.0)
+        if yn.lower() in ["y", "yes"]:
+            config = sqlite3.connect('databases/config.sqlite')
+            cursor = config.cursor()
+            cursor.execute("DELETE FROM afk where guild_id = ? and member_id = ?",
+                           (ctx.guild.id, member.id,))
+            config.commit()
+            await ctx.send(f"AFK status for **{member.name}#{member.discriminator}** removed.")
+            cursor.close()
+            config.close()
 
     @commands.command(name="afk", brief="Let everyone know you are AFK",
                       description="Sets an AFK status which will tell others why you are AFK when you are pinged.")
-    async def afk(self, ctx, *, message = "I am AFK!"):
+    async def afk(self, ctx, *, message="I am AFK!"):
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and member_id = ?',
+                                (ctx.guild.id, ctx.author.id,)).fetchall()
+        if len(result) > 0:
+            await ctx.send(
+                "You have already set an AFK status, wait until your AFK status is removed (30 seconds) to set a new AFK status.")
+            return
         member = ctx.author
         if len(message) > 1024:
-            await ctx.send("Your message for your AFK status is too long, try making it below 1024 characters.", delete_after = 5.0)
+            await ctx.send("Your message for your AFK status is too long, try making it below 1024 characters.",
+                           delete_after=5.0)
         if len(member.display_name) > 26:
-            await ctx.send("Your nickname could not be changed because it exceeds nickname character limits.", delete_after = 3.0)
+            await ctx.send("Your nickname could not be changed because it exceeds nickname character limits.",
+                           delete_after=3.0)
         else:
             try:
                 await member.edit(nick=f"[AFK] {member.display_name}")
             except discord.Forbidden:
-                await ctx.send("I do not have permission to change your nickname.")
+                await ctx.send("I do not have the permission to change your nickname.", delete_after=5.0)
         time_now = time.time()
-        time_now = round(time_now)
+        time_now = round(time_now) + 30
         async with ctx.typing():
-            await asyncio.sleep(1)
-            with open('resources/test.json', 'r') as f:
-                user = json.loads(f.read())
-                k = list(user.keys())
-                if str(ctx.author.id) in k:
-                    await ctx.send("You have already set an AFK status, wait until your AFK status is removed (30 seconds) to set a new AFK status.")
-                    return
-                user[str(ctx.author.id)] = {}
-                user[str(ctx.author.id)]['guild_id'] = ctx.guild.id
-                user[str(ctx.author.id)]['time'] = time_now+30
-                user[str(ctx.author.id)]['message'] = message
-                with open('resources/test.json', 'w', encoding='utf8') as f:
-                    json.dump(user,f,sort_keys=True,indent=4,ensure_ascii=False)
-                    await ctx.send(f"{member.mention} You are now AFK. message: {message}")
+            sql = "INSERT INTO afk(guild_id, member_id, time, message) VALUES(?,?,?,?)"
+            val = (ctx.guild.id, ctx.author.id, time_now, message)
+            cursor.execute(sql, val)
+            config.commit()
+            cursor.close()
+            config.close()
+        await ctx.send(f"{member.mention} You are now AFK. message: {message}")
 
     @afk.error
     async def afk_error(self, ctx, error):
@@ -118,10 +148,14 @@ class Afk(commands.Cog):
         await ctx.send(embed=errorembed)
         logchannel = self.client.get_channel(839016255733497917)
         await logchannel.send(
-            f"In {ctx.guild.name}, a command was executed by {ctx.author.mention}: `{ctx.message.content}`, which received an error: `{error}`\nMore details:")
-        message = await logchannel.send("Uploading traceback to Hastebin...")
-        tracebacklink = await postbin.postAsync(gettraceback(error))
-        await message.edit(content=tracebacklink)
+            f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await logchannel.send(file=file)
+        os.remove(filename)
 
 
 def setup(client):

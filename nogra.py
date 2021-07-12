@@ -62,7 +62,7 @@ class HelpEmbed(discord.Embed):  # Our embed with some preset attributes to avoi
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.timestamp = datetime.datetime.utcnow()
-        text = f"Use help [command] or help [category] for more information."
+        text = f"Use help [category] to see the commands in a category and help [command] to see its syntax."
         self.set_footer(text=text)
         self.color = discord.Color.random()
 
@@ -201,6 +201,8 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
+    if ctx.command.cog:
+        return
     if isinstance(error, discord.ext.commands.ChannelNotFound):
             await ctx.send(error)
             return

@@ -28,8 +28,7 @@ def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 start_time = time.time()
@@ -57,7 +56,6 @@ class Afk(commands.Cog):
         cursor = config.cursor()
         result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and member_id = ? and time < ? ',
                                 (message.guild.id, message.author.id, timenow,)).fetchall()
-        print(len(result))
         if len(result) == 0:
             result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and time < ?',
                                     (message.guild.id, timenow,)).fetchall()
@@ -78,10 +76,6 @@ class Afk(commands.Cog):
             if "[AFK] " in message.author.display_name:
                 newname = message.author.display_name.replace("[AFK]", "")
                 await message.author.edit(nick=newname)
-            print(result)
-            print(result[0])
-            print(result[1])
-            print(result[2])
             cursor.execute("DELETE FROM afk where guild_id = ? and member_id = ?", (result[0], result[1],))
             config.commit()
             await message.channel.send(f"Welcome back {message.author.mention}! I have removed your AFK status.")

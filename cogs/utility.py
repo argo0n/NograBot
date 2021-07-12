@@ -20,16 +20,18 @@ import json
 import os
 from datetime import datetime, date
 import time
-import nacl
-from pytz import timezone
-import postbin
+#import nacl
+#from pytz import timezone
+#import postbin
 import traceback
 from cogs.nograhelpers import *
-import requests
+#import requests
 from colorthief import ColorThief
 import urllib.request
 import sqlite3
 import matplotlib.pyplot as plt
+import numpy as np
+from typing import Union
 
 
 def rgb_to_hex(rgb):
@@ -485,10 +487,10 @@ class utility(commands.Cog):
         else:
             await ctx.send("You can only use this command if you are Argon.")
 
-    @commands.command(name="chatchart", brief="Lists portions of messages sent by members", description = "Shows the percentage of messages sent by various members")
-    async def chatchart(self, ctx, channel:discord.TextChannel =None):
+    @commands.command(name="chatchart", brief="Lists portions of messages sent by members | Add `--nobots` to filter out bots.", description = "Shows the percentage of messages sent by various members. Use `chatchart <channel> --nobots` to filter out bots.")
+    async def chatchart(self, ctx, channel:Union[discord.TextChannel, str] =None, hasbots = None):
         count = {}
-        if channel is None:
+        if channel is None or type(channel) is str:
             channel = ctx.channel
         with ctx.typing():
             messagelist = await channel.history(limit=1000).flatten()
@@ -503,10 +505,16 @@ class utility(commands.Cog):
                         else:
                             count["Others"] += 1
                     else:
-                        if authorid not in count:
-                            count[authorid] = 1
+                        if channel == "--nobots" or hasbots == "--nobots":
+                            if authorid not in count and not message.author.bot:
+                                count[authorid] = 1
+                            elif not message.author.bot:
+                                count[authorid] += 1
                         else:
-                            count[authorid] += 1
+                            if authorid not in count:
+                                count[authorid] = 1
+                            else:
+                                count[authorid] += 1
             counted = sorted(count.items(), key=operator.itemgetter(1), reverse=True)
             labels = []
             sizes = []
@@ -523,6 +531,7 @@ class utility(commands.Cog):
                     labels.append(name)
                     sizes.append(entry[1])
             count = counted
+            NUM_COLORS = len(labels)
             plt.figure(figsize=plt.figaspect(1))
             newlabels = []
             for l, s in zip(labels, sizes):
@@ -530,7 +539,8 @@ class utility(commands.Cog):
                 s = round(s,1)
                 newlabels.append(f"{l}, {s}%")
             title = plt.title(f"Messages in #{channel.name}", color = 'w')
-            plt.pie(sizes)
+            colors = ["saddlebrown", "red", "orangered","gold", "yellowgreen", "lime", "fuchsia", "cyan", "dodgerblue", "slategrey", "blue", "slateblue", "lightcoral", "grey"]
+            plt.pie(sizes, colors = colors)
             plt.legend(bbox_to_anchor=(1,0.5), loc='center left', labels=newlabels, facecolor="gray", edgecolor="white")
             filename = f"temp/{tempgen()}.png"
             plt.savefig(filename, bbox_inches="tight", pad_inches = 0.1, transparent=True)

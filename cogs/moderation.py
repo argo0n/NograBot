@@ -14,6 +14,7 @@ import discord
 import datetime
 import time
 import pytz
+import traceback
 from pytz import timezone
 import asyncio
 import postbin
@@ -61,10 +62,47 @@ class Moderation(commands.Cog):
 
     def __init__(self, client):
         self.description = "🛡️ Keep your server safe and healthy."
+        self.temproleremover.start()
         self.client = client
+
+    @tasks.loop(seconds=5.0)
+    async def temproleremover(self):
+        await self.client.wait_until_ready()
+        timenow = round(time.time())
+        temproles = sqlite3.connect('databases/config.sqlite')
+        cursor = temproles.cursor()
+        result = cursor.execute("SELECT * FROM temprole WHERE time < ?", (timenow,)).fetchall()
+        if len(result) == 0:
+            return
+        for row in result:
+            guild = self.client.get_guild(row[0])
+            member = guild.get_member(row[1])
+            role = guild.get_role(row[3])
+            if guild != None and member != None and role != None:
+                try:
+                    invoker = self.client.get_user(row[2])
+                    await member.remove_roles(role,
+                                              reason=f"Removed after specified timing, originally invoked by {invoker.name}#{invoker.discriminator}")
+                except discord.errors.Forbidden:
+                    pass
+            guild_id = row[0]
+            member_id = row[1]
+            executor_id = row[2]
+            role_id = row[3]
+            timee = row[4]
+            cursor.execute(
+                "DELETE FROM temprole WHERE guild_id = ? and member_id = ? and executor_id = ? and role_id = ? and time = ?",
+                (guild_id, member_id, executor_id, role_id, timee))
+        temproles.commit()
+        cursor.close()
+        temproles.close()
 
     @commands.Cog.listener()
     async def on_ready(self):
+        db = sqlite3.connect('databases/config.sqlite')
+        cursor = db.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS temprole(guild_id integer, member_id integer, executor_id integer, role_id integer, time integer)")
         print("Cog \"Moderation\" loaded")
 
     async def cog_command_error(self, ctx, error):
@@ -91,7 +129,10 @@ class Moderation(commands.Cog):
                 f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
             return
         if isinstance(error, commands.MemberNotFound):
-            await ctx.send(f"{error}\n It has to be a mention or user ID.")
+            await ctx.send(f"{error}\nIt has to be a mention or user ID.")
+        if isinstance(error, commands.RoleNotFound):
+            await ctx.send(
+                f"{error}\nIt has to be a mention, role ID or role name. If you did state the role name, try adding `\"` around the role name.")
             return
         if isinstance(error, commands.CommandInvokeError):
             error = error.original
@@ -142,48 +183,71 @@ class Moderation(commands.Cog):
                         idotchannel = self.client.get_channel(idotchannels)
                         await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
-    @commands.command(name="role", brief = "add/remove roles", description="Adds or remove roles from a member.")    
-    @commands.has_permissions(manage_roles = True)                    
-    async def role(self, ctx, member:discord.Member = None, *, role:discord.Role = None):
+    @commands.command(name="role", brief="add/remove roles", description="Adds or remove roles from a member.")
+    @commands.has_permissions(manage_roles=True)
+    async def role(self, ctx, member: discord.Member = None, *, role: discord.Role = None):
+        if member == None or role == None:
+            await ctx.send(
+                "Example of proper usage of command:\n`role @Argon#0002 smelly` (@Argon#0002 as the member and `smelly` as the role name)")
+        if member.top_role >= ctx.author.top_role:
+            await ctx.send(
+                f"You cannot ban {member.name} as your highest role (**{ctx.author.top_role}**) is the same as or lower than your target's highest role (**{member.top_role.name}**).")
+            return
         if role in member.roles:
             try:
-                await member.remove_roles(role, reason=f"Role removal for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await member.remove_roles(role,
+                                          reason=f"Role removal for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
                 await ctx.send(f"Removed **{role.name}** from **{member.name}#{member.discriminator}**.")
             except discord.errors.Forbidden:
-                await ctx.send(f"I do not have the permission to remove **{role.name}** from **{member.name}#{member.discriminator}**.")
+                await ctx.send(
+                    f"I do not have the permission to remove **{role.name}** from **{member.name}#{member.discriminator}**.")
                 return
         else:
             try:
-                await member.add_roles(role, reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
+                await member.add_roles(role,
+                                       reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
                 await ctx.send(f"Added **{role.name}** to **{member.name}#{member.discriminator}**.")
             except discord.errors.Forbidden:
-                await ctx.send(f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
+                await ctx.send(
+                    f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
                 return
 
-    @commands.command(name="temprole", brief = "add/remove roles", description="Adds or remove roles from a member.", aliases = ["temporaryrole"])
-    async def role(self, ctx, member:discord.Member = None, *, role:discord.Role = None):
-        if role in member.roles:
-            try:
-                await member.remove_roles(role, reason=f"Role removal for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
-                await ctx.send(f"Removed **{role.name}** from **{member.name}#{member.discriminator}**.")
-            except discord.errors.Forbidden:
-                await ctx.send(f"I do not have the permission to remove **{role.name}** from **{member.name}#{member.discriminator}**.")
-                return
-        else:
-            try:
-                await member.add_roles(role, reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}")
-                await ctx.send(f"Added **{role.name}** to **{member.name}#{member.discriminator}**.")
-            except discord.errors.Forbidden:
-                await ctx.send(f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
-                return
-
+    @commands.command(name="temprole", brief="add/remove roles with time",
+                      description="Adds or remove roles from a member for a specified time.", aliases=["temporaryrole"])
+    async def role(self, ctx, member: discord.Member = None, role: discord.Role = None, duration=None):
+        if member is None or role is None or duration is None:
+            await ctx.send(
+                "Example of proper usage of command:\n`temprole @Argon#0002 \"nice poo poo\" 1h2m` (@Argon#0002 as the member, `nice poo poo` as the role name and `1h2m` to signify 1 hour 2 minutes for the role to be added to Argon.)")
+            return
+        try:
+            with ctx.typing():
+                await member.add_roles(role,
+                                       reason=f"Role addition for {member.name}#{member.discriminator} requested by {ctx.author.name}#{ctx.author.discriminator}, includes delay to remove it")
+                timenow = round(time.time())
+                intduration = stringtotime(duration)
+                timenow += intduration
+                temproles = sqlite3.connect('databases/config.sqlite')
+                cursor = temproles.cursor()
+                sql = "INSERT INTO temprole(guild_id, member_id, executor_id, role_id, time) VALUES(?,?,?,?,?)"
+                val = (ctx.guild.id, member.id, ctx.author.id, role.id, timenow)
+                cursor.execute(sql, val)
+                temproles.commit()
+                cursor.close()
+                temproles.close()
+            await ctx.send(
+                f"Added **{role.name}** to **{member.name}#{member.discriminator}**. It will be removed in **{secondstotiming(intduration)}**.")
+        except discord.errors.Forbidden:
+            await ctx.send(
+                f"I do not have the permission to add **{role.name}** to **{member.name}#{member.discriminator}**.")
+            return
 
     @commands.command(name="slowmode", brief="Sets slowmode", description="Sets or changes the slowmode in a channel.",
                       aliases=["sm"])
     @commands.has_permissions(manage_messages=True)
-    async def slowmode(self, ctx, channel:Union[discord.TextChannel, str] = None, duration = None):
+    async def slowmode(self, ctx, channel: Union[discord.TextChannel, str] = None, duration=None):
         if channel is None:
-            await ctx.channel.edit(slowmode_delay = 0, reason = f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
+            await ctx.channel.edit(slowmode_delay=0,
+                                   reason=f"Channel edit requested by {ctx.author.name}#{ctx.author.discriminator}")
             await ctx.send(f"The slowmode in {ctx.channel.name} has been changed to **0 seconds.**")
 
         if isinstance(channel, discord.TextChannel):

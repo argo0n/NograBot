@@ -21,7 +21,7 @@ import os
 from datetime import datetime, date
 import time
 #import nacl
-#from pytz import timezone
+from pytz import timezone
 #import postbin
 import traceback
 from cogs.nograhelpers import *
@@ -99,6 +99,11 @@ class utility(commands.Cog):
             return
         if isinstance(error, commands.MemberNotFound):
             await ctx.send(f"{error}\n It has to be a mention or user ID.")
+            return
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
+        if isinstance(error, SyntaxError) and ctx.command.name == "calculate":
+            await ctx.send("You did not provide a vald calculation input.")
             return
         errorembed = discord.Embed(title="Oops!",
                                    description="This command just received an error. It has been sent to the bot developer..",
@@ -467,7 +472,7 @@ class utility(commands.Cog):
     async def calculate(self, ctx, *, yourcalculation):
         if "^" in yourcalculation:
             yourcalculation = yourcalculation.replace("^", "**")
-        result = ast.literal_eval(yourcalculation)
+        result = simple_eval(yourcalculation)
         await ctx.send(str(yourcalculation) + " = " + str(result))
 
     @commands.command(name="emojis", brief="Lists out emojis", description="Lists out emojis")

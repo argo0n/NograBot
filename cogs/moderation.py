@@ -18,7 +18,6 @@ import traceback
 from pytz import timezone
 import asyncio
 import postbin
-import traceback
 import json
 import random
 from cogs.nograhelpers import *

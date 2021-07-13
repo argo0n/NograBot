@@ -241,6 +241,7 @@ class utility(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def add(self, ctx, reaction_type=None, trigger=None, *, messageemoji=None):
         # sourcery no-metrics
+        trigger = trigger[0:300]
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]
         if reaction_type not in ["message", "react", "reaction", "send"]:
@@ -293,11 +294,11 @@ class utility(commands.Cog):
                 config.close()
                 return
         sql = 'INSERT INTO autoreact(guild_id, member_id, ar_type, trigger, content) VALUES(?,?,?,?,?)'
-        val = (ctx.guild.id, ctx.author.id, "message", trigger, messageemoji)
+        val = (ctx.guild.id, ctx.author.id, "message", trigger, messageemoji[0:1500])
         cursor.execute(sql, val)
         config.commit()
         await ctx.send(
-            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send **{messageemoji}** when I hear **{trigger}**.")
+            f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send **{messageemoji[0:1500]}** when I hear **{trigger}**.")
         cursor.close()
         config.close()
         return

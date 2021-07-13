@@ -142,7 +142,7 @@ class Fun(commands.Cog):
     @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
-        await ctx.send("This command is deprecated from build **version number** onwards. For more information, check out the changelog.\nIt will be permenantly removed during the next update.")
+        await ctx.send("This command is deprecated from build **2.5.0** onwards. For more information, check out the changelog.\nNogra will no longer respond to this command after the next update.")
         return
 
     @commands.command(name="blacklist", brief="blacklists user",

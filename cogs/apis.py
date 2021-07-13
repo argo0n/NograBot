@@ -38,7 +38,7 @@ class APIs(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.description = "🖼️ Get data from external APIs"
+        self.description = "📲 Get data from external APIs"
 
     @commands.Cog.listener()
     async def on_ready(self):

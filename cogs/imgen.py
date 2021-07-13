@@ -68,6 +68,7 @@ class Imgen(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.description = "🖼️ Image Generation"
 
     async def cog_command_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.ChannelNotFound):

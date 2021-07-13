@@ -494,39 +494,35 @@ class utility(commands.Cog):
 
     @commands.command(name="chatchart", brief="Lists portions of messages sent by members | Add `--nobots` to filter out bots.", description = "Shows the percentage of messages sent by various members. Use `chatchart <channel> --nobots` to filter out bots.")
     async def chatchart(self, ctx, channel:Union[discord.TextChannel, str] =None, hasbots = None):
+        # sourcery no-metrics
         count = {}
         if channel is None or type(channel) is str:
             channel = ctx.channel
         with ctx.typing():
             messagelist = await channel.history(limit=1000).flatten()
             for message in messagelist:
-                if message.webhook_id is not None:
-                    pass
-                else:
+                if message.webhook_id is None:
                     authorid = message.author.id
                     if len(count.keys()) > 15 and authorid not in count:
                         if "Others" not in count:
                             count["Others"] = 1
                         else:
                             count["Others"] += 1
+                    elif channel == "--nobots" or hasbots == "--nobots":
+                        if authorid not in count and not message.author.bot:
+                            count[authorid] = 1
+                        elif not message.author.bot:
+                            count[authorid] += 1
+                    elif authorid not in count:
+                        count[authorid] = 1
                     else:
-                        if channel == "--nobots" or hasbots == "--nobots":
-                            if authorid not in count and not message.author.bot:
-                                count[authorid] = 1
-                            elif not message.author.bot:
-                                count[authorid] += 1
-                        else:
-                            if authorid not in count:
-                                count[authorid] = 1
-                            else:
-                                count[authorid] += 1
+                        count[authorid] += 1
             counted = sorted(count.items(), key=operator.itemgetter(1), reverse=True)
             labels = []
             sizes = []
             for entry in counted:
                 if entry[0] == "Others":
                     labels.append("Others")
-                    sizes.append(entry[1])
                 else:
                     member = self.client.get_user(entry[0])
                     if len(member.name) > 15:
@@ -534,7 +530,7 @@ class utility(commands.Cog):
                     else:
                         name = f"{member.name}#{member.discriminator}"
                     labels.append(name)
-                    sizes.append(entry[1])
+                sizes.append(entry[1])
             count = counted
             NUM_COLORS = len(labels)
             plt.figure(figsize=plt.figaspect(1))

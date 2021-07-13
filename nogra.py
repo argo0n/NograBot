@@ -49,7 +49,8 @@ INITIAL_EXTENSIONS = [
     'cogs.dankmemer',
     'cogs.fun',
     'cogs.moderation',
-    'cogs.utility'
+    'cogs.utility',
+    'cogs.config'
 ]
 for extension in INITIAL_EXTENSIONS:
     try:
@@ -258,6 +259,17 @@ async def on_guild_remove(guild):
 @client.event
 async def on_guild_join(guild):
     print(f"I have joined {guild.name}")
+    with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
+        channeldetails = json.load(f)
+
+    if str(guild.id) not in channeldetails:
+        channeldetails[str(guild.id)] = {
+            'blacklist_channels': [],
+            'logging_channels': None,
+        }
+
+        with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+            json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
     with open('nograresources/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(guild.id)] = 'a.'

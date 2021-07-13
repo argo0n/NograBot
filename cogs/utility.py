@@ -155,8 +155,8 @@ class utility(commands.Cog):
                             await message.channel.send(autoreact[4])
                         except discord.errors.Forbidden:
                             pass
-            else:
-                pass
+                
+            pass
             cursor.close()
             config.close()
             return

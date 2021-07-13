@@ -78,7 +78,7 @@ class Moderation(commands.Cog):
             guild = self.client.get_guild(row[0])
             member = guild.get_member(row[1])
             role = guild.get_role(row[3])
-            if guild != None and member != None and role != None:
+            if guild is not None and member is not None and role is not None:
                 try:
                     invoker = self.client.get_user(row[2])
                     await member.remove_roles(role,
@@ -186,7 +186,7 @@ class Moderation(commands.Cog):
     @commands.command(name="role", brief="add/remove roles", description="Adds or remove roles from a member.")
     @commands.has_permissions(manage_roles=True)
     async def role(self, ctx, member: discord.Member = None, *, role: discord.Role = None):
-        if member == None or role == None:
+        if member is None or role is None:
             await ctx.send(
                 "Example of proper usage of command:\n`role @Argon#0002 smelly` (@Argon#0002 as the member and `smelly` as the role name)")
         if member.top_role >= ctx.author.top_role:

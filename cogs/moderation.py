@@ -406,9 +406,8 @@ class Moderation(commands.Cog):
                 await requester.send(f"I have left **{ctx.guild.name}**.")
             await ctx.guild.leave()
             return
-        else:
-            await ctx.send("I'll be staying here then <:thethumb:852486551867097089>")
-            return
+        await ctx.send("I'll be staying here then <:thethumb:852486551867097089>")
+        return
 
     @commands.command(pass_context=True, name="idot", brief="Sets logging channel",
                       description="If people talk in blacklisted channels, use this command to log their talking here.")

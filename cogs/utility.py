@@ -280,9 +280,8 @@ class utility(commands.Cog):
                         cursor.close()
                         config.close()
                         return
-                    else:
-                        await ctx.send("Stopping this command.")
-                        return
+                    await ctx.send("Stopping this command.")
+                    return
             else:
                 sql = 'INSERT INTO autoreact(guild_id, member_id, ar_type, trigger, content) VALUES(?,?,?,?,?)'
                 val = (ctx.guild.id, ctx.author.id, "react", trigger, messageemoji)

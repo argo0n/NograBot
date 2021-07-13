@@ -49,8 +49,7 @@ INITIAL_EXTENSIONS = [
     'cogs.dankmemer',
     'cogs.fun',
     'cogs.moderation',
-    'cogs.utility',
-    'cogs.config'
+    'cogs.utility'
 ]
 for extension in INITIAL_EXTENSIONS:
     try:
@@ -315,6 +314,15 @@ async def on_guild_join(guild):
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
         await general.send(embed=joinembed)
 
+@client.event
+async def on_guild_join(guild):
+    channel = client.get_channel(864530070880911398)
+    await channel.send(f"<@650647680837484556>, I have joined {guild.name}. It has {len(guild.members)} members.")
+
+@client.event
+async def on_guild_remove(guild):
+    channel = client.get_channel(864530070880911398)
+    await channel.send(f"<@650647680837484556>, I have left {guild.name}.")
 
 @client.event
 async def on_message(message):

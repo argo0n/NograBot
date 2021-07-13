@@ -82,5 +82,4 @@ def stringtotime(timing):
         timing = timing.replace("s", "*1+")
     timing += "0"
     timing = simple_eval(timing)
-    print(timing)
     return timing

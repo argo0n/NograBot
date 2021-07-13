@@ -39,6 +39,52 @@ class Afk(commands.Cog):
         self.client = client
         self.description = "<:nograafk:862735866857652224> Tell people you're AFK"
 
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.ChannelNotFound):
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.MissingPermissions):
+            if "--sudo permbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send("Reinvoking command with check bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
+            await ctx.send(error)
+            return
+        if isinstance(error, commands.CommandOnCooldown):
+            if "--sudo cdbypass" in ctx.message.content and ctx.author.id == 650647680837484556:
+                await ctx.send(
+                    "Reinvoking command with cooldown bypass. Errors, if any, will show up in the console")
+                await ctx.reinvoke()
+                return
+            cooldown = error.retry_after
+            await ctx.send(
+                f"Please wait for another **{secondstotiming(cooldown)}** seconds before executing this command!")
+            return
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send(f"{error}\n It has to be a mention or user ID.")
+            return
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
+        if isinstance(error, SyntaxError) and ctx.command.name == "calculate":
+            await ctx.send("You did not provide a vald calculation input.")
+            return
+        errorembed = discord.Embed(title="Oops!",
+                                   description="This command just received an error. It has been sent to the bot developer..",
+                                   color=0x00ff00)
+        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
+        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
+        await ctx.send(embed=errorembed)
+        logchannel = self.client.get_channel(839016255733497917)
+        await logchannel.send(
+            f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
+        filename = random.randint(1, 9999999999)
+        filename = f"temp/{filename}.txt"
+        with open(filename, "w") as f:
+            f.write(gettraceback(error))
+        file = discord.File(filename)
+        await logchannel.send(file=file)
+        os.remove(filename)
+
     @commands.Cog.listener()
     async def on_ready(self):
         db = sqlite3.connect('databases/config.sqlite')
@@ -84,11 +130,26 @@ class Afk(commands.Cog):
 
     @commands.command(name="afkclear", brief="Removes afk status", description="Removes the AFK status of a member.")
     @commands.has_permissions(manage_messages=True)
-    async def afkclear(self, ctx, member: discord.Member):
+    async def afkclear(self, ctx, member: discord.Member = None):
+        if member is None:
+            await ctx.send("You need to provide a member for this command.")
+            return
+        config = sqlite3.connect('databases/config.sqlite')
+        cursor = config.cursor()
+        result = cursor.execute('SELECT * FROM afk WHERE guild_id = ? and member_id = ?',
+                                (ctx.guild.id, member.id,)).fetchall()
+        if len(result) == 0:
+            await ctx.send(f"**{member.name}#{member.discriminator}** has no AFK status.")
+            return
         await ctx.send(f"Are you sure you want to remove **{member.name}#{member.discriminator}**'s AFK status?")
-        yn = await self.client.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
-                                        timeout=20.0)
-        if yn.lower() in ["y", "yes"]:
+        try:
+            yn = await self.client.wait_for("message",
+                                            check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+                                            timeout=20.0)
+        except asyncio.TimeoutError:
+            await ctx.send("Aborting this operation.")
+            return
+        if yn.content.lower() in ["y", "yes"]:
             config = sqlite3.connect('databases/config.sqlite')
             cursor = config.cursor()
             cursor.execute("DELETE FROM afk where guild_id = ? and member_id = ?",
@@ -97,6 +158,8 @@ class Afk(commands.Cog):
             await ctx.send(f"AFK status for **{member.name}#{member.discriminator}** removed.")
             cursor.close()
             config.close()
+        else:
+            await ctx.send("Aborting this operation.")
 
     @commands.command(name="afk", brief="Let everyone know you are AFK",
                       description="Sets an AFK status which will tell others why you are AFK when you are pinged.")
@@ -131,25 +194,6 @@ class Afk(commands.Cog):
             cursor.close()
             config.close()
         await ctx.send(f"{member.mention} You are now AFK. message: {message}")
-
-    @afk.error
-    async def afk_error(self, ctx, error):
-        errorembed = discord.Embed(title="Oops!",
-                                   description="This command just received an error. It has been sent to the bot developer..",
-                                   color=0x00ff00)
-        errorembed.add_field(name="Error", value=f"```{error}```", inline=False)
-        errorembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/834753936023224360.gif?v=1")
-        await ctx.send(embed=errorembed)
-        logchannel = self.client.get_channel(839016255733497917)
-        await logchannel.send(
-            f"Error encountered on a command.\nGuild `:` {ctx.guild.name} ({ctx.guild.id})\nAuthor `:` {ctx.author.name}#{ctx.author.discriminator} {ctx.author.mention}({ctx.author.id})\nChannel `:` {ctx.channel.name} {ctx.channel.mention} ({ctx.channel.id})\nCommand `:` `{ctx.message.content}`\nError `:` `{error}`\nMore details:")
-        filename = random.randint(1, 9999999999)
-        filename = f"temp/{filename}.txt"
-        with open(filename, "w") as f:
-            f.write(gettraceback(error))
-        file = discord.File(filename)
-        await logchannel.send(file=file)
-        os.remove(filename)
 
 
 def setup(client):

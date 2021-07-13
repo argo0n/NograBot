@@ -139,7 +139,7 @@ class utility(commands.Cog):
         result = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (message.guild.id,)).fetchall()
         if len(result) != 0:
             for autoreact in result:
-                if any([autoreact[3] == word for word in message.content.split()]):
+                if any(autoreact[3] == word for word in message.content.split()):
                     if autoreact[2] == "react":
                         try:
                             await message.add_reaction(autoreact[4])

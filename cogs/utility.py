@@ -509,7 +509,7 @@ class utility(commands.Cog):
     @commands.command(name="chatchart",
                       brief="Lists portions of messages sent by members | Add `--nobots` to filter out bots.",
                       description="Shows the percentage of messages sent by various members. Use `chatchart <channel> --nobots` to filter out bots.")
-    async def chatchart(self, ctx, channel: Union[discord.TextChannel, str]):
+    async def chatchart(self, ctx, channel: Union[discord.TextChannel, str] = None):
         # sourcery no-metrics
         count = {}
         if channel is None or type(channel) is str:

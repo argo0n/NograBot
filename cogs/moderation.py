@@ -171,16 +171,19 @@ class Moderation(commands.Cog):
 
             with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
                 json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
-            await message.channel.send("The shut-up feature is now online for Nogra. You can prevent people from talking in a channel while keeping their perms to send messages.\nUse `a.shutup add/remove [channel]` to make a channel shut up and `a.idot add/remove [channel]` if you want people to get pinged for why they cannot talk.")
         else:
             blacklisted_channels = channeldetails[str(message.guild.id)]['blacklist_channels']
-            if len(blacklisted_channels) != 0:
-                if message.channel.id in blacklisted_channels:
-                    await message.delete()
-                    idotchannels = channeldetails[str(message.guild.id)]['logging_channels']
-                    if idotchannels is not None:
-                        idotchannel = self.client.get_channel(idotchannels)
-                        await idotchannel.send("**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
+            if (
+                    len(blacklisted_channels) != 0
+                    and message.channel.id in blacklisted_channels
+            ):
+                await message.delete()
+                idotchannels = channeldetails[str(message.guild.id)]['logging_channels']
+                if idotchannels is not None:
+                    idotchannel = self.client.get_channel(idotchannels)
+                    await idotchannel.send(
+                        "**" + str(message.author.mention) + "**, if you continue to talk in <#" + str(
+                            message.channel.id) + "> i'm gonna have to mute you <a:pik:801091998290411572>")
 
     @commands.command(name="role", brief="add/remove roles", description="Adds or remove roles from a member.")
     @commands.has_permissions(manage_roles=True)
@@ -514,7 +517,7 @@ class Moderation(commands.Cog):
         embed = discord.Embed(colour=0x00FF00)
         embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
         embed.add_field(name="Recommended Invite Link",
-                        value=f"[Nogra with only necessary permissions](https://discord.com/oauth2/authorize?client_id={self.client.user.id}&permissions=1544416503&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot)")
+                        value=f"[Nogra with only necessary permissions](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=3691375831&redirect_uri=https%3A%2F%2Fnogra.me%2Fthank-you&scope=bot)")
         embed.add_field(name="Admin Invite Link",
                         value=f"[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot)")
         embed.set_thumbnail(url=str(self.client.user.avatar_url))

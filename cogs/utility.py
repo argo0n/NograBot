@@ -245,7 +245,6 @@ class utility(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def add(self, ctx, reaction_type=None, trigger=None, *, messageemoji=None):
         # sourcery no-metrics
-        trigger = trigger[0:300]
         prefix = await self.client.get_prefix(ctx)
         prefix = prefix[2]
         if reaction_type not in ["message", "react", "reaction", "send"]:
@@ -254,6 +253,7 @@ class utility(commands.Cog):
         if trigger is None or messageemoji is None:
             await ctx.send(f"You're either missing the trigger or the response to the trigger. Please use `{prefix}autoreact` to see how to use this command.")
             return
+        trigger = trigger[0:300]
         config = sqlite3.connect('databases/config.sqlite')
         cursor = config.cursor()
         result = cursor.execute('SELECT * FROM autoreact WHERE trigger = ? and guild_id = ?',

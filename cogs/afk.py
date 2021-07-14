@@ -95,7 +95,7 @@ class Afk(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot or message.author == self.client.user:
+        if message.author.bot or message.author == self.client.user or isinstance(message.channel, discord.DMChannel):
             return
         timenow = time.time()
         config = sqlite3.connect('databases/config.sqlite')

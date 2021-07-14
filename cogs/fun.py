@@ -139,7 +139,7 @@ class Fun(commands.Cog):
             await ctx.send(
                 f"**{member.name}#{member.discriminator}** has been banned by {ctx.author.mention} for **{random.choice(duration)}**. Reason: {reason}")
 
-    @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"])
+    @commands.command(name="spamping", brief="spam pings people", description="Spam pings people", aliases=["sp"], hidden = True)
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def spamping(self, ctx, member: discord.Member = None, times=None, *, message=None):
         await ctx.send("This command is deprecated from build **2.5.0** onwards. For more information, check out the changelog.\nNogra will no longer respond to this command after the next update.")

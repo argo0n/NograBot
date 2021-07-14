@@ -492,8 +492,10 @@ class utility(commands.Cog):
         else:
             await ctx.send("You can only use this command if you are Argon.")
 
-    @commands.command(name="chatchart", brief="Lists portions of messages sent by members | Add `--nobots` to filter out bots.", description = "Shows the percentage of messages sent by various members. Use `chatchart <channel> --nobots` to filter out bots.")
-    async def chatchart(self, ctx, channel:Union[discord.TextChannel, str] =None, hasbots = None):
+    @commands.command(name="chatchart",
+                      brief="Lists portions of messages sent by members | Add `--nobots` to filter out bots.",
+                      description="Shows the percentage of messages sent by various members. Use `chatchart <channel> --nobots` to filter out bots.")
+    async def chatchart(self, ctx, channel: Union[discord.TextChannel, str]):
         # sourcery no-metrics
         count = {}
         if channel is None or type(channel) is str:
@@ -503,12 +505,12 @@ class utility(commands.Cog):
             for message in messagelist:
                 if message.webhook_id is None:
                     authorid = message.author.id
-                    if len(count.keys()) > 15 and authorid not in count:
+                    if len(count.keys()) > 19 and authorid not in count:
                         if "Others" not in count:
                             count["Others"] = 1
                         else:
                             count["Others"] += 1
-                    elif channel == "--nobots" or hasbots == "--nobots":
+                    elif ctx.message.content.endswith("--nobots"):
                         if authorid not in count and not message.author.bot:
                             count[authorid] = 1
                         elif not message.author.bot:
@@ -532,15 +534,15 @@ class utility(commands.Cog):
                     labels.append(name)
                 sizes.append(entry[1])
             count = counted
-            NUM_COLORS = len(labels)
             plt.figure(figsize=plt.figaspect(1))
             newlabels = []
             for l, s in zip(labels, sizes):
                 s = s/sum(sizes)*100
                 s = round(s,1)
                 newlabels.append(f"{l}, {s}%")
-            title = plt.title(f"Messages in #{channel.name}", color = 'w')
-            colors = ["saddlebrown", "red", "orangered","gold", "yellowgreen", "lime", "fuchsia", "cyan", "dodgerblue", "slategrey", "blue", "slateblue", "lightcoral", "grey"]
+            title = plt.title(f"Messages in #{channel.name}", color='w')
+            colors = ["saddlebrown", "red", "coral", "gold", "yellowgreen", "lime", "darkgreen", "fuchsia", "cyan",
+                      "dodgerblue", "slategrey", "blue", "lightcoral"]
             plt.pie(sizes, colors = colors)
             plt.legend(bbox_to_anchor=(1,0.5), loc='center left', labels=newlabels, facecolor="gray", edgecolor="white")
             filename = f"temp/{tempgen()}.png"

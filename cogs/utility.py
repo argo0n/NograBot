@@ -102,6 +102,9 @@ class utility(commands.Cog):
             return
         if isinstance(error, commands.CommandInvokeError):
             error = error.original
+        if isinstance(error, discord.errors.Forbidden):
+            await ctx.send(f"I am `{error.text}` to complete this command.")
+            return
         if isinstance(error, SyntaxError) and ctx.command.name == "calculate":
             await ctx.send("You did not provide a vald calculation input.")
             return
@@ -139,7 +142,8 @@ class utility(commands.Cog):
         result = cursor.execute('SELECT * FROM autoreact WHERE guild_id = ?', (message.guild.id,)).fetchall()
         if len(result) != 0:
             for autoreact in result:
-                if any(autoreact[3] == word for word in message.content.split()):
+                messagecontent = message.content.lower()
+                if any(autoreact[3].lower() == word for word in messagecontent.split()):
                     if autoreact[2] == "react":
                         try:
                             await message.add_reaction(autoreact[4])
@@ -289,7 +293,7 @@ class utility(commands.Cog):
                 cursor.execute(sql, val)
                 config.commit()
                 await ctx.send(
-                    f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now send {messageemoji} when I hear **{trigger}**.")
+                    f"<a:Tick:796984073603383296> **Autoreaction added**\nI will now react with {messageemoji} when I hear **{trigger}**.")
                 cursor.close()
                 config.close()
                 return

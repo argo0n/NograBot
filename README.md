@@ -1,4 +1,4 @@
-![Nogra on Discord](https://i.imgur.com/M4CDNRD.png)
+![Nogra on Discord](https://i.imgur.com/O2dihWE.png)
 
 <p align="center">
   <a href="https://www.gnu.org/licenses/gpl-3.0">

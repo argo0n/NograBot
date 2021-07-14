@@ -49,7 +49,8 @@ INITIAL_EXTENSIONS = [
     'cogs.dankmemer',
     'cogs.fun',
     'cogs.moderation',
-    'cogs.utility'
+    'cogs.utility',
+    'jishaku'
 ]
 for extension in INITIAL_EXTENSIONS:
     try:
@@ -94,6 +95,8 @@ class MyHelp(commands.HelpCommand):
                 usable += amount_commands
                 if cog:  # getting attributes dependent on if a cog exists or not
                     name = cog.qualified_name
+                    if cog.qualified_name.lower() == "jishaku":
+                        pass
                     description = cog.description or "No description"
                     embed.add_field(name=f"{name} [{amount_commands}]", value=description)
 

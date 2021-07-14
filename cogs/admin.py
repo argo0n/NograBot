@@ -280,7 +280,16 @@ class Admin(commands.Cog):
             else:
                 await ctx.send("No dmads for you <:nograsweg:818474291757580328>")
 
-    @commands.command(brief="command to send a update message to various channels", description="command to send a update message to various channels", hidden=True)
+    @commands.command(brief="Jishaku list", description="Jishaku's list of commands", hidden=True)
+    @commands.is_owner()
+    async def jskhelp(self, ctx):
+        embed = discord.Embed(title="Jishaku Help",
+                              description="\n> jishaku [py|python] or [pyi|python_inspect] <argument>\nEvals python code.\nThe variables available by default in all execution contexts are:\n\n_ctx, _bot, _author, _channel, _guild, _message, _msg, _find, _get\n\n> jishaku [dis|disassemble] <argument>\nThis command compiles Python code in an asynchronous context, and then disassembles the resulting function into Python bytecode in the style of dis.dis.\nThis allows you to quickly and easily determine the bytecode that results from a given expression or piece of code. The code itself is not actually executed.\n\n	\n> jishaku [sh|shell] <argument>\nThe shell command executes commands within your system shell.\n\n> jishaku git/pip <argument>\nShortcuts for shell command\n\n> jishaku shutdown\nShuts Nogra down gracefully\n\n> jishaku rtt\nRound-Trip Time for your bot to the API.\n	\n> jishaku cat <file>\nThis command reads a file from your file system, automatically detecting encoding and (if applicable) highlighting.\n\n> jishaku curl <url>\nLike jsk cat but reads from a URL.\n\nYou can use this to display contents of files online, for instance, the message.txt files created when a message is too long, or raw files from paste sites.\n\n> jishaku sudo <command string> bypasses all checks and cooldowns on a given command.\n\n> jishaku su <member> <command string> allows you to execute a command as another user.\n\n> jishaku in <channel> <command string> allows you to execute a command in another channel.\n\n> jishaku debug <command string> executes a command with an exception wrapper and a timer. This allows you to quickly get feedback on reproducable command errors and slowdowns.\n\n> jishaku repeat <times> <command string> repeats a command a number of times.\n\n> jishaku permtrace <channel> [targets...]\nThis command allows you to investigate the source of expressed permissions in a given channel. Targets can be either a member, or a list of roles (to simulate a member with those roles).\n",
+                              color=discord.Color.random())
+        await ctx.send(embed=embed)
+
+    @commands.command(brief="command to send a update message to various channels",
+                      description="command to send a update message to various channels", hidden=True)
     @commands.is_owner()
     async def update(self, ctx, *, message):
         await ctx.message.delete()

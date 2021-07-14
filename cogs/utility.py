@@ -143,7 +143,9 @@ class utility(commands.Cog):
         if len(result) != 0:
             for autoreact in result:
                 messagecontent = message.content.lower()
-                if any(autoreact[3].lower() == word for word in messagecontent.split()):
+                arrespond = autoreact[3].lower()
+                if arrespond in messagecontent:
+                    print(True)
                     if autoreact[2] == "react":
                         try:
                             await message.add_reaction(autoreact[4])
@@ -155,6 +157,11 @@ class utility(commands.Cog):
                                 (autoreact[0], autoreact[1], autoreact[2], autoreact[3], autoreact[4]))
                             config.commit()
                     elif autoreact[2] == "message":
+                        try:
+                            await message.channel.send(autoreact[4])
+                        except discord.errors.Forbidden:
+                            pass
+                    else:
                         try:
                             await message.channel.send(autoreact[4])
                         except discord.errors.Forbidden:

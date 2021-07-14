@@ -181,6 +181,9 @@ class utility(commands.Cog):
         embed.add_field(name="Autoreact to multiple words?",
                         value="Add double quotes `\"` around the trigger.",
                         inline=False)
+        embed.add_field(name="Character limit",
+                        value="A **trigger** is limited to **300 characters** and a **message** is limited to **1500** characters.",
+                        inline=False)
         embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
         await ctx.send(embed=embed)
     

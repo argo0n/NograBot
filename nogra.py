@@ -93,12 +93,13 @@ class MyHelp(commands.HelpCommand):
                 # if no commands are usable in this category, we don't want to display it
                 amount_commands = len(filtered_commands)
                 usable += amount_commands
-                if cog:  # getting attributes dependent on if a cog exists or not
+                if cog:
                     name = cog.qualified_name
-                    if cog.qualified_name.lower() == "jishaku":
+                    if name.lower() == "jishaku":
                         pass
-                    description = cog.description or "No description"
-                    embed.add_field(name=f"{name} [{amount_commands}]", value=description)
+                    else:
+                        description = cog.description or "No description"
+                        embed.add_field(name=f"{name} [{amount_commands}]", value=description)
 
         embed.description = f"Thank you for using {client.user.name}!"
 
@@ -165,7 +166,7 @@ class MyHelp(commands.HelpCommand):
                 text += f"`{command.name}` - {command.description}\n"
         if command.cog:
             embed.add_field(name="Category", value=command.cog.qualified_name)
-        embed.add_field(name="Sub-commands", value=text, inline=False)
+        embed.add_field(name=f"Sub-commands (`{title}` followed by the subcommand)", value=text, inline=False)
         await self.send(embed=embed)
 
     async def send_group_help(self, group):

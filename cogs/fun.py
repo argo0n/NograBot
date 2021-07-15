@@ -213,7 +213,7 @@ class Fun(commands.Cog):
             await ctx.message.delete()
             await ctx.send(f"<@{userid}> {message}")
 
-    @commands.command()
+    @commands.command(name="dumbfight", description = "Want someone to stay quiet for a few seconds? Use this command to fight them and mute them!", aliases = ["df"])
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def dumbfight(self, ctx, member: discord.Member = None):
         if member is None:
@@ -251,7 +251,7 @@ class Fun(commands.Cog):
                 overwrite.send_messages = True
                 await channel.set_permissions(ctx.author, overwrite=overwrite)
 
-    @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
+    @commands.command(name="hug", brief="hug someone or ship two people with a hug!", description = "hug someone or ship two people with a hug!")
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def hug(self, ctx, target1: discord.Member = None, target2: discord.Member = None):
         if target1 is None:
@@ -268,7 +268,7 @@ class Fun(commands.Cog):
             hugembed.set_image(url=str(huggif))
             await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
             
-    @commands.command(name="slap", brief="slap someone with or even without any reason!")
+    @commands.command(name="slap", brief="Slap someone with or even without any reason!", description = "Slap someone with or even without any reason!")
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def slap(self, ctx, slapTarget: discord.Member = None):
         if slapTarget is None:
@@ -287,9 +287,9 @@ class Fun(commands.Cog):
                 await ctx.send(f"{slapTarget}", embed=slapembed)
             else:
                 print("There's something happened on the tenor API")
-                await ctx.send("Some error occured, please dm Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_SLP`")
+                await ctx.send("Some error occured, please DM Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_SLP`")
             
-    @commands.command(name="kiss", brief="kiss someone :)")
+    @commands.command(name="kiss", brief="Kiss someone :)", description = "Kiss someone :)")
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def kiss(self, ctx, kissTarget: discord.Member = None):
         if kissTarget is None:
@@ -308,7 +308,7 @@ class Fun(commands.Cog):
                 await ctx.send(f"{kissTarget}", embed=kissembed)
             else:
                 print("There's something happened on the tenor API")
-                await ctx.send("Some error occured, please dm Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_KSS`")
+                await ctx.send("Some error occured, please DM Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_KSS`")
 
 def setup(client):
     client.add_cog(Fun(client))

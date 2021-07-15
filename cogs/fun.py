@@ -281,7 +281,7 @@ class Fun(commands.Cog):
                 json_data = json.loads(r.text)
                 slapgif = json_data["results"][random.randint(0, 29)]["media"][0]["gif"]["url"]
                 slapembed.set_image(url=str(slapgif))
-                slapembed.set_footer(name="GIFs taken from tenor")
+                slapembed.set_footer(text="GIFs taken from tenor")
                 await ctx.send(f"{slapTarget}", embed=slapembed)
             else:
                 print("There's something happened on the tenor API")

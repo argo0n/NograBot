@@ -23,14 +23,15 @@ import postbin
 import traceback
 from cogs.nograhelpers import *
 import os
+import requests
+import json
 
 
 def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 start_time = time.time()
@@ -258,18 +259,11 @@ class Fun(commands.Cog):
             hugembed = discord.Embed(title="", color=0x8B95C9)
             hugembed.add_field(name="owo how cute",
                                value=f"{hug1.mention} hugs {hug2.mention}, owo how cute <:nyaFlowers:832598466474803221>")
-            huggif = ['https://i.imgur.com/r9aU2xv.gif',
-                      'https://i.pinimg.com/originals/93/2c/2f/932c2f0c043797342f40c6892ffc93eb.gif',
-                      'https://thumbs.gfycat.com/UnluckyYearlyFlea-small.gif',
-                      'https://acegif.com/wp-content/gif/anime-hug-9.gif',
-                      'https://25.media.tumblr.com/tumblr_ma7l17EWnk1rq65rlo1_500.gif',
-                      'https://i.pinimg.com/originals/85/72/a1/8572a1d1ebaa45fae290e6760b59caac.gif',
-                      'https://media2.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif',
-                      'https://media1.giphy.com/media/JUwliZWcyDmTQZ7m9L/giphy.gif',
-                      'https://media.tenor.com/images/ca88f916b116711c60bb23b8eb608694/tenor.gif',
-                      'https://thumbs.gfycat.com/AlienatedUnawareArcherfish-size_restricted.gif',
-                      'https://i.pinimg.com/originals/42/8b/7e/428b7ed57db9d7aeb2e3f70f21f7bb25.gif']
-            hugembed.set_image(url=str(random.choice(huggif)))
+            response = requests.get("https://some-random-api.ml/animu/hug")
+            json_data = json.loads(response.text)
+            huggif = json_data["link"]
+            
+            hugembed.set_image(url=str(huggif))
             await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
 
 

@@ -261,7 +261,6 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_guild_join(guild):
-    print(f"I have joined {guild.name}")
     with open('nograresources/shutup.json', 'r', encoding='utf8') as f:
         channeldetails = json.load(f)
 
@@ -271,23 +270,20 @@ async def on_guild_join(guild):
             'logging_channels': None,
         }
 
-        with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
-            json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
+    with open('nograresources/shutup.json', 'w', encoding='utf8') as f:
+        json.dump(channeldetails, f, sort_keys=True, indent=4, ensure_ascii=False)
     with open('nograresources/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(guild.id)] = 'a.'
     with open('nograresources/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
-
     with open('nograresources/shutup.json', 'r') as f:
         shutuplist = json.load(f)
     shutuplist[str(guild.id)] = {"blacklist_channels": [], "logging_channels": None}
     with open('nograresources/shutup.json', 'w') as f:
         json.dump(shutuplist, f, indent=4)
-    general = find(lambda x: 'general' in x.name, guild.text_channels)
-    if general is None:
-        for channel in guild.text_channels:
-            if channel.permissions_for(guild.me).send_messages:
+    for channel in guild.text_channels:
+        if channel.permissions_for(guild.me).send_messages and "general" in channel.name:
                 general = channel
     if general is None:
         return
@@ -316,7 +312,12 @@ async def on_guild_join(guild):
         joinembed.set_footer(
             text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
         joinembed.set_thumbnail(url=str(client.user.avatar_url))
-        await general.send(embed=joinembed)
+        try:
+            await general.send(embed=joinembed)
+        except discord.Forbidden:
+            pass
+    channel = client.get_channel(864530070880911398)
+    await channel.send(f"<@650647680837484556>, I have joined {guild.name}. It has {len(guild.members)} members.")
 
 @client.event
 async def on_guild_join(guild):

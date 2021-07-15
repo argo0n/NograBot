@@ -280,7 +280,7 @@ class Fun(commands.Cog):
             if r.status_code == 200:
                 json_data = json.loads(r.text)
                 slapgif = json_data["results"][random.randint(0, 29)]["media"][0]["gif"]["url"]
-                slapembed.set_image(url=str(kissgif))
+                slapembed.set_image(url=str(slapgif))
                 slapembed.set_footer(name="GIFs taken from tenor")
                 await ctx.send(f"{slapTarget}", embed=slapembed)
             else:

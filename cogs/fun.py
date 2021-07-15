@@ -301,7 +301,7 @@ class Fun(commands.Cog):
                 json_data = json.loads(r.text)
                 kissgif = json_data["results"][random.randint(0, 29)]["media"][0]["gif"]["url"]
                 kissembed.set_image(url=str(kissgif))
-                kissembed.set_footer(name="GIFs taken from tenor")
+                kissembed.set_footer(text="GIFs taken from tenor")
                 await ctx.send(f"{kissTarget}", embed=kissembed)
             else:
                 print("There's something happened on the tenor API")

@@ -252,6 +252,7 @@ class Fun(commands.Cog):
                 await channel.set_permissions(ctx.author, overwrite=overwrite)
 
     @commands.command(name="hug", brief="hug someone or ship two people with a hug!")
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def hug(self, ctx, target1: discord.Member = None, target2: discord.Member = None):
         if target1 is None:
             await ctx.send("You need to tell me who you want to hug <:sadsit:826716508750086195>")
@@ -268,6 +269,7 @@ class Fun(commands.Cog):
             await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
             
     @commands.command(name="slap", brief="slap someone with or even without any reason!")
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def slap(self, ctx, slapTarget: discord.Member = None):
         if slapTarget is None:
             await ctx.send("Congratulations you just slapped yourself <:dv_tfWhatteaOwO:837880380941533214>")
@@ -288,6 +290,7 @@ class Fun(commands.Cog):
                 await ctx.send("Some error occured, please dm Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_SLP`")
             
     @commands.command(name="kiss", brief="kiss someone :)")
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def kiss(self, ctx, kissTarget: discord.Member = None):
         if kissTarget is None:
             await ctx.send("You need to mention someone to kiss <:sad:753682653462396979>")

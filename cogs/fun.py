@@ -31,8 +31,7 @@ def gettraceback(error):
     etype = type(error)
     trace = error.__traceback__
     lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    return traceback_text
+    return ''.join(lines)
 
 
 start_time = time.time()

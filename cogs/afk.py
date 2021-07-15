@@ -90,7 +90,7 @@ class Afk(commands.Cog):
         db = sqlite3.connect('databases/config.sqlite')
         cursor = db.cursor()
         cursor.execute(
-            "CREATE TABLE IF NOT EXISTS afk(guild_id integer, member_id integer, time integer, message text)")
+            "CREATE TABLE IF NOT EXISTS afk(guild_id integer, member_id integer, message text, time integer)")
         print("Cog \"AFK\" loaded")
 
     @commands.Cog.listener()

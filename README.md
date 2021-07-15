@@ -23,7 +23,15 @@
 Discord.py bot written by Argon#0002
 
 ## What is Nogra?
-Nogra is a multifunctional Discord.py Bot that was started and written by Argon since the start of January 2021. Over the past few months, its code has expanded from a few hundred lines to over 1000 lines. Many of its commands *(and on_message client events)* are written based on Argon's preferences, and while they may seem useless, it is very productive in managing a server and having fun in the long run.
+A general multipurpose bot with features you wish you could have, including Dank Memer Utilities and many Fun and Utility commands!
+Current Features:
+• Dank Memer utilities
+• Fun and entertaining commands (not really tbh)
+• Informational utility commands
+• Moderation commands
+This bot is constantly updated every 2 weeks to squish out bugs and add new features, so fret not if Nogra does not meet your standards yet!
+
+Visit Nogra at https://nogra.me.
 
 ## Invite
 Invite Nogra at https://nogra.me/invite.
@@ -33,6 +41,7 @@ View Nogra's commands on Nogra's webpage <a href="https://nogra.me/commands">Her
 
 ## Developers
 Argon#0002
+Maple 🍁#2204 (Contributor)
 
 ## Contributing
 If you need support with the bot or would like to contribute to Nogra, shoot Argon#0002 a message.

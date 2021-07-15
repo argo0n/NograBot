@@ -50,6 +50,7 @@ INITIAL_EXTENSIONS = [
     'cogs.fun',
     'cogs.moderation',
     'cogs.utility',
+    'cogs.imgen',
     'jishaku'
 ]
 for extension in INITIAL_EXTENSIONS:
@@ -316,11 +317,6 @@ async def on_guild_join(guild):
             await general.send(embed=joinembed)
         except discord.Forbidden:
             pass
-    channel = client.get_channel(864530070880911398)
-    await channel.send(f"<@650647680837484556>, I have joined {guild.name}. It has {len(guild.members)} members.")
-
-@client.event
-async def on_guild_join(guild):
     channel = client.get_channel(864530070880911398)
     await channel.send(f"<@650647680837484556>, I have joined {guild.name}. It has {len(guild.members)} members.")
 

@@ -36,6 +36,7 @@ def gettraceback(error):
 
 start_time = time.time()
 
+TENOR_API_KEY = os.environ['TENORkey']
 
 class Fun(commands.Cog):
 
@@ -265,7 +266,46 @@ class Fun(commands.Cog):
             
             hugembed.set_image(url=str(huggif))
             await ctx.send(f"{hug1.mention} {hug2.mention}", embed=hugembed)
-
+            
+    @commands.command(name="slap", brief="slap someone with or even without any reason!")
+    async def slap(self, ctx, slapTarget: discord.Member = None):
+        if slapTarget is None:
+            await ctx.send("Congratulations you just slapped yourself <:dv_tfWhatteaOwO:837880380941533214>")
+        else:
+            author = ctx.author
+            slapembed = discord.Embed(title="", color=0xd41919)
+            slapembed.add_field(name="What a slap!", value=f"{slapTarget} just got a hard slap from {author}!")
+            search_term = "slap"
+            r = requests.get(f"https://g.tenor.com/v1/search?q={search_term}&key={TENOR_API_KEY}&limit=30")
+            if r.status_code == 200:
+                json_data = json.loads(r.text)
+                slapgif = json_data["results"][random.randint(0, 29)]["media"][0]["gif"]["url"]
+                slapembed.set_image(url=str(kissgif))
+                slapembed.set_footer(name="GIFs taken from tenor")
+                await ctx.send(f"{slapTarget}", embed=slapembed)
+            else:
+                print("There's something happened on the tenor API")
+                await ctx.send("Some error occured, please dm Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_SLP`")
+            
+    @commands.command(name="kiss", brief="kiss someone :)")
+    async def kiss(self, ctx, kissTarget: discord.Member = None):
+        if kissTarget is None:
+            await ctx.send("You need to mention someone to kiss <:sad:753682653462396979>")
+        else:
+            author = ctx.author
+            kissembed = discord.Embed(title="", color=0xf7a8a1)
+            kissembed.add_field(name="How cute :3", value=f"{kissTarget}, you got a kiss from {author} :)")
+            search_term = "kiss"
+            r = requests.get(f"https://g.tenor.com/v1/search?q={search_term}&key={TENOR_API_KEY}&limit=30")
+            if r.status_code == 200:
+                json_data = json.loads(r.text)
+                kissgif = json_data["results"][random.randint(0, 29)]["media"][0]["gif"]["url"]
+                kissembed.set_image(url=str(kissgif))
+                kissembed.set_footer(name="GIFs taken from tenor")
+                await ctx.send(f"{kissTarget}", embed=kissembed)
+            else:
+                print("There's something happened on the tenor API")
+                await ctx.send("Some error occured, please dm Argon#0002 or Maple 🍁#2204. \n `ERROR CODE: ERR_API_TNR_KSS`")
 
 def setup(client):
     client.add_cog(Fun(client))

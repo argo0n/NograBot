@@ -548,6 +548,9 @@ class utility(commands.Cog):
                     labels.append(name)
                 sizes.append(entry[1])
             count = counted
+            if len(labels) is 0:
+                await ctx.send("There were no entries to display in chatchart. This can happen as: \n    • No one had talked in the channel.\n    • `--nobots` was used but there're only bots talking.\n    • I do not have `Read Message History` permissions.")
+                return
             plt.figure(figsize=plt.figaspect(1))
             newlabels = []
             for l, s in zip(labels, sizes):

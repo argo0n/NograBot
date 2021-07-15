@@ -191,7 +191,7 @@ class utility(commands.Cog):
         embed.add_field(name="Character limit",
                         value="A **trigger** is limited to **300 characters** and a **message** is limited to **1500** characters.",
                         inline=False)
-        embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
+        embed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar.url)
         await ctx.send(embed=embed)
     
     @autoreact.command(name="clear", aliases=["reset"], description = "Removes **ALL** autoreactions from this server.")
@@ -417,8 +417,8 @@ class utility(commands.Cog):
             else:
                 statusoutput = "Unknown"
             embed.add_field(name="Status", value=statusoutput, inline=True)
-            embed.set_author(name=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar_url)
-            embed.set_footer(text=f"Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url)
+            embed.set_author(name=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar.url)
+            embed.set_footer(text=f"Requested by {ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
 
@@ -574,7 +574,7 @@ class utility(commands.Cog):
             prefix = prefix[2]
             pingembed = discord.Embed(title=f"My prefix here is `{prefix}`",
                                       description=f"Use `{prefix}prefix [prefix]` to change my prefix.")
-            pingembed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar_url)
+            pingembed.set_author(name=self.client.user.name, icon_url=self.client.user.avatar.url)
             await ctx.send(embed=pingembed)
             return
         with open('nograresources/prefixes.json', 'r') as f:
@@ -655,7 +655,7 @@ class utility(commands.Cog):
         '''userinfo.add_field(name="Account created on", value=member.created_at, inline=True)
         userinfo.add_field(name="Account created on", value=member.created_at, inline=True)
         userinfo.add_field(name="Account created on", value=member.created_at, inline=True)'''
-        userinfo.set_thumbnail(url=member.avatar_url)
+        userinfo.set_thumbnail(url=member.avatar.url)
         await ctx.send(embed=userinfo)
 
     @commands.command(name="spotify", brief="shows you what you're listening to",
@@ -673,7 +673,7 @@ class utility(commands.Cog):
                 spotify = discord.Embed(title=f"{member.name} is listening to",
                                         description=f"[{artists} - {activity.title}](https://open.spotify.com/track/{activity.track_id})",
                                         color=activity.color)
-                spotify.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+                spotify.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
                 spotify.set_footer(text=f"Powered by Spotify®", icon_url="https://i.imgur.com/zNBmzpl.png")
                 spotify.set_thumbnail(url=activity.album_cover_url)
                 listenduration = today - activity.start
@@ -693,7 +693,7 @@ class utility(commands.Cog):
         spotify = discord.Embed(title=f"{member.name} is listening to",
                                 description=f"[Nothing!](https://open.spotify.com/track/3cdhgO3vgHyOIADMXokd2t?si=f7078aa59889446e)",
                                 color=0x1DB954)
-        spotify.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+        spotify.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
         spotify.set_thumbnail(
             url="https://lh3.googleusercontent.com/proxy/2MW-6rV-ik6QiqydtV2T5d6PEM5894IXD990hxcCp17slr5F0bj0u1xypl-0MkChbMD6MabQDSCFGFGCm6w03EMSptzUIU9Y_u1eDgzOzC_27YoSOvRFgHUw4gLfaHrB2i_ImlYuJKPOTZg3-RD1bTAYv1-S4pIHU2UkyMZ0")
         spotify.set_footer(text=f"Powered by Spotify®", icon_url="https://i.imgur.com/zNBmzpl.png")
@@ -714,7 +714,7 @@ class utility(commands.Cog):
     async def color(self, ctx, member: discord.Member = None):
         if member is None:
             member = ctx.author
-        avatarurl = member.avatar_url
+        avatarurl = member.avatar.url
         opener = urllib.request.build_opener()
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         urllib.request.install_opener(opener)
@@ -742,13 +742,13 @@ class utility(commands.Cog):
         activitylist = member.activities
         if not activitylist:
             activityembed = discord.Embed(title=f"{member.name} isn't doing anything now!", color=member.color)
-            activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+            activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
             await ctx.send(embed=activityembed)
             return
         for activity in activitylist:
             if isinstance(activity, discord.Game):
                 activityembed = discord.Embed(title=f"{member.name} is playing:", color=member.color)
-                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
                 if activity.start:
                     starttime = activity.start
                     duration = today - activity.start
@@ -773,7 +773,7 @@ class utility(commands.Cog):
                 return
             if isinstance(activity, discord.Activity):
                 activityembed = discord.Embed(title=f"{member.name} is playing:", color=member.color)
-                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
                 if activity.start:
                     starttime = activity.start
                     duration = today - activity.start
@@ -809,12 +809,12 @@ class utility(commands.Cog):
                 activityembed = discord.Embed(title=f"{member.name} is streaming:",
                                               description=f'[{activity.name} on {platform}]({activity.url} "{activity.name} on {activity.platform}") {emoji}',
                                               color=member.color)
-                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+                activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
                 activityembed.add_field(name="Steam details", value=f"Playing {activity.game}", inline=False)
                 await ctx.send(embed=activityembed)
                 return
         activityembed = discord.Embed(title=f"{member.name} isn't doing anything now!", color=member.color)
-        activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar_url)
+        activityembed.set_author(name=f"{member.name}#{member.discriminator}", icon_url=member.avatar.url)
         await ctx.send(embed=activityembed)
 
 

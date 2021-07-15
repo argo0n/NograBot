@@ -82,7 +82,7 @@ class DankMemerHelp(commands.Cog):
             messagelink = discord.Embed(
                 description=f"[Jump to message](https://discord.com/channels/{guildid}/{channelid}/{messageid})",
                 color=0x00FFFF)
-            messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+            messagelink.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar.url))
             with open("nograresources/lotterychoice.json", 'r', encoding="utf8") as f:
                 choices = json.load(f)
                 choice = choices[str(row[0])]
@@ -293,7 +293,7 @@ class DankMemerHelp(commands.Cog):
     @commands.command(name="dankmemer",brief = "dank memer information", description = "Gives you information about Dank Memer utilities.")
     async def dankmemer(self, ctx):
         embed = discord.Embed(title="Dank Memer Utilities")
-        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar.url))
         embed.add_field(name="\u200b",
                         value="**<:nogralottery:861088502070509568> Lottery reminder**\nNogra will remind you to perform the lottery when you type `pls lottery` automatically. You can customize your reminder via `a.lotteryconfig`. ",
                         inline=False)

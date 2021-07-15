@@ -397,12 +397,12 @@ class Moderation(commands.Cog):
                     option = option-1
                     logchannel = self.client.get_channel(861956356419616808)
                     leaveembed = discord.Embed(title=f"Just removed {self.client.user.name} from the server {ctx.guild.name}.")
-                    leaveembed.set_author(name = f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id})", icon_url=ctx.author.avatar_url)
+                    leaveembed.set_author(name = f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id})", icon_url=ctx.author.avatar.url)
                     leaveembed.add_field(name="Reason", value =reasons[option][1], inline=False)
                     leaveembed.set_thumbnail(url="https://cdn.discordapp.com/emojis/755954448009920592.gif?v=1")
                     if 'feedback' in locals():
                         leaveembed.add_field(name="Additional Information", value =f"\u200b{feedback.content}", inline=False)
-                    leaveembed.set_footer(text=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar_url)
+                    leaveembed.set_footer(text=f"{self.client.user.name}#{self.client.user.discriminator}", icon_url=self.client.user.avatar.url)
                     await logchannel.send(embed=leaveembed)
                     await requester.send(f"{reasons[option][2]} Thank you for inviting {self.client.user.name}!")
                 await requester.send(f"I have left **{ctx.guild.name}**.")
@@ -490,7 +490,7 @@ class Moderation(commands.Cog):
             timestamp = ctx.message.created_at
             clearembed = discord.Embed(title="`Clear` action done with Nogra", color=0xff0000)
             clearembed.set_author(name=str(ctx.author.name) + "#" + str(ctx.author.discriminator),
-                                  icon_url=str(ctx.author.avatar_url))
+                                  icon_url=str(ctx.author.avatar.url))
             clearembed.add_field(name=str(number) + " messages deleted", value="in " + str(ctx.channel.mention),
                                  inline=False)
             clearembed.set_footer(text="ID: " + str(ctx.author.id) + " • " + str(timestamp))
@@ -502,7 +502,7 @@ class Moderation(commands.Cog):
         current_datetime = datetime.datetime.now(timezone("UTC"))
         difference = int(round(current_time - start_time))
         embed = discord.Embed(colour=0xc8dc6c)
-        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar_url))
+        embed.set_author(name=self.client.user.name, icon_url=str(self.client.user.avatar.url))
         embed.add_field(name="Time of last reboot", value=timetosgtime(utcbootime), inline=True)
         embed.add_field(name="Time now", value=timetosgtime(current_datetime), inline=True)
         embed.add_field(name="Uptime", value=secondstotiming(difference), inline=False)
@@ -515,12 +515,12 @@ class Moderation(commands.Cog):
     @commands.command(name="invite", brief="Invite the bot", description="Gives you invite links for Nogra")
     async def invite(self, ctx):
         embed = discord.Embed(colour=0x00FF00)
-        embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar_url))
+        embed.set_author(name=f"Add {self.client.user.name} to your server!", icon_url=str(self.client.user.avatar.url))
         embed.add_field(name="Recommended Invite Link",
                         value=f"[Nogra with only necessary permissions](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=3691375831&redirect_uri=https%3A%2F%2Fnogra.me%2Fthank-you&scope=bot)")
         embed.add_field(name="Admin Invite Link",
                         value=f"[Nogra with Admin Invite Permission](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&redirect_uri=https://nogra.me/thank-you&response_type=code&scope=bot)")
-        embed.set_thumbnail(url=str(self.client.user.avatar_url))
+        embed.set_thumbnail(url=str(self.client.user.avatar.url))
         try:
             await ctx.send(embed=embed)
         except discord.HTTPException:

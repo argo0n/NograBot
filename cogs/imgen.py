@@ -162,7 +162,7 @@ class Imgen(commands.Cog):
         opener = urllib.request.build_opener()
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         urllib.request.install_opener(opener)
-        urllib.request.urlretrieve(str(member.avatar_url), memberfilename)
+        urllib.request.urlretrieve(str(member.avatar.url), memberfilename)
         ima = Image.open(memberfilename).convert('RGBA')
         ima = ima.resize((185, 185))
         ima = ima.rotate(45, expand=True)

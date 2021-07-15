@@ -85,7 +85,7 @@ class MyHelp(commands.HelpCommand):
         # foundation of help command
         ctx = self.context
         embed = HelpEmbed(title=f"{ctx.me.display_name}'s Help Page")
-        embed.set_thumbnail(url=ctx.me.avatar_url)
+        embed.set_thumbnail(url=ctx.me.avatar.url)
         usable = 0
         for cog, commands in mapping.items():  # iterating through our mapping of cog: commands
             filtered_commands = await self.filter_commands(commands)
@@ -198,7 +198,7 @@ async def on_ready():
     botready = discord.Embed(title="Bot is ready!",
                              description="[Celebrate here](https://www.youtube.com/watch?v=dQw4w9WgXcQ)",
                              color=0x32CD32)
-    botready.set_author(name=f"{client.user.name}", icon_url=client.user.avatar_url,
+    botready.set_author(name=f"{client.user.name}", icon_url=client.user.avatar.url,
                         url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=botready)
@@ -296,7 +296,7 @@ async def on_guild_join(guild):
         joinembed = discord.Embed(title="Thanks for using Nogra!",
                                   description="Nogra is a Discord bot with many different functions for your convenience and entertainment.",
                                   color=0x00ff00)
-        joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar_url))
+        joinembed.set_author(name=f"{client.user.name}", icon_url=str(client.user.avatar.url))
         joinembed.add_field(name="**__Not sure where to start?__**", value="\u200b", inline=False)
         joinembed.add_field(name="__Fun commands!__",
                             value=f"{client.user.name} Has a wide range of commands that are fun to use. You can send a fake Dank Memer blacklist message to someone, or mute them by dumbfighting them! Use `a.help Fun` to see what commands can be used.<:thumbsupthefuck:823214448579838012>",
@@ -315,7 +315,7 @@ async def on_guild_join(guild):
                             inline=False)
         joinembed.set_footer(
             text=f"Do a.help as a start. Enjoy using {client.user.name}! If you run into problems or find a bug, DM Argon#0002. Make sure you have enabled the permissions necessary for Nogra to function properly.")
-        joinembed.set_thumbnail(url=str(client.user.avatar_url))
+        joinembed.set_thumbnail(url=str(client.user.avatar.url))
         await general.send(embed=joinembed)
 
 @client.event
@@ -348,7 +348,7 @@ async def on_message(message):
             prefix = prefix[2]
             pingembed = discord.Embed(title=f"My prefix here is `{prefix}`",
                                       description=f"Use `{prefix}help` to see my range of commands.")
-            pingembed.set_author(name=client.user.name, icon_url=client.user.avatar_url)
+            pingembed.set_author(name=client.user.name, icon_url=client.user.avatar.url)
             pingembed.set_footer(text=f"Use `{prefix}prefix [prefix]` to change my prefix!")
             await message.channel.send(embed=pingembed)
 
@@ -410,7 +410,7 @@ async def softreboot(ctx):
             except commands.ExtensionFailed:
                 await message.edit(content=f"{INITIAL_EXTENSIONS.index(extension)+1} of {len(INITIAL_EXTENSIONS)}: `{extension}` **failed to load, load it manually**. <:nograyellow:830765423112880148>")
     cogsoftreboot = discord.Embed(title="Soft Reboot completed", color=0x00ff00)
-    cogsoftreboot.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    cogsoftreboot.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar.url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogsoftreboot)
 
@@ -421,7 +421,7 @@ async def load(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` loaded.")
     cogload = discord.Embed(title="Cog Loaded", description=f"`cogs.{extension}`", color=0x00ff00)
-    cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    cogload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar.url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogload)
 
@@ -431,7 +431,7 @@ async def unload(ctx, extension):
     client.unload_extension(f'cogs.{extension}')
     await ctx.send(f"`{extension}` unloaded.")
     cogunload = discord.Embed(title="Cog Unloaded", description=f"`cogs.{extension}`", color=0xff0000)
-    cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    cogunload.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar.url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=cogunload)
 
@@ -445,7 +445,7 @@ async def cogreboot(ctx, extension):
     client.load_extension(f'cogs.{extension}')
     await message.edit(content=f"<:nograonline:830765387422892033> `{extension}` loaded successfully.")
     rebootcog = discord.Embed(title="Cog Rebooted", description=f"`cogs.{extension}`", color=0xffff00)
-    rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar_url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    rebootcog.set_author(name=f"{ctx.author.name}#{ctx.author.discriminator}", icon_url=ctx.author.avatar.url, url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     status = client.get_channel(839045672111308820)
     await status.send(embed=rebootcog)
 

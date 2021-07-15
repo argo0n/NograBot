@@ -113,7 +113,7 @@ class Afk(commands.Cog):
                         afk_duration = int(round(current_time - afkdetail[3]))
                         afk_embed = discord.Embed(title="", color=0x00ff00)
                         afk_embed.set_author(name=f"{member.name}#{member.discriminator}",
-                                             icon_url=str(member.avatar_url))
+                                             icon_url=str(member.avatar.url))
                         afk_embed.add_field(name=f"{member.name} is AFK", value=afkdetail[2], inline=True)
                         afk_embed.set_footer(text=f"{member.name} has been AFK for {secondstotiming(afk_duration)}.")
                         await message.channel.send(embed=afk_embed)

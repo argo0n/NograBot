@@ -4,7 +4,7 @@
 # |                            Moderation Cog for Nogra Bot                            |
 # |                               Written by Argon#0002                                |
 # |                               Commands in this cog:                                |
-# |                clear, uptime, invite, abuse, stopabusing, ban, cban                |
+# |          clear, uptime, invite, abuse, stopabusing, ban, cban, serverinfo          |
 # |                                                                                    |
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
@@ -576,8 +576,27 @@ class Moderation(commands.Cog):
         await member.ban(reason=reason)
         await ctx.send(f"{member} is banned for: {reason}")
 
-
-
+    # Not done yet, could insert more. If any embed field placement error, please contact or just commit change/make pr.
+    # TODO : add features field, channels field, info field (w/ icon link), roles and member count field.
+    @commands.command(name="serverinfo", breif="Giving nearly all server's info", description="Giving nearly all server's info", aliases=["si"])
+    @commands.has_permission(manage_channel=True)
+    async def serverinfo(self, ctx):
+        guild = discord.Guild
+        siembed = discord.Embed(title=f"{guild.name}'s Info")
+        siembed.add_field(name="Server Owner", value=guild.owner, inline=True)
+        siembed.add_field(name="Server ID", value=guild.id, inline=True)
+        mfa = guild.mfa_level
+        if mfa == 0:
+            mfa_status = "No two factor authentication for moderation setted in this server."
+        elif mfa == 1:
+            mfa_status = "Two factor authentication for moderation is turned **on** in this server."
+        siembed.add_field(name="Two Factor Auth", value=mfa_status)
+        tier = guild.premium_tier
+        tier_desc = ("Level", str(tier))
+        siembed.add_field(name="Server Boost Tier", value=tier_desc, inline=True)
+        siembed.add_field(name="Server Boosts", value=guild.premium_subscription_count, inline=True)
+        siembed.set_thumbnail(url=str(guild.icon))
+        ctx.send(embed=siembed)
 
 def setup(client):
     client.add_cog(Moderation(client))

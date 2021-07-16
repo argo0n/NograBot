@@ -330,7 +330,7 @@ async def on_message(message):
     if isinstance(message.channel, discord.DMChannel):
         return
     ctx = await client.get_context(message)
-    if ctx.valid:
+    if ctx.valid and not message.author.bot:
         await client.invoke(ctx)
     else:
         if message.author == client.user:

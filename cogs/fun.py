@@ -4,8 +4,8 @@
 # |                               Fun Cog for Nogra Bot                                |
 # |                               Written by Argon#0002                                |
 # |                               Commands in this cog:                                |
-# |   say, pogpong, bon, blacklisttypefor, secretping, yeet, unoreverse, dumbfight     |
-# |                                                                                    |
+# |   say, pogpong, bon, blacklisttypefor, secretping, yeet, unoreverse, dumbfight,    |
+# |                                 hug, slap, kiss                                    |
 # |                                                                                    |
 # |------------------------------------------------------------------------------------
 from discord.ext import commands

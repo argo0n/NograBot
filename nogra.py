@@ -349,17 +349,6 @@ async def on_message(message):
             pingembed.set_footer(text=f"Use `{prefix}prefix [prefix]` to change my prefix!")
             await message.channel.send(embed=pingembed)
 
-        # CHEONG MEET LINK
-        if "cheong" in message.content or "Cheong" in message.content:
-            cheongembed = discord.Embed(title="Meeting link for Google Meet freeloaders",
-                                        description="Click [here](https://meet.google.com/shc-xgce-aix?authuser=1)",
-                                        color=0x00ff00)
-            cheongembed.set_image(
-                url="https://media.discordapp.net/attachments/764151467115544576/765918704142647346/IMG-20200925-WA0037.jpg")
-            cheongembed.set_footer(
-                text="Cheong socializing with a cup of coke in a McDonalds outlet in Siglap link, colourised, 2019. Source:")
-            await message.channel.send(embed=cheongembed)
-
 
 @client.event
 async def on_member_join(member):
